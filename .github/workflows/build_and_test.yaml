@@ -7,7 +7,7 @@ on:
       - main
   pull_request:
 jobs:
-  pre_job:
+  Build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,22 +15,28 @@ jobs:
         with:
           java-version: 17
           distribution: 'temurin'
-
-  Build:
-    needs: pre_job
-    steps:
       - name: Build with Gradle
         run: ./gradlew build -x test
 
   Test:
-    needs: pre_job
+    runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'temurin'
       - name: Running application tests
         run: ./gradlew test
 
   checking-code-format:
-    needs: Build
+    runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'temurin'
       - uses: actions/checkout@v4
       - uses: yutailang0119/action-ktlint@v4
         with:
