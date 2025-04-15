@@ -40,7 +40,7 @@ internal class GenericGraph<V, E> : Graph<V, E> {
     private data class DirectedVertex<V>(override var element: V) : Vertex<V>
 
     private data class UndirectedEdge<E, V>(
-        override var element: E,
+        override var element: E?,
         var first: Vertex<V>,
         var second: Vertex<V>,
     ) : Edge<E, V> {
@@ -49,7 +49,7 @@ internal class GenericGraph<V, E> : Graph<V, E> {
     }
 
     private data class DirectedEdge<E, V>(
-        override var element: E,
+        override var element: E?,
         var from: Vertex<V>,
         var to: Vertex<V>,
     ) : Edge<E, V> {
