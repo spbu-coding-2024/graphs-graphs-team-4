@@ -11,6 +11,7 @@ class GraphViewModel<V, E>(
     private val graph: Graph<V, E>,
     showVerticesLabels: State<Boolean>,
     showEdgesLabels: State<Boolean>,
+    showWeightLabels: State<Boolean>,
 ) {
     private val _vertices = graph.vertices.associateWith { v ->
         VertexViewModel(0.dp, 0.dp, Color.Gray, v, showVerticesLabels)
@@ -20,7 +21,7 @@ class GraphViewModel<V, E>(
             ?: throw IllegalStateException("VertexView for ${e.vertices.first} not found")
         val snd = _vertices[e.vertices.second]
             ?: throw IllegalStateException("VertexView for ${e.vertices.second} not found")
-        EdgeViewModel(fst, snd, e, showEdgesLabels)
+        EdgeViewModel(fst, snd, e, showEdgesLabels, showWeightLabels)
     }
 
     val vertices: Collection<VertexViewModel<V>>
