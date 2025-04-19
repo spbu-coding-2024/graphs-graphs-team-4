@@ -20,4 +20,3 @@ interface DirectedEdge<E, V> : Edge<E, V> {
 }
 
 interface WeightedDirectedEdge<E, V> : DirectedEdge<E, V>, WeightedEdge<E, V>
-
