@@ -21,7 +21,13 @@ class MainScreenViewModel<V, E>(graph: Graph<V, E>, private val representationSt
             _showEdgesLabels.value = value
         }
 
-    val graphViewModel = GraphViewModel(graph, _showVerticesLabels, _showEdgesLabels)
+    private var _showEdgesWeights = mutableStateOf(false)
+    var showWeight: Boolean
+        get() = _showEdgesWeights.value
+        set(value) {
+            _showEdgesWeights.value = value
+        }
+    val graphViewModel = GraphViewModel(graph, _showVerticesLabels, _showEdgesLabels, _showEdgesWeights)
 
     init {
         representationStrategy.place(800.0, 600.0, graphViewModel.vertices)
