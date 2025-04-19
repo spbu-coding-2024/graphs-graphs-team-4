@@ -26,5 +26,6 @@ class EdgeViewModel<E, V>(
         get() = _directionVisible.value && directedEdge != null
 
     val direction: Boolean?
-        get() = directedEdge?.let { it.from == u && it.to == v }
+        get() = directedEdge?.let { it.from.id == u.vertexID && it.to.id == v.vertexID }
+
 }

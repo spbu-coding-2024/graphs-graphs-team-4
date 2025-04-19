@@ -5,43 +5,36 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import org.graphApp.model.graph.DirectGraph
 import org.graphApp.model.graph.Graph
 import org.graphApp.model.graph.UndirectedGraph
 import org.graphApp.view.MainScreen
 import org.graphApp.viewmodel.MainScreenViewModel
 import org.graphApp.viewmodel.graph.CircularPlacementStrategy
 
-val sampleGraph: Graph<String, Long> = UndirectedGraph<String, Long>().apply {
-    addVertex("A", "1")
-    addVertex("B", "2")
-    addVertex("C", "3")
-    addVertex("D", "4")
-    addVertex("E", "5")
-    addVertex("F", "6")
-    addVertex("G", "7")
+val sampleGraph: Graph<String, Long> = DirectGraph<String, Long>().apply {
+    val vertexA = addVertex("A", "1")
+    val vertexB = addVertex("B", "2")
+    val vertexC = addVertex("C", "3")
+    val vertexD = addVertex("D", "4")
+    val vertexE = addVertex("E", "5")
+    val vertexF = addVertex("F", "6")
+    val vertexG = addVertex("G", "7")
 
-    addEdge("1" to "A", "2" to "B", 1)
-    addEdge("1" to "A", "3" to "C", 2)
-    addEdge("1" to "A", "4" to "D", 3)
-    addEdge("1" to "A", "5" to "E", 4)
-    addEdge("1" to "A", "6" to "F", 5)
-    addEdge("1" to "A", "7" to "G", 6)
+    addEdge(vertexA, vertexB, 1L)
+    addEdge(vertexA, vertexC, 2L)
+    addEdge(vertexA, vertexD, 3L)
+    addEdge(vertexA, vertexE, 4L)
+    addEdge(vertexA, vertexF, 5L)
+    addEdge(vertexA, vertexG, 6L)
 
-    addVertex("H", "8")
-    addVertex("I", "9")
-    addVertex("J", "10")
-    addVertex("K", "11")
-    addVertex("L", "12")
-    addVertex("M", "13")
-    addVertex("N", "14")
-
-    addEdge("8" to "H", "9" to "I", 7)
-    addEdge("8" to "H", "10" to "J", 8)
-    addEdge("8" to "H", "11" to "K", 9)
-    addEdge("8" to "H", "12" to "L", 10)
-    addEdge("8" to "H", "13" to "M", 11)
-    addEdge("8" to "H", "14" to "N", 12)
-    addEdge("1" to "A", "8" to "H", 0)
+    val vertexH = addVertex("H", "8")
+    val vertexI = addVertex("I", "9")
+    val vertexJ = addVertex("J", "10")
+    val vertexK = addVertex("K", "11")
+    val vertexL = addVertex("L", "12")
+    val vertexM = addVertex("M", "13")
+    val vertexN = addVertex("N", "14")
 }
 
 @Composable

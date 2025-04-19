@@ -10,12 +10,12 @@ internal class WeightedGraph<V, E> : UndirectedWeightedGraph<V, E> {
     override fun addVertex(v: V, id: String) =
         _vertices.getOrPut(v) { DVertex(id, v) }
 
-    override fun addEdge(u: Pair<String, V>, v: Pair<String, V>, e: E): Edge<E, V> =
+    override fun addEdge(u: Vertex<V>, v: Vertex<V>, e: E): Edge<E, V> =
         throw IllegalArgumentException("You must set weight for your edge")
 
-    override fun addEdge(u: Pair<String, V>, v: Pair<String, V>, e: E, weight: String): WeightedEdge<E, V> {
-        val first = addVertex(u.second, u.first)
-        val second = addVertex(v.second, v.first)
+    override fun addEdge(u: Vertex<V>, v: Vertex<V>, e: E, weight: String): WeightedEdge<E, V> {
+        val first = addVertex(u.element, u.id)
+        val second = addVertex(v.element, v.id)
         return _edges.getOrPut(e) { DataWeightedEdge(e, first to second, weight) }
     }
     private data class DataWeightedEdge<E, V>(

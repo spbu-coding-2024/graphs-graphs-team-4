@@ -27,7 +27,13 @@ class MainScreenViewModel<V, E>(graph: Graph<V, E>, private val representationSt
         set(value) {
             _showEdgesWeights.value = value
         }
-    val graphViewModel = GraphViewModel(graph, _showVerticesLabels, _showEdgesLabels, _showEdgesWeights)
+    private var _showDirections = mutableStateOf(false)
+    var showDirections: Boolean
+        get() = _showDirections.value
+        set(v) { _showDirections.value = v }
+
+
+    val graphViewModel = GraphViewModel(graph, _showVerticesLabels, _showEdgesWeights, _showDirections)
 
     init {
         representationStrategy.place(800.0, 600.0, graphViewModel.vertices)

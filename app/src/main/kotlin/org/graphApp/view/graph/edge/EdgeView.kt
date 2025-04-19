@@ -43,7 +43,7 @@ fun <E, V> EdgeView(
         )
     }
 
-    if (viewModel.directionVisible) {
+    if (true) {
         Canvas(modifier = modifier.fillMaxSize()) {
             val start = Offset(
                 viewModel.u.x.toPx() + viewModel.u.radius.toPx(),
