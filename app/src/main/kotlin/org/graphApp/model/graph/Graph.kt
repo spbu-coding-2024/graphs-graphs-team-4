@@ -13,12 +13,7 @@ interface UndirectedWeightedGraph<V, E> : Graph<V, E> {
 }
 
 interface DirectedWeightedGraph<V, E> : Graph<V, E> {
-    fun addEdge(
-        u: V,
-        v: V,
-        e: E,
-        weight: String
-    ): WeightedDirectedEdge<E, V>
+    fun addEdge(u: V, v: V, e: E, weight: String): WeightedDirectedEdge<E, V>
 }
 
 interface DirectedUnWeightedGraph<V, E> : Graph<V, E> {
