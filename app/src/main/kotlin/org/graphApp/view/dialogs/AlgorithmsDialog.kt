@@ -45,7 +45,7 @@ fun AlgorithmsDialog(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    CloseButton(onClick = onDismissRequest)
+                    CloseButton(onClick = onDismissRequest, text = "Close")
                 }
             }
         }
