@@ -11,30 +11,26 @@ import org.graphApp.model.graph.UndirectedGraph
 import org.graphApp.view.MainScreen
 import org.graphApp.viewmodel.MainScreenViewModel
 import org.graphApp.viewmodel.graph.CircularPlacementStrategy
+val sampleGraph: Graph<String, Long> = UndirectedGraph<String, Long>().apply {
 
-val sampleGraph: Graph<String, Long> = DirectGraph<String, Long>().apply {
-    val vertexA = addVertex("A", "1")
-    val vertexB = addVertex("B", "2")
-    val vertexC = addVertex("C", "3")
-    val vertexD = addVertex("D", "4")
-    val vertexE = addVertex("E", "5")
-    val vertexF = addVertex("F", "6")
-    val vertexG = addVertex("G", "7")
+    listOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N").forEach {
+        addVertex(it)
+    }
 
-    addEdge(vertexA, vertexB, 1L)
-    addEdge(vertexA, vertexC, 2L)
-    addEdge(vertexA, vertexD, 3L)
-    addEdge(vertexA, vertexE, 4L)
-    addEdge(vertexA, vertexF, 5L)
-    addEdge(vertexA, vertexG, 6L)
+    addEdge("A", "B", 1)
+    addEdge("A", "C", 2)
+    addEdge("A", "D", 3)
+    addEdge("A", "E", 4)
+    addEdge("A", "F", 5)
+    addEdge("A", "G", 6)
 
-    val vertexH = addVertex("H", "8")
-    val vertexI = addVertex("I", "9")
-    val vertexJ = addVertex("J", "10")
-    val vertexK = addVertex("K", "11")
-    val vertexL = addVertex("L", "12")
-    val vertexM = addVertex("M", "13")
-    val vertexN = addVertex("N", "14")
+    addEdge("H", "I", 7)
+    addEdge("H", "J", 8)
+    addEdge("H", "K", 9)
+    addEdge("H", "L", 10)
+    addEdge("H", "M", 11)
+    addEdge("H", "N", 12)
+    addEdge("A", "H", 0)
 }
 
 @Composable
