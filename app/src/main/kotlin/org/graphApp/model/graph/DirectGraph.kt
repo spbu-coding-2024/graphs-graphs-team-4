@@ -17,7 +17,6 @@ internal class DirectGraph<V, E> : DirectedUnWeightedGraph<V, E> {
             _vertices[newVertex.id] = newVertex
             newVertex
         }
-
     override fun addEdge(u: V, v: V, e: E): DirectedEdge<E, V> {
         val from = addVertex(u)
         val to = addVertex(v)

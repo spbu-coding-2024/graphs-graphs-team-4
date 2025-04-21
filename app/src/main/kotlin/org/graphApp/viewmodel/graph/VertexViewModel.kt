@@ -35,8 +35,11 @@ class VertexViewModel<V>(
             _color.value = value
         }
 
-    val label
+    val value
         get() = v.element.toString()
+
+    val vertexID
+        get() = v.id
 
     val labelVisible
         get() = _labelVisible.value

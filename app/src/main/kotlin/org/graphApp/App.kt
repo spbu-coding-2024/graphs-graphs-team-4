@@ -5,12 +5,12 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import org.graphApp.model.graph.DirectGraph
 import org.graphApp.model.graph.Graph
 import org.graphApp.model.graph.UndirectedGraph
 import org.graphApp.view.MainScreen
 import org.graphApp.viewmodel.MainScreenViewModel
 import org.graphApp.viewmodel.graph.CircularPlacementStrategy
-
 val sampleGraph: Graph<String, Long> = UndirectedGraph<String, Long>().apply {
 
     listOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N").forEach {

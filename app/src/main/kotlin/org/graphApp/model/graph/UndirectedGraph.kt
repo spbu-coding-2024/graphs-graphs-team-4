@@ -9,6 +9,7 @@ internal class UndirectedGraph<V, E> : Graph<V, E> {
     override val vertices: Collection<Vertex<V>> get() = _vertices.values
     override val edges: Collection<Edge<E, V>> get() = _edges.values
 
+
     override fun addVertex(v: V): Vertex<V> =
         elementToVertex.getOrPut(v) {
             val newVertex = DVertex(vertexIdCounter++, v)
