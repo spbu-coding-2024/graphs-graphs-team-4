@@ -21,11 +21,14 @@ import androidx.compose.ui.unit.sp
 import org.graphApp.view.components.*
 import kotlin.math.roundToInt
 
+const val START_ZOOM_POSITION = 250
+
+
 @Composable
 fun ViewDialog(
     onDismissRequest: () -> Unit
 ) {
-    var sliderPosition by remember { mutableStateOf((0 + 100) / 2) }
+    var sliderPosition by remember { mutableStateOf(START_ZOOM_POSITION) }
     var selectedTheme by remember { mutableStateOf("Auto") }
     val listOfThemes = listOf("Light", "Dark", "Auto")
     Dialog(onDismissRequest = onDismissRequest) {
@@ -65,37 +68,28 @@ fun ViewDialog(
 
                 listOfThemes.forEach { text ->
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
                     ) {
-                        val isSelected = text == selectedTheme
-
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.width(100.dp)
+                            horizontalArrangement = Arrangement.Center,
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(15.dp)
-                                    .background(
-                                        color = if (isSelected) Color.Black else Color.White,
-                                        shape = CircleShape
-                                    )
-                                    .clickable { selectedTheme = text }
+                            RadioButton(
+                                selected = text == selectedTheme,
+                                onClick = { selectedTheme = text },
+                                colors = RadioButtonDefaults.colors(
+                                    selectedColor = Color.Black
+                                )
                             )
-
-                            Spacer(Modifier.width(12.dp))
-
                             Text(
                                 text = text,
                                 style = MaterialTheme.typography.body1,
                                 color = Color.Black,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp
                             )
                         }
                     }
-                    Spacer(Modifier.height(8.dp))
                 }
 
                 Row(
@@ -118,7 +112,7 @@ fun ViewDialog(
 
                 ZoomSlider(
                     value = sliderPosition,
-                    valueRange = 0..100,
+                    valueRange = 100..400,
                     onValueChange = { sliderPosition = it },
                     modifier = Modifier.padding(top = 8.dp),
                     zoomInIcon = zoomIn,
@@ -130,7 +124,7 @@ fun ViewDialog(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     ResetButton(
-                        onClick = { sliderPosition = (0 + 100) / 2 },
+                        onClick = { sliderPosition = 250 },
                         text = "Reset"
                     )
                 }

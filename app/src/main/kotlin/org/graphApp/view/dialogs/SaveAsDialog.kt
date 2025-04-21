@@ -52,7 +52,8 @@ fun SaveAsDialog(
                                 )
                             )
                             Spacer(Modifier.width(4.dp))
-                            Text(text)
+                            Text(text
+                            )
                         }
 
                     }
