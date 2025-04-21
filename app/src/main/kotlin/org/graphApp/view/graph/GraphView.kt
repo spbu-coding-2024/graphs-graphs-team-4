@@ -12,7 +12,6 @@ import org.graphApp.view.graph.vertex.VertexView
 import org.graphApp.viewmodel.graph.GraphViewModel
 import org.graphApp.viewmodel.graph.VertexViewModel
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun <V, E>GraphView(
     viewModel: GraphViewModel<V, E>,
