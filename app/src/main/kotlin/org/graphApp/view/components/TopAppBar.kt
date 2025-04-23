@@ -1,38 +1,23 @@
 package org.graphApp.view.components
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.graphApp.view.dialogs.AboutDialog
-import org.graphApp.view.dialogs.AlgorithmsDialog
 import org.graphApp.view.dialogs.DocumentationDialog
-import org.graphApp.view.dialogs.NewGraphDialog
 import org.graphApp.view.dialogs.SaveAsDialog
 import org.graphApp.view.dialogs.ViewDialog
-import androidx.compose.foundation.background
-import androidx.compose.material.ButtonDefaults.textButtonColors
 
 @Composable
-fun TopBarMenu() {
+fun TopBarMenu(
+    onToggleAlgorithms: () -> Unit,
+    onShowNewGraph: () -> Unit
+) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -46,10 +31,10 @@ fun TopBarMenu() {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            FileMenu()
+            FileMenu(onNewGraph = onShowNewGraph)
             EditMenu()
             ViewMenu()
-            AlgorithmsMenu()
+            AlgorithmsMenu(onClick = onToggleAlgorithms)
             SettingsMenu()
             HelpMenu()
         }
@@ -57,44 +42,50 @@ fun TopBarMenu() {
 }
 
 @Composable
-private fun FileMenu() {
+private fun FileMenu(onNewGraph: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
-    var showNewGraphDialog by remember { mutableStateOf(false) }
     var showSaveAsDialog by remember { mutableStateOf(false) }
 
     Box {
         TextButton(
             onClick = { expanded = true },
-            colors = textButtonColors(
+            colors = ButtonDefaults.textButtonColors(
                 contentColor = MaterialTheme.colors.onPrimary
             )
         ) {
             Text("File")
         }
+
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.background(Color.White)  // цвет меню
+            modifier = Modifier.background(Color.White)
         ) {
             DropdownMenuItem(onClick = {
                 expanded = false
-                showNewGraphDialog = true
-            }) { Text("New Graph", color = Color.Black) }
-            DropdownMenuItem(onClick = { }) {
+                onNewGraph()
+            }) {
+                Text("New Graph", color = Color.Black)
+            }
+            DropdownMenuItem(onClick = { /* TODO: Open */ }) {
                 Text("Open", color = Color.Black)
             }
-            DropdownMenuItem(onClick = { /* Handle save! */ }) { Text("Save", color = Color.Black) }
+            DropdownMenuItem(onClick = { /* TODO: Save */ }) {
+                Text("Save", color = Color.Black)
+            }
             DropdownMenuItem(onClick = {
                 expanded = false
                 showSaveAsDialog = true
-            }) { Text("Save as", color = Color.Black) }
-            DropdownMenuItem(onClick = { /* Handle delete! */ }) { Text("Delete", color = Color.Black) }
-            DropdownMenuItem(onClick = { /* Handle example! */ }) { Text("Example", color = Color.Black) }
+            }) {
+                Text("Save as", color = Color.Black)
+            }
+            DropdownMenuItem(onClick = { /* TODO: Delete */ }) {
+                Text("Delete", color = Color.Black)
+            }
+            DropdownMenuItem(onClick = { /* TODO: Example */ }) {
+                Text("Example", color = Color.Black)
+            }
         }
-    }
-
-    if (showNewGraphDialog) {
-        NewGraphDialog(onDismissRequest = { showNewGraphDialog = false })
     }
 
     if (showSaveAsDialog) {
@@ -109,19 +100,24 @@ private fun EditMenu() {
     Box {
         TextButton(
             onClick = { expanded = true },
-            colors = textButtonColors(
+            colors = ButtonDefaults.textButtonColors(
                 contentColor = MaterialTheme.colors.onPrimary
             )
         ) {
             Text("Edit")
         }
+
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
             modifier = Modifier.background(Color.White)
         ) {
-            DropdownMenuItem(onClick = { /* Handle Undo! */ }) { Text("Undo", color = Color.Black) }
-            DropdownMenuItem(onClick = { /* Handle Redo! */ }) { Text("Redo", color = Color.Black) }
+            DropdownMenuItem(onClick = { /* Undo */ }) {
+                Text("Undo", color = Color.Black)
+            }
+            DropdownMenuItem(onClick = { /* Redo */ }) {
+                Text("Redo", color = Color.Black)
+            }
         }
     }
 }
@@ -132,7 +128,7 @@ private fun ViewMenu() {
 
     TextButton(
         onClick = { showViewDialog = true },
-        colors = textButtonColors(
+        colors = ButtonDefaults.textButtonColors(
             contentColor = MaterialTheme.colors.onPrimary
         )
     ) {
@@ -145,24 +141,17 @@ private fun ViewMenu() {
 }
 
 @Composable
-private fun AlgorithmsMenu() {
-    var showAlgorithmsDialog by remember { mutableStateOf(false) }
-
+private fun AlgorithmsMenu(onClick: () -> Unit) {
     TextButton(
-        onClick = { showAlgorithmsDialog = true },
-        colors = textButtonColors(
+        onClick = onClick,
+        colors = ButtonDefaults.textButtonColors(
             contentColor = MaterialTheme.colors.onPrimary
         )
     ) {
         Text("Algorithms")
     }
-
-    if (showAlgorithmsDialog) {
-        AlgorithmsDialog(onDismissRequest = { showAlgorithmsDialog = false })
-    }
 }
 
-//добавить меню выбора языка с radiobutton
 @Composable
 fun SettingsMenu() {
     var expanded by remember { mutableStateOf(false) }
@@ -170,21 +159,22 @@ fun SettingsMenu() {
     Box {
         TextButton(
             onClick = { expanded = true },
-            colors = textButtonColors(
+            colors = ButtonDefaults.textButtonColors(
                 contentColor = MaterialTheme.colors.onPrimary
             )
         ) {
             Text("Settings")
         }
+
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
             modifier = Modifier.background(Color.White)
         ) {
-            DropdownMenuItem(onClick = {expanded = false}) {
+            DropdownMenuItem(onClick = { expanded = false }) {
                 Text("Language", color = Color.Black)
             }
-            DropdownMenuItem(onClick = {expanded = false}) {
+            DropdownMenuItem(onClick = { expanded = false }) {
                 Text("Reset default", color = Color.Black)
             }
         }
@@ -200,12 +190,13 @@ fun HelpMenu() {
     Box {
         TextButton(
             onClick = { expanded = true },
-            colors = textButtonColors(
+            colors = ButtonDefaults.textButtonColors(
                 contentColor = MaterialTheme.colors.onPrimary
             )
         ) {
             Text("Help")
         }
+
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
@@ -227,11 +218,10 @@ fun HelpMenu() {
     }
 
     if (showDocumentation) {
-        DocumentationDialog(onDismissRequest = {showDocumentation = false}
-        )
+        DocumentationDialog(onDismissRequest = { showDocumentation = false })
     }
 
     if (showAbout) {
-        AboutDialog(onDismissRequest = {showAbout = false})
+        AboutDialog(onDismissRequest = { showAbout = false })
     }
 }

@@ -1,58 +1,133 @@
 package org.graphApp.view.dialogs
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import org.graphApp.view.components.CloseButton
+import androidx.compose.ui.unit.sp
 
 @Composable
-fun NewGraphDialog(
-    onDismissRequest: () -> Unit
+fun NewGraphPanel(
+    modifier: Modifier = Modifier,
+    onClose: () -> Unit
 ) {
-    Dialog(onDismissRequest = onDismissRequest) {
-        Surface(
-            shape = RoundedCornerShape(10.dp),
-            color = MaterialTheme.colors.surface,
-            modifier = Modifier,
-            elevation = 8.dp
+    var name by remember { mutableStateOf("") }
+    var showWeights by remember { mutableStateOf(true) }
+    var showId by remember { mutableStateOf(false) }
+    var showDirected by remember { mutableStateOf(false) }
+
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(10.dp),
+        color = MaterialTheme.colors.surface,
+        elevation = 8.dp
+    ) {
+        val scrollState = rememberScrollState()
+
+        Column(
+
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.Start,
+            modifier = Modifier
+                .padding(8.dp)
+                .verticalScroll(scrollState)
         ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(16.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "New Graph",
-                    style = MaterialTheme.typography.h6
-                )
+                Box(modifier = Modifier.weight(0.67f))
 
                 Text(
-                    text = "Ooops"
+                    text = "Graph",
+                    style = MaterialTheme.typography.h6.copy(
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 16.sp,
+                        color = activeTrackColor
+                    ),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 8.dp)
                 )
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start
-                ) {
-                    CloseButton(onClick = onDismissRequest, text = "Cancel")
+                // Правая часть — кнопка закрытия
+                IconButton(onClick = onClose) {
+                    Icon(Icons.Default.Close, contentDescription = "Close")
                 }
+            }
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
+            OutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                placeholder = { Text("Enter name", fontSize = 13.sp) },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                textStyle = MaterialTheme.typography.body2.copy(fontSize = 14.sp),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    backgroundColor = MaterialTheme.colors.onSurface.copy(alpha = 0.1f)
+                )
+            )
+
+
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(6.dp),
+                color = MaterialTheme.colors.onSurface.copy(alpha = 0.1f),
+            ) {
+                Column(
+                    modifier = Modifier.padding(2.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    CloseButton(onClick = onDismissRequest, text = "Cancel")
+                    Text(
+                        "Display Options:",
+                        style = MaterialTheme.typography.h6.copy(
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = activeTrackColor
+                        ),
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+
+                        )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        LabelCheckbox("Show weights", showWeights) { showWeights = it }
+                        LabelCheckbox("Show id", showId) { showId = it }
+                    }
+
+                    LabelCheckbox("Show directed", showDirected) { showDirected = it }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun LabelCheckbox(text: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Checkbox(
+            checked = checked, onCheckedChange = onCheckedChange,
+            colors = CheckboxDefaults.colors(
+                checkedColor = activeTrackColor,
+                uncheckedColor = activeTrackColor
+            ),
+//            modifier = Modifier.scale(0.8f)
+        )
+        Text(
+            text = text,
+            fontSize = 14.sp
+        )
     }
 }
