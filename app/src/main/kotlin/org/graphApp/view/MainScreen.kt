@@ -1,7 +1,6 @@
 package org.graphApp.view
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -15,7 +14,7 @@ import org.graphApp.view.dialogs.AlgorithmsDialog
 import org.graphApp.view.dialogs.NewGraphPanel
 
 @Composable
-fun <V, E> MainScreen(viewModel: MainScreenViewModel<V, E>) {
+fun <V, E> MainScreen(viewModel: MainScreenViewModel<V, E>, onCloseRequest: () -> Unit) {
     GraphTheme {
         var showAlgorithmsPanel by remember { mutableStateOf(false) }
         var showNewGraphPanel by remember { mutableStateOf(false) }
@@ -23,7 +22,8 @@ fun <V, E> MainScreen(viewModel: MainScreenViewModel<V, E>) {
         Column(modifier = Modifier.fillMaxSize()) {
             TopBarMenu(
                 onToggleAlgorithms = { showAlgorithmsPanel = !showAlgorithmsPanel },
-                onShowNewGraph = { showNewGraphPanel = true }
+                onShowNewGraph = { showNewGraphPanel = true },
+                onCloseRequest = onCloseRequest
             )
 
             Row(modifier = Modifier.fillMaxSize()) {
@@ -62,7 +62,7 @@ fun <V, E> MainScreen(viewModel: MainScreenViewModel<V, E>) {
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(10.dp),
-                    color = MaterialTheme.colors.surface
+                    color = MaterialTheme.colors.background
                 ) {
                     GraphView(viewModel.graphViewModel)
                 }
