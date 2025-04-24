@@ -16,7 +16,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 // перенести отсюда ввод имени во ViewDialog
-
+// ввод названия графа вынести в SaveAsDialog
+// тут только display options должны быть или, мб, что-нибудь еще (???)
 @Composable
 fun NewGraphPanel(
     modifier: Modifier = Modifier,

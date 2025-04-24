@@ -1,7 +1,6 @@
 package org.graphApp.view.dialogs
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,7 +22,8 @@ import kotlin.math.roundToInt
 
 const val START_ZOOM_POSITION = 250
 
-
+// ViewDialog: вытащить theme и zoom отдельно во view (???)
+// какая-то проблема с расположением кнопок (при полном размере экрана они съезжают, а в уменьшенном окне все ок)
 @Composable
 fun ViewDialog(
     onDismissRequest: () -> Unit
