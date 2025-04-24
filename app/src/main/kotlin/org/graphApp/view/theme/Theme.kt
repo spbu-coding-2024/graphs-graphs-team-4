@@ -9,10 +9,10 @@ import androidx.compose.ui.graphics.Color
 
 // нужно еще будет реализовать переключение темы, а еще цвета подобрать
 val LightColorScheme = lightColors(
-    primary = PrimaryColor,
-    primaryVariant = ButtonColor,
-    background = FrameColor,
-    surface = DarkGray,
+    primary = TopAppBarColor,
+    primaryVariant = FrameColor,
+    background = BackgroundDarkGray,
+    surface = DialogColorBackground,
     onPrimary = Color.White,
     onSecondary = Color.Black,
     onBackground = Color.Black,
@@ -20,9 +20,9 @@ val LightColorScheme = lightColors(
 )
 
 val DarkColorScheme = darkColors(
-    primary = PrimaryColor,
+    primary = TopAppBarColor,
     background = FrameColor,
-    surface = DarkGray,
+    surface = BackgroundDarkGray,
     onPrimary = Color.Black,
     onSecondary = Color.White,
     onBackground = Color.White,
@@ -43,6 +43,3 @@ fun GraphTheme(
         content = content
     )
 }
-
-
-

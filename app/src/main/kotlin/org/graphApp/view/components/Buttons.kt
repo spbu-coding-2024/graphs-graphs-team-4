@@ -3,20 +3,12 @@ package org.graphApp.view.components
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.graphics.PathFillType
-import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.StrokeJoin
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.path
 
 @Composable
 fun CloseButton(
@@ -27,8 +19,8 @@ fun CloseButton(
         onClick = onClick,
         shape = RoundedCornerShape(15.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colors.primaryVariant,
-            contentColor = Color.White
+            backgroundColor = Color(0xFFB3B3B3),
+            contentColor = Color(0xFF1A0202)
         ),
         modifier = Modifier.padding(8.dp)
     ) {
@@ -47,8 +39,8 @@ fun SaveButton(
         onClick = onClick,
         shape = RoundedCornerShape(15.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colors.primaryVariant,
-            contentColor = Color.White
+            backgroundColor = Color(0xFFB3B3B3),
+            contentColor = Color(0xFF1A0202)
         ),
         modifier = Modifier.padding(8.dp)
     ) {
@@ -68,8 +60,8 @@ fun ResetButton(
         onClick = onClick,
         shape = RoundedCornerShape(15.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colors.primaryVariant,
-            contentColor = Color.White
+            backgroundColor = Color(0xFFB3B3B3),
+            contentColor = Color(0xFF1A0202)
         ),
         modifier = Modifier.padding(8.dp)
     ) {
@@ -89,8 +81,8 @@ fun OkButton(
         onClick = onClick,
         shape = RoundedCornerShape(15.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colors.primaryVariant,
-            contentColor = Color.White
+            backgroundColor = Color(0xFFB3B3B3),
+            contentColor = Color(0xFF1A0202)
         ),
         modifier = Modifier.padding(8.dp)
     ) {

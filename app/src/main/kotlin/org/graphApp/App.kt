@@ -35,19 +35,19 @@ val sampleGraph: Graph<String, Long> = UndirectedGraph<String, Long>().apply {
 
 @Composable
 @Preview
-fun App() {
+fun App(onCloseRequest: () -> Unit) {
     MaterialTheme {
-        MainScreen(MainScreenViewModel(sampleGraph, CircularPlacementStrategy()))
+        MainScreen(MainScreenViewModel(sampleGraph, CircularPlacementStrategy()), onCloseRequest = onCloseRequest)
     }
 }
 
 //  надо будет добавить иконку приложения
-//  перенести кнопки управления окном и название приложения в topbar
+//  перенести кнопки управления окном в topbar
 fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
-        title = "GraphViz"
+        title = ""
     ) {
-        App()
+        App(::exitApplication)
     }
 }

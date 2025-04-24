@@ -10,10 +10,14 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+// перенести отсюда ввод имени во ViewDialog
+// ввод названия графа вынести в SaveAsDialog
+// тут только display options должны быть или, мб, что-нибудь еще (???)
 @Composable
 fun NewGraphPanel(
     modifier: Modifier = Modifier,
@@ -67,17 +71,19 @@ fun NewGraphPanel(
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
-                placeholder = { Text("Enter name", fontSize = 13.sp) },
+                placeholder = { Text(
+                    "Enter name",
+                    color = Color(0xFFB3B3B3),
+                    fontSize = 13.sp) },
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
                 textStyle = MaterialTheme.typography.body2.copy(fontSize = 14.sp),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    backgroundColor = MaterialTheme.colors.onSurface.copy(alpha = 0.1f)
+                    backgroundColor = Color(0xFF3C3030)
                 )
             )
-
 
             Surface(
                 modifier = Modifier.fillMaxWidth(),
@@ -96,7 +102,6 @@ fun NewGraphPanel(
                             color = activeTrackColor
                         ),
                         modifier = Modifier.align(Alignment.CenterHorizontally),
-
                         )
 
                     Row(

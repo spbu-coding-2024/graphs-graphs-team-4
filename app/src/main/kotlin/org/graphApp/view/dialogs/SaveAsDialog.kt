@@ -12,6 +12,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.text.font.FontWeight
 import org.graphApp.view.components.*
 
+// ввод названия графа NewGraphDialog вынести сюда
 @Composable
 fun SaveAsDialog(
     onDismissRequest: () -> Unit
