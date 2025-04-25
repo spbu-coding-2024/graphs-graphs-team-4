@@ -79,7 +79,7 @@ fun NewGraphPanel(
                 modifier = Modifier
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
-                textStyle = MaterialTheme.typography.body2.copy(fontSize = 14.sp),
+                textStyle = MaterialTheme.typography.body2.copy(fontSize = 14.sp, color = Color.White),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     backgroundColor = Color(0xFF3C3030)
                 )
