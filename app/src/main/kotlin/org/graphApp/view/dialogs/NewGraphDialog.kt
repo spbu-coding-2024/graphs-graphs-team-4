@@ -15,17 +15,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// перенести отсюда ввод имени во ViewDialog
-// ввод названия графа вынести в SaveAsDialog
-// тут только display options должны быть или, мб, что-нибудь еще (???)
 @Composable
 fun NewGraphPanel(
     modifier: Modifier = Modifier,
     onClose: () -> Unit
 ) {
-    var name by remember { mutableStateOf("") }
     var showWeights by remember { mutableStateOf(true) }
-    var showId by remember { mutableStateOf(false) }
     var showDirected by remember { mutableStateOf(false) }
 
     Surface(
@@ -51,7 +46,7 @@ fun NewGraphPanel(
                 Box(modifier = Modifier.weight(0.67f))
 
                 Text(
-                    text = "Graph",
+                    text = "New Graph",
                     style = MaterialTheme.typography.h6.copy(
                         fontWeight = FontWeight.ExtraBold,
                         fontSize = 16.sp,
@@ -68,23 +63,6 @@ fun NewGraphPanel(
                 }
             }
 
-            OutlinedTextField(
-                value = name,
-                onValueChange = { name = it },
-                placeholder = { Text(
-                    "Enter name",
-                    color = Color(0xFFB3B3B3),
-                    fontSize = 13.sp) },
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                textStyle = MaterialTheme.typography.body2.copy(fontSize = 14.sp, color = Color.White),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    backgroundColor = Color(0xFF3C3030)
-                )
-            )
-
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(6.dp),
@@ -95,24 +73,22 @@ fun NewGraphPanel(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        "Display Options:",
+                        "Check type:",
                         style = MaterialTheme.typography.h6.copy(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = activeTrackColor
                         ),
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        modifier = Modifier.align(Alignment.Start),
                         )
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        LabelCheckbox("Show weights", showWeights) { showWeights = it }
-                        LabelCheckbox("Show id", showId) { showId = it }
+                        LabelCheckbox("Weights", showWeights) { showWeights = it }
+                        LabelCheckbox("Directed", showDirected) { showDirected = it }
                     }
-
-                    LabelCheckbox("Show directed", showDirected) { showDirected = it }
                 }
             }
         }
@@ -128,7 +104,6 @@ fun LabelCheckbox(text: String, checked: Boolean, onCheckedChange: (Boolean) -> 
                 checkedColor = activeTrackColor,
                 uncheckedColor = activeTrackColor
             ),
-//            modifier = Modifier.scale(0.8f)
         )
         Text(
             text = text,
