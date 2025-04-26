@@ -30,4 +30,7 @@ class GraphViewModel<V, E>(
     val edges: Collection<EdgeViewModel<E, V>>
         get() = _edges.values
 
+
+
+    
 }

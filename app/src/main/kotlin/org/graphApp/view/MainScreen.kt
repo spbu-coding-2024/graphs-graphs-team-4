@@ -12,6 +12,7 @@ import org.graphApp.viewmodel.MainScreenViewModel
 import org.graphApp.view.theme.GraphTheme
 import org.graphApp.view.dialogs.AlgorithmsDialog
 import org.graphApp.view.dialogs.NewGraphPanel
+import org.graphApp.view.graph.RightClickPopupOnEmptyArea
 
 @Composable
 fun <V, E> MainScreen(viewModel: MainScreenViewModel<V, E>, onCloseRequest: () -> Unit) {
@@ -64,7 +65,9 @@ fun <V, E> MainScreen(viewModel: MainScreenViewModel<V, E>, onCloseRequest: () -
                         .padding(10.dp),
                     color = MaterialTheme.colors.background
                 ) {
+
                     GraphView(viewModel.graphViewModel)
+                    RightClickPopupOnEmptyArea()
                 }
             }
         }

@@ -48,4 +48,8 @@ class VertexViewModel<V>(
         _x.value += offset.x.dp
         _y.value += offset.y.dp
     }
+
+    fun getVertex(): Vertex<V> {
+        return v
+    }
 }

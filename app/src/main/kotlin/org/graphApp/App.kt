@@ -10,7 +10,7 @@ import org.graphApp.model.graph.Graph
 import org.graphApp.model.graph.UndirectedGraph
 import org.graphApp.view.MainScreen
 import org.graphApp.viewmodel.MainScreenViewModel
-import org.graphApp.viewmodel.graph.CircularPlacementStrategy
+
 val sampleGraph: Graph<String, Long> = UndirectedGraph<String, Long>().apply {
 
     listOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N").forEach {
@@ -37,7 +37,7 @@ val sampleGraph: Graph<String, Long> = UndirectedGraph<String, Long>().apply {
 @Preview
 fun App(onCloseRequest: () -> Unit) {
     MaterialTheme {
-        MainScreen(MainScreenViewModel(sampleGraph, CircularPlacementStrategy()), onCloseRequest = onCloseRequest)
+        MainScreen(MainScreenViewModel(sampleGraph), onCloseRequest = onCloseRequest)
     }
 }
 
