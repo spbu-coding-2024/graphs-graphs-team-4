@@ -99,9 +99,9 @@ fun AddFolderButton(
 ) {
         Icon(
             imageVector = addFolder,
-            contentDescription = "Zoom Out",
+            contentDescription = "Add Folder",
             modifier = Modifier.size(40.dp)
                 .clickable(onClick = onClick)
-                .padding(8.dp)
+                .padding(5.dp)
         )
 }
