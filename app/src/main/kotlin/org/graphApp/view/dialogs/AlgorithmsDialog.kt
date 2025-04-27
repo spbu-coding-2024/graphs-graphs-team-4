@@ -21,11 +21,10 @@ fun AlgorithmsDialog(
     onClose: () -> Unit
 ) {
     Surface(
-        modifier = modifier,
+        color = MaterialTheme.colors.surface,
         shape = RoundedCornerShape(10.dp),
-        color = MaterialTheme.colors.surface.copy(alpha = 1.0f),
-        elevation = 8.dp
-    ) {
+
+        ) {
         val scrollState = rememberScrollState()
 
         Column(
@@ -43,9 +42,9 @@ fun AlgorithmsDialog(
                 Text(
                     text = "Algorithms",
                     style = MaterialTheme.typography.h6.copy(
-                        fontWeight = FontWeight.ExtraBold,
+                        fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp,
-                        color = activeTrackColor
+                        color = MaterialTheme.colors.onPrimary
                     ),
                     modifier = Modifier
                         .weight(1f)
@@ -57,12 +56,16 @@ fun AlgorithmsDialog(
                 }
             }
 
-            Divider()
+
+            Divider(
+                color = MaterialTheme.colors.onPrimary.copy(alpha = 0.5f),
+                thickness = 1.dp
+            )
 
             Text(
                 text = "Basic",
                 style = MaterialTheme.typography.h6.copy(
-                    fontWeight = FontWeight.Bold, color = activeTrackColor
+                    fontWeight = FontWeight.Bold, color = MaterialTheme.colors.onPrimary
                 )
             )
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -78,7 +81,7 @@ fun AlgorithmsDialog(
             Text(
                 text = "Classical",
                 style = MaterialTheme.typography.h6.copy(
-                    fontWeight = FontWeight.Bold, color = activeTrackColor
+                    fontWeight = FontWeight.Bold, color = MaterialTheme.colors.onPrimary
                 )
             )
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -104,10 +107,7 @@ fun AlgorithmsDialog(
     }
 }
 
-val bubbleColor: Color = Color(0xFF2F2F2F)
-val stemColor: Color = Color(0xFF2F2F2F)
 val activeTrackColor: Color = Color(0xFF1B0B0B)
-val inactiveTrackColor: Color = Color(0xFFDDDDDD)
 
 @Composable
 fun LabeledCheckbox(text: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
@@ -116,13 +116,16 @@ fun LabeledCheckbox(text: String, checked: Boolean, onCheckedChange: (Boolean) -
             checked = checked,
             onCheckedChange = onCheckedChange,
             colors = CheckboxDefaults.colors(
-                checkedColor = activeTrackColor,
-                uncheckedColor = activeTrackColor
+                checkedColor = MaterialTheme.colors.primaryVariant,
+                uncheckedColor = MaterialTheme.colors.onPrimary
             )
         )
         Text(
             text = text,
-            fontSize = 15.sp
+            fontSize = 15.sp,
+            color = MaterialTheme.colors.onPrimary,
+            fontWeight = FontWeight.Light
+
         )
     }
 }
@@ -137,13 +140,15 @@ fun LabeledRadioButton(text: String, selected: Boolean, onClick: () -> Unit) {
             selected = selected,
             onClick = onClick,
             colors = RadioButtonDefaults.colors(
-                selectedColor = activeTrackColor,
-                unselectedColor = activeTrackColor
+                selectedColor = MaterialTheme.colors.primaryVariant,
+                unselectedColor = MaterialTheme.colors.onPrimary
             )
         )
         Text(
             text = text,
-            fontSize = 15.sp
+            fontSize = 15.sp,
+            color = MaterialTheme.colors.onPrimary,
+            fontWeight = FontWeight.Light
         )
     }
 }

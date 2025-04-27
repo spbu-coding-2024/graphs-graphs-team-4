@@ -3,6 +3,7 @@ package org.graphApp.view.graph.edge
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,14 +25,14 @@ fun <E, V> EdgeView(
     var start = Offset.Zero
     var end = Offset.Zero
     Canvas(modifier = modifier.fillMaxSize()) {
-            val vCenter = Offset(
-                viewModel.u.x.toPx() + viewModel.u.radius.toPx(),
-                viewModel.u.y.toPx() + viewModel.u.radius.toPx(),
-            )
-            val uCenter = Offset(
-                viewModel.v.x.toPx() + viewModel.v.radius.toPx(),
-                viewModel.v.y.toPx() + viewModel.v.radius.toPx(),
-            )
+        val vCenter = Offset(
+            viewModel.u.x.toPx() + viewModel.u.radius.toPx(),
+            viewModel.u.y.toPx() + viewModel.u.radius.toPx(),
+        )
+        val uCenter = Offset(
+            viewModel.v.x.toPx() + viewModel.v.radius.toPx(),
+            viewModel.v.y.toPx() + viewModel.v.radius.toPx(),
+        )
 
         val angle = atan2(
             vCenter.y - uCenter.y,
@@ -51,7 +52,7 @@ fun <E, V> EdgeView(
         drawLine(
             start = start,
             end = end,
-            color = Color.Black,
+            color = Color(0xFF696969),
             strokeWidth = 2f
         )
     }
@@ -67,8 +68,9 @@ fun <E, V> EdgeView(
     }
 
     if (true) {
-        Canvas(modifier = modifier.fillMaxSize()) {
 
+        Canvas(modifier = modifier.fillMaxSize()) {
+            val arrowColor = Color(0xFF696969)
             val arrowPosition = Offset(
                 start.x + (end.x - start.x) * PLACE_ARROW_PARAM,
                 start.y + (end.y - start.y) * PLACE_ARROW_PARAM
@@ -87,8 +89,8 @@ fun <E, V> EdgeView(
                 arrowPosition.y - arrowLen * sin(angle + arrowAngle)
             )
 
-            drawLine(color = Color.Black, start = arrowPosition, end = arrowPoint1, strokeWidth = 3f)
-            drawLine(color = Color.Black, start = arrowPosition, end = arrowPoint2, strokeWidth = 3f)
+            drawLine(color = arrowColor, start = arrowPosition, end = arrowPoint1, strokeWidth = 3f)
+            drawLine(color = arrowColor, start = arrowPosition, end = arrowPoint2, strokeWidth = 3f)
         }
     }
 }

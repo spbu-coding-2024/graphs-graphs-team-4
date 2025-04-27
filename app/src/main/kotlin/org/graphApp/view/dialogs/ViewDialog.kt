@@ -26,28 +26,40 @@ const val START_ZOOM_POSITION = 250
 // какая-то проблема с расположением кнопок (при полном размере экрана они съезжают, а в уменьшенном окне все ок)
 @Composable
 fun ViewDialog(
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
+    selectedTheme: String,
+    onThemeChange: (String) -> Unit
 ) {
     var sliderPosition by remember { mutableStateOf(START_ZOOM_POSITION) }
-    var selectedTheme by remember { mutableStateOf("Auto") }
     val listOfThemes = listOf("Light", "Dark", "Auto")
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
-            shape = RoundedCornerShape(10.dp),
             color = MaterialTheme.colors.surface,
-            modifier = Modifier,
-            elevation = 8.dp
+            shape = RoundedCornerShape(10.dp),
+            modifier = Modifier.width(350.dp).height(550.dp)
+
         ) {
             Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(4.dp)
             ) {
                 Text(
                     text = "View",
-                    style = MaterialTheme.typography.h6
+                    style = MaterialTheme.typography.h6,
+                    color = MaterialTheme.colors.onPrimary,
+                    modifier = Modifier.padding(top = 16.dp)
                 )
-
+                Divider(
+                    modifier = Modifier.padding(
+                        start = 30.dp,
+                        end = 30.dp,
+                        top = 10.dp,
+                        bottom = 10.dp
+                    ),
+                    color = MaterialTheme.colors.onPrimary.copy(alpha = 0.6f),
+                    thickness = 1.dp
+                )
                 Row(
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically,
@@ -56,13 +68,17 @@ fun ViewDialog(
                     Icon(
                         imageVector = chooseYourTheme,
                         contentDescription = null,
-                        modifier = Modifier.size(30.dp)
+                        modifier = Modifier
+                            .size(30.dp)
+                            .offset(30.dp)
                     )
                     Spacer(Modifier.width(5.dp))
                     Text(
                         text = "Theme",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colors.onPrimary,
+                        modifier = Modifier.padding(start = 16.dp).offset(14.dp)
                     )
                 }
 
@@ -76,17 +92,23 @@ fun ViewDialog(
                         ) {
                             RadioButton(
                                 selected = text == selectedTheme,
-                                onClick = { selectedTheme = text },
+                                onClick = {
+                                    if (text != selectedTheme) {
+                                        onThemeChange(text)
+                                    }
+                                },
                                 colors = RadioButtonDefaults.colors(
-                                    selectedColor = Color.Black
+                                    selectedColor = MaterialTheme.colors.primaryVariant,
+                                    unselectedColor = MaterialTheme.colors.onPrimary
                                 )
                             )
                             Text(
                                 text = text,
                                 style = MaterialTheme.typography.body1,
-                                color = Color.Black,
+                                color = MaterialTheme.colors.onPrimary,
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 18.sp
+                                fontSize = 16.sp,
+                                modifier = Modifier.padding(start = 8.dp)
                             )
                         }
                     }
@@ -100,13 +122,17 @@ fun ViewDialog(
                     Icon(
                         imageVector = zoomSign,
                         contentDescription = null,
-                        modifier = Modifier.size(30.dp)
+                        modifier = Modifier
+                            .size(30.dp)
+                            .offset(30.dp)
                     )
                     Spacer(Modifier.width(5.dp))
                     Text(
                         text = "Zoom",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colors.onPrimary,
+                        modifier = Modifier.padding(start = 16.dp).offset(14.dp)
                     )
                 }
 
@@ -129,16 +155,16 @@ fun ViewDialog(
                     )
                 }
 
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     CloseButton(onClick = onDismissRequest, text = "Cancel")
-                    Spacer(Modifier.width(250.dp))
-                    OkButton(onClick = onDismissRequest, text = "OK")
+                    OkButton(onClick = onDismissRequest, text = "  OK  ")
                 }
+
             }
+
         }
     }
 }
@@ -153,8 +179,8 @@ fun ZoomSlider(
     zoomOutIcon: ImageVector,
     bubbleColor: Color = Color(0xFF2F2F2F),
     stemColor: Color = Color(0xFF2F2F2F),
-    thumbColor: Color = Color.Black,
-    activeTrackColor: Color = Color(0xFF1B0B0B),
+    thumbColor: Color = MaterialTheme.colors.primaryVariant,
+    activeTrackColor: Color = MaterialTheme.colors.primaryVariant,
     inactiveTrackColor: Color = Color(0xFFDDDDDD)
 ) {
     val density = LocalDensity.current
