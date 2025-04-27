@@ -1,13 +1,17 @@
 package org.graphApp.viewmodel
 
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import org.graphApp.model.graph.Graph
 import org.graphApp.viewmodel.graph.GraphViewModel
-import org.graphApp.viewmodel.graph.RepresentationStrategy
+import sun.awt.X11.XUtilConstants.ZoomState
 
-class MainScreenViewModel<V, E>(graph: Graph<V, E>, private val representationStrategy: RepresentationStrategy) {
+
+
+class MainScreenViewModel<E>(graph: Graph<String, E>) {
     private var _showVerticesLabels = mutableStateOf(false)
+
+
     var showVerticesLabels: Boolean
         get() = _showVerticesLabels.value
         set(value) {
@@ -32,19 +36,14 @@ class MainScreenViewModel<V, E>(graph: Graph<V, E>, private val representationSt
         get() = _showDirections.value
         set(v) { _showDirections.value = v }
 
+    var zoomState = mutableFloatStateOf(2.5f)
 
-    val graphViewModel = GraphViewModel(graph, _showVerticesLabels, _showEdgesWeights, _showDirections)
 
-    init {
-        representationStrategy.place(800.0, 600.0, graphViewModel.vertices)
+    val graphViewModel = GraphViewModel(graph, _showVerticesLabels, _showEdgesWeights, _showDirections, zoomState)
+
+    fun zoomConverter(sliderValue: Int) : Float {
+        return sliderValue.toFloat() / 100f
     }
 
-    fun resetGraphView() {
-        representationStrategy.place(800.0, 600.0, graphViewModel.vertices)
-        graphViewModel.vertices.forEach { v -> v.color = Color.Gray }
-    }
 
-    fun setVerticesColor() {
-        representationStrategy.highlight(graphViewModel.vertices)
-    }
 }

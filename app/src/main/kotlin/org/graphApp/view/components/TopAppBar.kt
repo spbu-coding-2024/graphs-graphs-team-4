@@ -14,10 +14,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import org.graphApp.view.START_ZOOM_POSITION
 import org.graphApp.view.dialogs.AboutDialog
 import org.graphApp.view.dialogs.QuickGuideDialog
 import org.graphApp.view.dialogs.SaveAsDialog
 import org.graphApp.view.dialogs.ViewDialog
+import org.graphApp.viewmodel.MainScreenViewModel
 
 // какая-то проблема с расположением кнопок во ViewDialog
 // убрать AlgorithmMenu во ViewMenu (???)
@@ -26,10 +28,11 @@ import org.graphApp.view.dialogs.ViewDialog
 // добавить кнопку "Развернуть"
 
 @Composable
-fun TopBarMenu(
+fun <E> TopBarMenu(
+    mainVm: MainScreenViewModel<E>,
     onToggleAlgorithms: () -> Unit,
     onShowNewGraph: () -> Unit,
-    onCloseRequest: () -> Unit
+    onCloseRequest: () -> Unit,
 ) {
     Surface(
         modifier = Modifier
@@ -49,7 +52,8 @@ fun TopBarMenu(
             ) {
                 FileMenu(onNewGraph = onShowNewGraph)
                 EditMenu()
-                ViewMenu()
+                ViewMenu(onNewGraph = onShowNewGraph, mainVm = mainVm)
+
                 AlgorithmsMenu(onClick = onToggleAlgorithms)
                 SettingsMenu()
                 HelpMenu()
@@ -66,7 +70,6 @@ fun TopBarMenu(
                 )
             }
 
-            // кнопки управления окном
             Row(
                 modifier = Modifier.weight(1f),
                 verticalAlignment = Alignment.CenterVertically,
@@ -322,7 +325,11 @@ private fun EditMenu() {
 }
 
 @Composable
-private fun ViewMenu() {
+private fun <E> ViewMenu(
+    mainVm: MainScreenViewModel<E>,
+    onNewGraph: () -> Unit,
+    sliderposition: Int = START_ZOOM_POSITION
+    ) {
     var expanded by remember { mutableStateOf(false) }
     var showViewDialog by remember { mutableStateOf(false) }
 
@@ -366,7 +373,7 @@ private fun ViewMenu() {
             }
 
             if (showViewDialog) {
-                ViewDialog(onDismissRequest = { showViewDialog = false })
+                ViewDialog(onDismissRequest = { showViewDialog = false }, mainVm = mainVm)
             }
         }
     }

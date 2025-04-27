@@ -18,15 +18,15 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import org.graphApp.view.components.*
+import org.graphApp.viewmodel.MainScreenViewModel
 import kotlin.math.roundToInt
 
 const val START_ZOOM_POSITION = 250
 
-// ViewDialog: вытащить theme и zoom отдельно во view (???)
-// какая-то проблема с расположением кнопок (при полном размере экрана они съезжают, а в уменьшенном окне все ок)
 @Composable
-fun ViewDialog(
-    onDismissRequest: () -> Unit
+fun <E> ViewDialog(
+    mainVm: MainScreenViewModel<E>,
+    onDismissRequest: () -> Unit,
 ) {
     var sliderPosition by remember { mutableStateOf(START_ZOOM_POSITION) }
     var selectedTheme by remember { mutableStateOf("Auto") }
@@ -113,7 +113,9 @@ fun ViewDialog(
                 ZoomSlider(
                     value = sliderPosition,
                     valueRange = 100..400,
-                    onValueChange = { sliderPosition = it },
+                    onValueChange = { sliderPosition = it
+
+                                    },
                     modifier = Modifier.padding(top = 8.dp),
                     zoomInIcon = zoomIn,
                     zoomOutIcon = zoomOut
@@ -134,9 +136,20 @@ fun ViewDialog(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Start
                 ) {
-                    CloseButton(onClick = onDismissRequest, text = "Cancel")
-                    Spacer(Modifier.width(250.dp))
-                    OkButton(onClick = onDismissRequest, text = "OK")
+                    Column (
+                        horizontalAlignment = Alignment.Start,
+                        modifier = Modifier.fillMaxWidth(0.5f)
+                    ){
+                        CloseButton(onClick = onDismissRequest, text = "Cancel")
+                    }
+                    Column (horizontalAlignment = Alignment.End,
+                        modifier = Modifier.fillMaxWidth()) {
+                        OkButton(onClick = {
+                            mainVm.zoomState.floatValue = mainVm.zoomConverter(sliderPosition)
+                            onDismissRequest()
+                            println("zoom now is ${mainVm.zoomState}")
+                        }, text = "OK")
+                    }
                 }
             }
         }
@@ -245,7 +258,9 @@ fun ZoomSlider(
 
             Slider(
                 value = value.toFloat(),
-                onValueChange = { onValueChange(it.roundToInt()) },
+                onValueChange = { onValueChange(it.roundToInt())
+
+                                },
                 valueRange = valueRange.first.toFloat()..valueRange.last.toFloat(),
                 colors = SliderDefaults.colors(
                     thumbColor = thumbColor,

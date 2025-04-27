@@ -9,22 +9,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import org.graphApp.viewmodel.graph.VertexViewModel
 
 @Composable
 fun <V> VertexView(
     viewModel: VertexViewModel<V>,
     modifier: Modifier = Modifier,
+    zoom: Float = 2.5f
 ) {
     Box(modifier = modifier
-        .size(viewModel.radius * 2, viewModel.radius * 2)
+        .size(viewModel.radius * 2 * zoom, viewModel.radius * 2 * zoom)
         .offset(viewModel.x, viewModel.y)
         .background(
             color = viewModel.color,
             shape = CircleShape
         )
-        .pointerInput(viewModel) {
+        .pointerInput(viewModel, zoom) {
             detectDragGestures { change, dragAmount ->
                 change.consume()
                 viewModel.onDrag(dragAmount)
@@ -41,3 +44,6 @@ fun <V> VertexView(
         }
     }
 }
+
+
+
