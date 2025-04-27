@@ -14,10 +14,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import org.graphApp.view.START_ZOOM_POSITION
 import org.graphApp.view.dialogs.AboutDialog
 import org.graphApp.view.dialogs.QuickGuideDialog
 import org.graphApp.view.dialogs.SaveAsDialog
 import org.graphApp.view.dialogs.ViewDialog
+import org.graphApp.viewmodel.MainScreenViewModel
 
 // какая-то проблема с расположением кнопок во ViewDialog
 // убрать AlgorithmMenu во ViewMenu (???)
@@ -26,12 +28,14 @@ import org.graphApp.view.dialogs.ViewDialog
 // добавить кнопку "Развернуть"
 
 @Composable
-fun TopBarMenu(
+fun <E> TopBarMenu(
+
     onToggleAlgorithms: () -> Unit,
     onShowNewGraph: () -> Unit,
     onCloseRequest: () -> Unit,
     onToggleTheme: () -> Unit,
-    mainThemeDark: Boolean
+    mainThemeDark: Boolean,
+    mainVm: MainScreenViewModel<E>
 ) {
     Surface(
         modifier = Modifier
@@ -51,7 +55,7 @@ fun TopBarMenu(
             ) {
                 FileMenu(onNewGraph = onShowNewGraph)
                 EditMenu()
-                ViewMenu(mainThemeDark, onToggleTheme)
+                ViewMenu(onNewGraph = onShowNewGraph, mainVm = mainVm, mainThemeDark, onToggleTheme)
                 AlgorithmsMenu(onClick = onToggleAlgorithms)
                 SettingsMenu()
                 HelpMenu()
@@ -68,7 +72,6 @@ fun TopBarMenu(
                 )
             }
 
-            // кнопки управления окном
             Row(
                 modifier = Modifier.weight(1f),
                 verticalAlignment = Alignment.CenterVertically,
@@ -324,7 +327,14 @@ private fun EditMenu() {
 }
 
 @Composable
-private fun ViewMenu(mainThemeDark: Boolean, onToggleTheme: () -> Unit) {
+// sliderposition: Int = START_ZOOM_POSITION,
+private fun <E> ViewMenu(
+    onNewGraph: () -> Unit,
+    mainVm: MainScreenViewModel<E>,
+    mainThemeDark: Boolean,
+    onToggleTheme: () -> Unit
+    ) {
+
     var expanded by remember { mutableStateOf(false) }
     var showViewDialog by remember { mutableStateOf(false) }
 
@@ -369,6 +379,7 @@ private fun ViewMenu(mainThemeDark: Boolean, onToggleTheme: () -> Unit) {
 
             if (showViewDialog) {
                 ViewDialog(
+                    mainVm = mainVm,
                     selectedTheme = if (mainThemeDark) "Light" else "Dark",
                     onThemeChange = { newTheme ->
                         onToggleTheme()

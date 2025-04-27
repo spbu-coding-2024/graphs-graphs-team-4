@@ -1,7 +1,5 @@
 package org.graphApp.model.graph
 
-import org.graphApp.model.graph.WeightedGraph.DataWeightedEdge
-
 internal class DirectGraph<V, E> : DirectedUnWeightedGraph<V, E> {
     private val _vertices = hashMapOf<Long, Vertex<V>>()
     private val elementToVertex = hashMapOf<V, Vertex<V>>()
