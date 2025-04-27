@@ -33,7 +33,7 @@ fun <E> ViewDialog(
     val listOfThemes = listOf("Light", "Dark", "Auto")
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
-            shape = RoundedCornerShape(10.dp),
+            shape = RoundedCornerShape(16.dp),
             color = MaterialTheme.colors.surface,
             modifier = Modifier,
             elevation = 8.dp
@@ -41,53 +41,64 @@ fun <E> ViewDialog(
             Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(4.dp)
+                modifier = Modifier.padding(24.dp)
             ) {
                 Text(
                     text = "View",
-                    style = MaterialTheme.typography.h6
+                    style = MaterialTheme.typography.h6,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
 
-                Row(
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Icon(
-                        imageVector = chooseYourTheme,
-                        contentDescription = null,
-                        modifier = Modifier.size(30.dp)
-                    )
-                    Spacer(Modifier.width(5.dp))
-                    Text(
-                        text = "Theme",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
-                    )
+                    Row(
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(
+                            imageVector = chooseYourTheme,
+                            contentDescription = null,
+                            modifier = Modifier.size(30.dp)
+                        )
+                        Spacer(Modifier.width(5.dp))
+                        Text(
+                            text = "Theme",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp
+                        )
+                    }
                 }
 
-                listOfThemes.forEach { text ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    listOfThemes.forEach { text ->
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center,
                         ) {
-                            RadioButton(
-                                selected = text == selectedTheme,
-                                onClick = { selectedTheme = text },
-                                colors = RadioButtonDefaults.colors(
-                                    selectedColor = Color.Black
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center,
+                            ) {
+                                RadioButton(
+                                    selected = text == selectedTheme,
+                                    onClick = { selectedTheme = text },
+                                    colors = RadioButtonDefaults.colors(
+                                        selectedColor = Color.Black
+                                    )
                                 )
-                            )
-                            Text(
-                                text = text,
-                                style = MaterialTheme.typography.body1,
-                                color = Color.Black,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 18.sp
-                            )
+                                Text(
+                                    text = text,
+                                    style = MaterialTheme.typography.body1,
+                                    color = Color.Black,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 18.sp
+                                )
+                            }
                         }
                     }
                 }
@@ -113,9 +124,7 @@ fun <E> ViewDialog(
                 ZoomSlider(
                     value = sliderPosition,
                     valueRange = 100..400,
-                    onValueChange = { sliderPosition = it
-
-                                    },
+                    onValueChange = { sliderPosition = it },
                     modifier = Modifier.padding(top = 8.dp),
                     zoomInIcon = zoomIn,
                     zoomOutIcon = zoomOut
