@@ -52,7 +52,7 @@ fun <E> TopBarMenu(
             ) {
                 FileMenu(onNewGraph = onShowNewGraph)
                 EditMenu()
-                ViewMenu(onNewGraph = onShowNewGraph, mainVm = mainVm)
+                ViewMenu(mainVm = mainVm)
 
                 AlgorithmsMenu(onClick = onToggleAlgorithms)
                 SettingsMenu()
@@ -327,7 +327,6 @@ private fun EditMenu() {
 @Composable
 private fun <E> ViewMenu(
     mainVm: MainScreenViewModel<E>,
-    onNewGraph: () -> Unit,
     sliderposition: Int = START_ZOOM_POSITION
     ) {
     var expanded by remember { mutableStateOf(false) }
@@ -557,7 +556,7 @@ fun HelpMenu() {
                 }
             ) {
                 Text(
-                    "Quick Guide",
+                    "Quick Start",
                     color = MaterialTheme.colors.onSurface,
                     fontWeight = FontWeight.Medium
                 )

@@ -1,9 +1,11 @@
 package org.graphApp.view.dialogs
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,7 +32,7 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
             elevation = 8.dp
         ) {
             Column(
-//                verticalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .padding(16.dp)
@@ -41,11 +43,9 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
                     color = MaterialTheme.colors.onBackground,
                     style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold)
                 )
-
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.Start
+                    horizontalAlignment = Alignment.Start,
                 ) {
                     Text(
                         text = "Create Vertex:",
@@ -54,7 +54,6 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
                     )
                 }
                 Column(
-//                    verticalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.Start
                 ) {
@@ -68,8 +67,10 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
                         color = MaterialTheme.colors.onBackground
                     )
                 }
+
+                Box(modifier = Modifier.padding(start = 10.dp).height(16.dp))
+
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.Start
                 ) {
@@ -80,7 +81,6 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
                     )
                 }
                 Column(
-//                    verticalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.Start
                 ) {
@@ -89,15 +89,17 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
                             """
                                 1) Right-click first vertex (source)
                                 2) Right-click second vertex (target):
-                                    - Directed graph: edge from 1st → 2nd vertex
-                                    - Undirected graph: bidirectional edge 
+                                        - Directed graph: edge from 1st → 2nd vertex
+                                        - Undirected graph: bidirectional edge 
                         """
                                 .trimIndent(),
                         color = MaterialTheme.colors.onBackground
                     )
                 }
+
+                Box(modifier = Modifier.padding(start = 10.dp).height(16.dp))
+
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.Start
                 ) {
@@ -108,7 +110,6 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
                     )
                 }
                 Column(
-//                    verticalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.Start
                 ) {
@@ -122,8 +123,10 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
                         color = MaterialTheme.colors.onBackground
                     )
                 }
+
+                Box(modifier = Modifier.padding(start = 10.dp).height(16.dp))
+
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.Start
                 ) {
@@ -134,7 +137,6 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
                     )
                 }
                 Column(
-//                    verticalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.Start
                 ) {
@@ -148,8 +150,10 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
                         color = MaterialTheme.colors.onBackground
                     )
                 }
+
+                Box(modifier = Modifier.padding(start = 10.dp).height(16.dp))
+
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.Start
                 ) {
@@ -160,7 +164,6 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
                     )
                 }
                 Column(
-//                    verticalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.Start
                 ) {
@@ -173,7 +176,6 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
                         color = MaterialTheme.colors.onBackground
                     )
                 }
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
