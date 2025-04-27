@@ -8,24 +8,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 // нужно еще будет реализовать переключение темы, а еще цвета подобрать
-val LightColorScheme = lightColors(
-    primary = TopAppBarColor,
-    primaryVariant = FrameColor,
-    background = BackgroundDarkGray,
-    surface = DialogColorBackground,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black
-)
-
 val DarkColorScheme = darkColors(
     primary = TopAppBarColor,
-    background = FrameColor,
+    primaryVariant = Color(0xFF0C0C0C),
+    background = Color(0xFF1E1E1E),
+    surface = Color(0xFF373737),
+    onPrimary = Color(0xFFD5D5D5),
+    onSecondary = Color(0xFFFFFFFF),
+    onBackground = Color(0xFFD5D5D5),
+    onSurface = Color(0xFFB3B3B3)
+)
+
+val LightColorScheme = lightColors(
+    primary = TopAppBarColor,
+    background = Color.White,
     surface = BackgroundDarkGray,
     onPrimary = Color.Black,
     onSecondary = Color.White,
-    onBackground = Color.White,
+    onBackground = Color.Black,
     onSurface = Color.White,
 )
 
@@ -34,7 +34,7 @@ fun GraphTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
+    val colorScheme = if (darkTheme) LightColorScheme else DarkColorScheme
 
     MaterialTheme(
         colors = colorScheme,

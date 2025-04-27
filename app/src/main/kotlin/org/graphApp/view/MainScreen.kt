@@ -1,6 +1,7 @@
 package org.graphApp.view
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -15,26 +16,32 @@ import org.graphApp.view.dialogs.AlgorithmsDialog
 import org.graphApp.view.dialogs.NewGraphPanel
 import org.graphApp.view.graph.RightClickPopupOnEmptyArea
 
+
+
 const val START_ZOOM_POSITION = 250
 
 @Composable
-fun <E> MainScreen(viewModel: MainScreenViewModel<E>,onCloseRequest: () -> Unit) {
-    GraphTheme {
-        var showAlgorithmsPanel by remember { mutableStateOf(false) }
-        var showNewGraphPanel by remember { mutableStateOf(false) }
-        var sliderPositionLocal by remember { mutableStateOf(START_ZOOM_POSITION) }
+fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit) {
+    var mainThemeDark by remember { mutableStateOf(false) }
+    var sliderPositionLocal by remember { mutableStateOf(START_ZOOM_POSITION) }
+    var showAlgorithmsPanel by remember { mutableStateOf(false) }
+    var showNewGraphPanel by remember { mutableStateOf(false) }
 
+    GraphTheme(darkTheme = mainThemeDark) {
         Column(modifier = Modifier.fillMaxSize()) {
             TopBarMenu(
                 onToggleAlgorithms = { showAlgorithmsPanel = !showAlgorithmsPanel },
+                onToggleTheme = { mainThemeDark = !mainThemeDark },
                 onShowNewGraph = { showNewGraphPanel = true },
                 onCloseRequest = onCloseRequest,
+                mainThemeDark = mainThemeDark,
                 mainVm = viewModel
             )
 
             Row(modifier = Modifier.fillMaxSize()) {
                 AnimatedVisibility(
-                    visible = showAlgorithmsPanel || showNewGraphPanel
+                    visible = showAlgorithmsPanel || showNewGraphPanel,
+                    modifier = Modifier.background(MaterialTheme.colors.background)
                 ) {
                     Column(
                         modifier = Modifier
@@ -66,18 +73,17 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>,onCloseRequest: () -> Unit)
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(10.dp)
                 ) {
                     GraphView(
                         viewModel.graphViewModel,
-                        zoom = viewModel.zoomState.floatValue,
+                        zoom = viewModel.zoomState.floatValue
                     )
 
                     RightClickPopupOnEmptyArea(
                         viewModel = viewModel,
                         modifier = Modifier
                             .fillMaxSize()
-                            .zIndex(2f),
+                            .zIndex(2f)
                     )
                 }
             }
