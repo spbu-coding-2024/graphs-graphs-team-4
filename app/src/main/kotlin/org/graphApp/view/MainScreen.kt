@@ -73,7 +73,6 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(10.dp)
                 ) {
                     GraphView(
                         viewModel.graphViewModel,
