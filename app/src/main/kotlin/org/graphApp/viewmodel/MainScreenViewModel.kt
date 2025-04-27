@@ -1,12 +1,17 @@
 package org.graphApp.viewmodel
 
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import org.graphApp.model.graph.Graph
 import org.graphApp.viewmodel.graph.GraphViewModel
+import sun.awt.X11.XUtilConstants.ZoomState
 
-class MainScreenViewModel<V, E>(graph: Graph<V, E>) {
+
+
+class MainScreenViewModel<E>(graph: Graph<String, E>) {
     private var _showVerticesLabels = mutableStateOf(false)
+
+
     var showVerticesLabels: Boolean
         get() = _showVerticesLabels.value
         set(value) {
@@ -31,9 +36,14 @@ class MainScreenViewModel<V, E>(graph: Graph<V, E>) {
         get() = _showDirections.value
         set(v) { _showDirections.value = v }
 
+    var zoomState = mutableFloatStateOf(2.5f)
 
-    val graphViewModel = GraphViewModel(graph, _showVerticesLabels, _showEdgesWeights, _showDirections)
 
+    val graphViewModel = GraphViewModel(graph, _showVerticesLabels, _showEdgesWeights, _showDirections, zoomState)
+
+    fun zoomConverter(sliderValue: Int) : Float {
+        return sliderValue.toFloat() / 100f
+    }
 
 
 }
