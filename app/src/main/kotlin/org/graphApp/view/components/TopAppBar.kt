@@ -14,7 +14,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import org.graphApp.view.START_ZOOM_POSITION
 import org.graphApp.view.dialogs.AboutDialog
 import org.graphApp.view.dialogs.QuickGuideDialog
 import org.graphApp.view.dialogs.SaveAsDialog
@@ -29,16 +28,18 @@ import org.graphApp.viewmodel.MainScreenViewModel
 
 @Composable
 fun <E> TopBarMenu(
-    mainVm: MainScreenViewModel<E>,
     onToggleAlgorithms: () -> Unit,
     onShowNewGraph: () -> Unit,
     onCloseRequest: () -> Unit,
+    onToggleTheme: () -> Unit,
+    mainThemeDark: Boolean,
+    mainVm: MainScreenViewModel<E>
 ) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
             .height(37.dp),
-        color = MaterialTheme.colors.primary
+        color = MaterialTheme.colors.surface
     ) {
         Row(
             modifier = Modifier
@@ -52,8 +53,7 @@ fun <E> TopBarMenu(
             ) {
                 FileMenu(onNewGraph = onShowNewGraph)
                 EditMenu()
-                ViewMenu(mainVm = mainVm)
-
+                ViewMenu(mainVm = mainVm, mainThemeDark, onToggleTheme)
                 AlgorithmsMenu(onClick = onToggleAlgorithms)
                 SettingsMenu()
                 HelpMenu()
@@ -100,13 +100,13 @@ private fun FileMenu(onNewGraph: () -> Unit) {
             onClick = { expanded = true },
             colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.onPrimary)
         ) {
-            Text("File")
+            Text("File", fontWeight = FontWeight.Light, color = MaterialTheme.colors.onSecondary)
         }
 
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.background(Color.White)
+            modifier = Modifier.background(MaterialTheme.colors.surface)
         ) {
             DropdownMenuItem(
                 onClick = {
@@ -166,7 +166,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
                         )
                     }
                 }
-                DropdownMenuItem(onClick = { /* TODO: open */}) {
+                DropdownMenuItem(onClick = { /* TODO: open */ }) {
                     Box(modifier = Modifier.padding(start = 55.dp)) {
                         Text(
                             "ooops-1",
@@ -175,7 +175,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
                         )
                     }
                 }
-                DropdownMenuItem(onClick = { /* TODO: open */}) {
+                DropdownMenuItem(onClick = { /* TODO: open */ }) {
                     Box(modifier = Modifier.padding(start = 55.dp)) {
                         Text(
                             "ooops-2",
@@ -185,7 +185,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
                     }
                 }
 
-                DropdownMenuItem(onClick = { /* TODO: open */}) {
+                DropdownMenuItem(onClick = { /* TODO: open */ }) {
                     Box(modifier = Modifier.padding(start = 55.dp)) {
                         Text(
                             "ooops-3",
@@ -195,7 +195,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
                     }
                 }
 
-                DropdownMenuItem(onClick = { /* TODO: Load */}) {
+                DropdownMenuItem(onClick = { /* TODO: Load */ }) {
                     Row(
                         modifier = Modifier.padding(start = 40.dp),
                         verticalAlignment = Alignment.CenterVertically,
@@ -218,7 +218,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
                 }
             }
 
-            DropdownMenuItem(onClick = { /* TODO: Save */}) {
+            DropdownMenuItem(onClick = { /* TODO: Save */ }) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -251,7 +251,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
                 }
             }
 
-            DropdownMenuItem(onClick = { /* TODO: reset */}) {
+            DropdownMenuItem(onClick = { /* TODO: reset */ }) {
                 Box(modifier = Modifier.padding(start = 28.dp)) {
                     Text(
                         "Reset",
@@ -277,15 +277,15 @@ private fun EditMenu() {
             onClick = { expanded = true },
             colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.onPrimary)
         ) {
-            Text("Edit")
+            Text("Edit", fontWeight = FontWeight.Light, color = MaterialTheme.colors.onSecondary)
         }
 
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.background(Color.White)
+            modifier = Modifier.background(MaterialTheme.colors.surface)
         ) {
-            DropdownMenuItem(onClick = { /* Undo */}) {
+            DropdownMenuItem(onClick = { /* Undo */ }) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -303,7 +303,7 @@ private fun EditMenu() {
                 }
             }
 
-            DropdownMenuItem(onClick = { /* Redo */}) {
+            DropdownMenuItem(onClick = { /* Redo */ }) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -325,9 +325,11 @@ private fun EditMenu() {
 }
 
 @Composable
+// sliderposition: Int = START_ZOOM_POSITION,
 private fun <E> ViewMenu(
     mainVm: MainScreenViewModel<E>,
-    sliderposition: Int = START_ZOOM_POSITION
+    mainThemeDark: Boolean,
+    onToggleTheme: () -> Unit
     ) {
     var expanded by remember { mutableStateOf(false) }
     var showViewDialog by remember { mutableStateOf(false) }
@@ -337,13 +339,13 @@ private fun <E> ViewMenu(
             onClick = { expanded = true },
             colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.onPrimary)
         ) {
-            Text("View")
+            Text("View", fontWeight = FontWeight.Light, color = MaterialTheme.colors.onSecondary)
         }
 
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.background(Color.White)
+            modifier = Modifier.background(MaterialTheme.colors.surface)
         ) {
             DropdownMenuItem(onClick = { showViewDialog = true }) {
                 Row(
@@ -352,13 +354,12 @@ private fun <E> ViewMenu(
                 ) {
                     Text(
                         "Settings",
-                        color = MaterialTheme.colors.onSurface,
                         fontWeight = FontWeight.Medium
                     )
                 }
             }
 
-            DropdownMenuItem(onClick = { /* Reset */}) {
+            DropdownMenuItem(onClick = { /* Reset */ }) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -372,7 +373,14 @@ private fun <E> ViewMenu(
             }
 
             if (showViewDialog) {
-                ViewDialog(onDismissRequest = { showViewDialog = false }, mainVm = mainVm)
+                ViewDialog(
+                    mainVm = mainVm,
+                    selectedTheme = if (mainThemeDark) "Light" else "Dark",
+                    onThemeChange = { newTheme ->
+                        onToggleTheme()
+                    },
+                    onDismissRequest = { showViewDialog = false }
+                )
             }
         }
     }
@@ -387,13 +395,17 @@ private fun AlgorithmsMenu(onClick: () -> Unit) {
             onClick = { expanded = true },
             colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.onPrimary)
         ) {
-            Text("Algorithms")
+            Text(
+                "Algorithms",
+                fontWeight = FontWeight.Light,
+                color = MaterialTheme.colors.onSecondary
+            )
         }
 
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.background(Color.White)
+            modifier = Modifier.background(MaterialTheme.colors.surface)
         ) {
             DropdownMenuItem(onClick = onClick) {
                 Row(
@@ -408,7 +420,7 @@ private fun AlgorithmsMenu(onClick: () -> Unit) {
                 }
             }
 
-            DropdownMenuItem(onClick = { /* Reset */}) {
+            DropdownMenuItem(onClick = { /* Reset */ }) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -434,7 +446,12 @@ fun SettingsMenu() {
             onClick = { expanded = true },
             colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.onPrimary)
         ) {
-            Text("Settings")
+            Text(
+                "Settings",
+                fontWeight = FontWeight.Light,
+                color = MaterialTheme.colors.onSecondary
+            )
+
         }
 
         DropdownMenu(
@@ -443,7 +460,7 @@ fun SettingsMenu() {
                 expanded = false
                 languageExpanded = false
             },
-            modifier = Modifier.background(Color.White)
+            modifier = Modifier.background(MaterialTheme.colors.surface)
         ) {
             DropdownMenuItem(onClick = { languageExpanded = !languageExpanded }) {
                 Row(
@@ -489,10 +506,10 @@ fun SelectLanguage(modifier: Modifier = Modifier) {
     val radioOptions = listOf("English", "Russian")
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
 
-    Column(modifier.selectableGroup()) {
+    Column(modifier = modifier.selectableGroup()) {
         radioOptions.forEach { text ->
             Row(
-                Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
                     .selectable(
                         selected = (text == selectedOption),
                         onClick = { onOptionSelected(text) },
@@ -528,13 +545,13 @@ fun HelpMenu() {
             onClick = { expanded = true },
             colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.onPrimary)
         ) {
-            Text("Help")
+            Text("Help", fontWeight = FontWeight.Light, color = MaterialTheme.colors.onSecondary)
         }
 
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.background(Color.White)
+            modifier = Modifier.background(MaterialTheme.colors.surface)
         ) {
             DropdownMenuItem(
                 onClick = {

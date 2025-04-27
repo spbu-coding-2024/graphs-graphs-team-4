@@ -1,5 +1,6 @@
 package org.graphApp.view.dialogs
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,10 +25,8 @@ fun NewGraphPanel(
     var showDirected by remember { mutableStateOf(false) }
 
     Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(10.dp),
         color = MaterialTheme.colors.surface,
-        elevation = 8.dp
+        shape = RoundedCornerShape(10.dp)
     ) {
         val scrollState = rememberScrollState()
 
@@ -50,14 +49,13 @@ fun NewGraphPanel(
                     style = MaterialTheme.typography.h6.copy(
                         fontWeight = FontWeight.ExtraBold,
                         fontSize = 16.sp,
-                        color = activeTrackColor
+                        color = MaterialTheme.colors.onPrimary
                     ),
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 8.dp)
                 )
 
-                // Правая часть — кнопка закрытия
                 IconButton(onClick = onClose) {
                     Icon(Icons.Default.Close, contentDescription = "Close")
                 }
@@ -69,7 +67,7 @@ fun NewGraphPanel(
                 color = MaterialTheme.colors.onSurface.copy(alpha = 0.1f),
             ) {
                 Column(
-                    modifier = Modifier.padding(2.dp),
+                    modifier = Modifier.padding(15.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
@@ -77,14 +75,14 @@ fun NewGraphPanel(
                         style = MaterialTheme.typography.h6.copy(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
-                            color = activeTrackColor
+                            color = MaterialTheme.colors.onPrimary
                         ),
                         modifier = Modifier.align(Alignment.Start),
-                        )
+                    )
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
                         LabelCheckbox("Weights", showWeights) { showWeights = it }
                         LabelCheckbox("Directed", showDirected) { showDirected = it }
@@ -101,8 +99,8 @@ fun LabelCheckbox(text: String, checked: Boolean, onCheckedChange: (Boolean) -> 
         Checkbox(
             checked = checked, onCheckedChange = onCheckedChange,
             colors = CheckboxDefaults.colors(
-                checkedColor = activeTrackColor,
-                uncheckedColor = activeTrackColor
+                checkedColor = MaterialTheme.colors.primaryVariant,
+                uncheckedColor = MaterialTheme.colors.onPrimary
             ),
         )
         Text(
