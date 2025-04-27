@@ -10,15 +10,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import org.graphApp.view.components.*
 
-// ввод названия графа NewGraphDialog вынести сюда
+// добавить обработку названия графа с подсказками для пользователя, чтобы был корректный ввод
 @Composable
 fun SaveAsDialog(
     onDismissRequest: () -> Unit
 ) {
     var selectedOption by remember { mutableStateOf("JSON")}
     val options = listOf("JSON", "Neo4j", "SQLite")
+    var name by remember { mutableStateOf("") }
 
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
@@ -32,6 +34,22 @@ fun SaveAsDialog(
                 horizontalAlignment = Alignment.Start,
                 modifier = Modifier.padding(16.dp)
             ) {
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    placeholder = { Text(
+                        "Enter name",
+                        color = Color(0xFFB3B3B3),
+                        fontSize = 13.sp) },
+                    singleLine = true,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    textStyle = MaterialTheme.typography.body2.copy(fontSize = 14.sp, color = Color.White),
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        backgroundColor = Color(0xFF3C3030)
+                    )
+                )
                 Text(
                     text = "Choose a saving format:",
                     fontWeight = FontWeight.Bold,

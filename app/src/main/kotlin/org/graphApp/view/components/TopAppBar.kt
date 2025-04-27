@@ -23,7 +23,6 @@ import org.graphApp.viewmodel.MainScreenViewModel
 
 // какая-то проблема с расположением кнопок во ViewDialog
 // убрать AlgorithmMenu во ViewMenu (???)
-// ввод названия графа из DisplayOptionsDialog вынести в SaveAsDialog
 // ViewDialog: вытащить theme и zoom отдельно в view (???)
 // добавить кнопку "Свернуть"
 // добавить кнопку "Развернуть"
@@ -51,9 +50,10 @@ fun <E> TopBarMenu(
                 modifier = Modifier.weight(1f),
                 horizontalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-                FileMenu()
+                FileMenu(onNewGraph = onShowNewGraph)
                 EditMenu()
                 ViewMenu(onNewGraph = onShowNewGraph, mainVm = mainVm)
+
                 AlgorithmsMenu(onClick = onToggleAlgorithms)
                 SettingsMenu()
                 HelpMenu()
@@ -90,7 +90,7 @@ fun <E> TopBarMenu(
 }
 
 @Composable
-private fun FileMenu() {
+private fun FileMenu(onNewGraph: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     var openExpanded by remember { mutableStateOf(false) }
     var showSaveAsDialog by remember { mutableStateOf(false) }
@@ -108,7 +108,12 @@ private fun FileMenu() {
             onDismissRequest = { expanded = false },
             modifier = Modifier.background(Color.White)
         ) {
-            DropdownMenuItem(onClick = { expanded = false }) {
+            DropdownMenuItem(
+                onClick = {
+                    expanded = false
+                    onNewGraph()
+                }
+            ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -245,6 +250,16 @@ private fun FileMenu() {
                     )
                 }
             }
+
+            DropdownMenuItem(onClick = { /* TODO: reset */}) {
+                Box(modifier = Modifier.padding(start = 28.dp)) {
+                    Text(
+                        "Reset",
+                        color = MaterialTheme.colors.onSurface,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+            }
         }
     }
 
@@ -315,7 +330,6 @@ private fun <E> ViewMenu(
     onNewGraph: () -> Unit,
     sliderposition: Int = START_ZOOM_POSITION
     ) {
-
     var expanded by remember { mutableStateOf(false) }
     var showViewDialog by remember { mutableStateOf(false) }
 
@@ -332,20 +346,6 @@ private fun <E> ViewMenu(
             onDismissRequest = { expanded = false },
             modifier = Modifier.background(Color.White)
         ) {
-            DropdownMenuItem(
-                onClick = {
-                    expanded = false
-                    onNewGraph()
-                }
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text("Display Options", color = Color.Black, fontWeight = FontWeight.Medium)
-                }
-            }
-
             DropdownMenuItem(onClick = { showViewDialog = true }) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
