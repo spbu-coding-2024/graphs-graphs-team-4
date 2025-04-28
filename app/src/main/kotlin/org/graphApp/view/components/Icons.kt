@@ -1123,3 +1123,272 @@ public val Arrow_drop_down: ImageVector
     }
 
 private var _Arrow_drop_down: ImageVector? = null
+
+public val RestoreWindowIcon: ImageVector
+    get() {
+        if (_RestoreWindowIcon != null) {
+            return _RestoreWindowIcon!!
+        }
+        _RestoreWindowIcon = ImageVector.Builder(
+            name = "RestoreWindowIcon",
+            defaultWidth = 122.88.dp,
+            defaultHeight = 114.64.dp,
+            viewportWidth = 122.88f,
+            viewportHeight = 114.64f
+        ).apply {
+            group {
+                path(
+                    fill = SolidColor(Color.Black),
+                    fillAlpha = 1.0f,
+                    stroke = null,
+                    strokeAlpha = 1.0f,
+                    strokeLineWidth = 1.0f,
+                    strokeLineCap = StrokeCap.Butt,
+                    strokeLineJoin = StrokeJoin.Miter,
+                    strokeLineMiter = 1.0f,
+                    pathFillType = PathFillType.EvenOdd
+                ) {
+                    moveTo(8.284f, 36.331f)
+                    horizontalLineToRelative(22.438f)
+                    verticalLineTo(9.749f)
+                    curveTo(30.7220f, 4.3880f, 35.110f, 00f, 40.4710f, 00f)
+                    horizontalLineToRelative(72.66f)
+                    curveToRelative(5.3610f, 00f, 9.7490f, 4.3880f, 9.7490f, 9.7490f)
+                    verticalLineToRelative(72.66f)
+                    curveToRelative(00f, 5.360f, -4.3880f, 9.7490f, -9.7490f, 9.7490f)
+                    horizontalLineToRelative(-34.82f)
+                    verticalLineToRelative(14.197f)
+                    curveToRelative(00f, 4.5610f, -3.7230f, 8.2840f, -8.2830f, 8.2840f)
+                    horizontalLineTo(8.284f)
+                    curveToRelative(-4.5610f, 00f, -8.2840f, -3.7240f, -8.2840f, -8.2840f)
+                    verticalLineTo(44.614f)
+                    curveTo(00f, 40.0540f, 3.7230f, 36.3310f, 8.2840f, 36.3310f)
+                    lineTo(8.284f, 36.331f)
+                    close()
+                    moveTo(30.722f, 56.694f)
+                    horizontalLineTo(7.851f)
+                    verticalLineToRelative(43.469f)
+                    curveToRelative(00f, 3.6460f, 2.9790f, 6.6260f, 6.6260f, 6.6260f)
+                    horizontalLineToRelative(49.357f)
+                    curveToRelative(3.6460f, 00f, 6.6270f, -2.9790f, 6.6270f, -6.6260f)
+                    verticalLineToRelative(-8.005f)
+                    horizontalLineToRelative(-29.99f)
+                    curveToRelative(-5.3610f, 00f, -9.7490f, -4.3890f, -9.7490f, -9.7490f)
+                    verticalLineTo(56.694f)
+                    lineTo(30.722f, 56.694f)
+                    close()
+                    moveTo(113.635f, 25.634f)
+                    horizontalLineToRelative(-73.67f)
+                    verticalLineToRelative(49.487f)
+                    curveToRelative(00f, 4.2880f, 3.5040f, 7.7920f, 7.7940f, 7.7920f)
+                    horizontalLineToRelative(58.084f)
+                    curveToRelative(4.2880f, 00f, 7.7920f, -3.5040f, 7.7920f, -7.7920f)
+                    verticalLineTo(25.634f)
+                    lineTo(113.635f, 25.634f)
+                    close()
+                }
+            }
+        }.build()
+        return _RestoreWindowIcon!!
+    }
+
+private var _RestoreWindowIcon: ImageVector? = null
+
+
+public val CollapseMinusIcon: ImageVector
+    get() {
+        if (_CollapseMinusIcon != null) {
+            return _CollapseMinusIcon!!
+        }
+        _CollapseMinusIcon = ImageVector.Builder(
+            name = "CollapseMinusIcon",
+            defaultWidth = 122.88.dp,
+            defaultHeight = 119.72.dp,
+            viewportWidth = 122.88f,
+            viewportHeight = 119.72f
+        ).apply {
+            group {
+                path(
+                    fill = SolidColor(Color.Black),
+                    fillAlpha = 1.0f,
+                    stroke = null,
+                    strokeAlpha = 1.0f,
+                    strokeLineWidth = 1.0f,
+                    strokeLineCap = StrokeCap.Butt,
+                    strokeLineJoin = StrokeJoin.Miter,
+                    strokeLineMiter = 1.0f,
+                    pathFillType = PathFillType.NonZero
+                ) {
+                    moveTo(22.72f, 0f)
+                    horizontalLineToRelative(77.45f)
+                    curveToRelative(6.250f, 00f, 11.930f, 2.560f, 16.050f, 6.670f)
+                    curveToRelative(4.110f, 4.110f, 6.670f, 9.790f, 6.670f, 16.050f)
+                    verticalLineToRelative(74.29f)
+                    curveToRelative(00f, 6.250f, -2.560f, 11.930f, -6.670f, 16.050f)
+                    lineToRelative(-0.32f, 0.29f)
+                    curveToRelative(-4.090f, 3.940f, -9.640f, 6.380f, -15.730f, 6.380f)
+                    horizontalLineTo(22.72f)
+                    curveToRelative(-6.250f, 00f, -11.930f, -2.560f, -16.050f, -6.670f)
+                    lineToRelative(-0.3f, -0.32f)
+                    curveTo(2.430f, 108.640f, 00f, 103.090f, 00f, 97.010f)
+                    verticalLineTo(22.71f)
+                    curveToRelative(00f, -6.250f, 2.550f, -11.930f, 6.670f, -16.050f)
+                    curveTo(10.780f, 2.550f, 16.460f, 00f, 22.720f, 00f)
+                    lineTo(22.72f, 0f)
+                    close()
+                    moveTo(39.92f, 65.83f)
+                    curveToRelative(-3.30f, 00f, -5.970f, -2.670f, -5.970f, -5.970f)
+                    curveToRelative(00f, -3.30f, 2.670f, -5.970f, 5.970f, -5.970f)
+                    horizontalLineToRelative(43.05f)
+                    curveToRelative(3.30f, 00f, 5.970f, 2.670f, 5.970f, 5.970f)
+                    curveToRelative(00f, 3.30f, -2.670f, 5.970f, -5.970f, 5.970f)
+                    horizontalLineTo(39.92f)
+                    lineTo(39.92f, 65.83f)
+                    close()
+                    moveTo(100.16f, 10.24f)
+                    horizontalLineTo(22.72f)
+                    curveToRelative(-3.430f, 00f, -6.550f, 1.410f, -8.810f, 3.670f)
+                    curveToRelative(-2.260f, 2.260f, -3.670f, 5.380f, -3.670f, 8.810f)
+                    verticalLineToRelative(74.29f)
+                    curveToRelative(00f, 3.330f, 1.310f, 6.350f, 3.430f, 8.590f)
+                    lineToRelative(0.24f, 0.22f)
+                    curveToRelative(2.260f, 2.260f, 5.380f, 3.670f, 8.810f, 3.670f)
+                    horizontalLineToRelative(77.45f)
+                    curveToRelative(3.320f, 00f, 6.350f, -1.310f, 8.590f, -3.440f)
+                    lineToRelative(0.21f, -0.23f)
+                    curveToRelative(2.260f, -2.260f, 3.670f, -5.380f, 3.670f, -8.810f)
+                    verticalLineTo(22.71f)
+                    curveToRelative(00f, -3.420f, -1.410f, -6.540f, -3.670f, -8.810f)
+                    curveTo(106.710f, 11.650f, 103.590f, 10.240f, 100.160f, 10.240f)
+                    lineTo(100.16f, 10.24f)
+                    close()
+                }
+            }
+        }.build()
+        return _CollapseMinusIcon!!
+    }
+
+private var _CollapseMinusIcon: ImageVector? = null
+
+public val CloseWindowIcon: ImageVector
+    get() {
+        if (_CloseWindowIcon != null) {
+            return _CloseWindowIcon!!
+        }
+        _CloseWindowIcon = ImageVector.Builder(
+            name = "CloseWindowIcon",
+            defaultWidth = 122.88.dp,
+            defaultHeight = 119.79.dp,
+            viewportWidth = 122.88f,
+            viewportHeight = 119.79f
+        ).apply {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(23.5f, 0f)
+                horizontalLineTo(99.38f)
+                arcToRelative(23.56f, 23.56f, 0f, isMoreThanHalf = false, isPositiveArc = true, 23.5f, 23.5f)
+                verticalLineTo(96.29f)
+                arcToRelative(23.56f, 23.56f, 0f, isMoreThanHalf = false, isPositiveArc = true, -23.5f, 23.5f)
+                horizontalLineTo(23.5f)
+                arcToRelative(23.44f, 23.44f, 0f, isMoreThanHalf = false, isPositiveArc = true, -16.6f, -6.9f)
+                lineToRelative(-0.37f, -0.4f)
+                arcTo(23.43f, 23.43f, 0f, isMoreThanHalf = false, isPositiveArc = true, 0f, 96.29f)
+                verticalLineTo(23.5f)
+                arcTo(23.56f, 23.56f, 0f, isMoreThanHalf = false, isPositiveArc = true, 23.5f, 0f)
+                close()
+                moveTo(41f, 49.35f)
+                arcToRelative(7f, 7f, 0f, isMoreThanHalf = false, isPositiveArc = true, 9.89f, -9.89f)
+                lineTo(61.44f, 50f)
+                lineTo(72f, 39.46f)
+                arcToRelative(7f, 7f, 0f, isMoreThanHalf = true, isPositiveArc = true, 9.89f, 9.9f)
+                lineTo(71.33f, 59.9f)
+                lineTo(81.87f, 70.43f)
+                arcTo(7f, 7f, 0f, isMoreThanHalf = false, isPositiveArc = true, 72f, 80.33f)
+                lineTo(61.44f, 69.79f)
+                lineTo(50.9f, 80.33f)
+                arcTo(7f, 7f, 0f, isMoreThanHalf = false, isPositiveArc = true, 41f, 70.43f)
+                lineTo(51.55f, 59.89f)
+                lineTo(41f, 49.35f)
+                close()
+                moveTo(99.38f, 12.52f)
+                horizontalLineTo(23.5f)
+                arcToRelative(11f, 11f, 0f, isMoreThanHalf = false, isPositiveArc = false, -11f, 11f)
+                verticalLineTo(96.29f)
+                arcToRelative(10.92f, 10.92f, 0f, isMoreThanHalf = false, isPositiveArc = false, 3f, 7.49f)
+                lineToRelative(0.27f, 0.26f)
+                arcToRelative(11f, 11f, 0f, isMoreThanHalf = false, isPositiveArc = false, 7.75f, 3.23f)
+                horizontalLineTo(99.38f)
+                arcToRelative(11f, 11f, 0f, isMoreThanHalf = false, isPositiveArc = false, 11f, -11f)
+                verticalLineTo(23.5f)
+                arcToRelative(11f, 11f, 0f, isMoreThanHalf = false, isPositiveArc = false, -11f, -11f)
+                close()
+            }
+        }.build()
+        return _CloseWindowIcon!!
+    }
+
+private var _CloseWindowIcon: ImageVector? = null
+
+
+public val SquareLineIcon: ImageVector
+    get() {
+        if (_SquareLineIcon != null) {
+            return _SquareLineIcon!!
+        }
+        _SquareLineIcon = ImageVector.Builder(
+            name = "SquareLineIcon",
+            defaultWidth = 122.661.dp,
+            defaultHeight = 122.88.dp,
+            viewportWidth = 122.661f,
+            viewportHeight = 122.88f
+        ).apply {
+            group {
+                path(
+                    fill = SolidColor(Color.Black),
+                    fillAlpha = 1.0f,
+                    stroke = null,
+                    strokeAlpha = 1.0f,
+                    strokeLineWidth = 1.0f,
+                    strokeLineCap = StrokeCap.Butt,
+                    strokeLineJoin = StrokeJoin.Miter,
+                    strokeLineMiter = 1.0f,
+                    pathFillType = PathFillType.EvenOdd
+                ) {
+                    moveTo(21.26f, 0f)
+                    horizontalLineToRelative(80.142f)
+                    curveToRelative(11.6920f, 00f, 21.260f, 9.7060f, 21.260f, 21.5690f)
+                    verticalLineToRelative(79.741f)
+                    curveToRelative(00f, 11.8640f, -9.5670f, 21.5690f, -21.260f, 21.5690f)
+                    horizontalLineTo(21.26f)
+                    curveTo(9.5660f, 122.880f, 00f, 113.1750f, 00f, 101.3110f)
+                    verticalLineTo(21.569f)
+                    curveTo(00f, 9.7060f, 9.5660f, 00f, 21.260f, 00f)
+                    lineTo(21.26f, 0f)
+                    close()
+                    moveTo(21.674f, 11.14f)
+                    horizontalLineToRelative(79.312f)
+                    curveToRelative(5.8550f, 00f, 10.6470f, 4.7880f, 10.6470f, 10.6410f)
+                    verticalLineToRelative(79.313f)
+                    curveToRelative(00f, 5.8550f, -4.7920f, 10.6460f, -10.6470f, 10.6460f)
+                    horizontalLineTo(21.674f)
+                    curveToRelative(-5.8550f, 00f, -10.6460f, -4.790f, -10.6460f, -10.6460f)
+                    verticalLineTo(21.78f)
+                    curveTo(11.0270f, 15.9280f, 15.8180f, 11.140f, 21.6740f, 11.140f)
+                    lineTo(21.674f, 11.14f)
+                    close()
+                }
+            }
+        }.build()
+        return _SquareLineIcon!!
+    }
+
+private var _SquareLineIcon: ImageVector? = null
