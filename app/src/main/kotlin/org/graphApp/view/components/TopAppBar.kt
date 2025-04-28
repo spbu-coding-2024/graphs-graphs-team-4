@@ -14,6 +14,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.WindowPlacement
+import androidx.compose.ui.window.WindowState
 import org.graphApp.view.dialogs.AboutDialog
 import org.graphApp.view.dialogs.QuickGuideDialog
 import org.graphApp.view.dialogs.SaveAsDialog
@@ -22,17 +24,17 @@ import org.graphApp.viewmodel.MainScreenViewModel
 
 // убрать AlgorithmMenu во ViewMenu (???)
 // ViewDialog: вытащить theme и zoom отдельно в view (???)
-// добавить кнопку "Свернуть"
-// добавить кнопку "Развернуть"
-
 @Composable
 fun <E> TopBarMenu(
     onToggleAlgorithms: () -> Unit,
     onShowNewGraph: () -> Unit,
     onCloseRequest: () -> Unit,
+    onMinimize: () -> Unit,
+    onToggleFullscreen: () -> Unit,
     onToggleTheme: () -> Unit,
     mainThemeDark: Boolean,
-    mainVm: MainScreenViewModel<E>
+    mainVm: MainScreenViewModel<E>,
+    windowState: WindowState
 ) {
     Surface(
         modifier = Modifier
@@ -74,15 +76,50 @@ fun <E> TopBarMenu(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End
             ) {
+
                 IconButton(
-                    onClick = onCloseRequest,
+                    onClick = onMinimize,
                     modifier = Modifier.size(20.dp)
                 ) {
                     Icon(
-                        Icons.Default.Close,
+                        imageVector = CollapseMinusIcon,
+                        contentDescription = "Minimize"
+                    )
+                }
+
+                Spacer(Modifier.width(20.dp))
+
+                IconButton(
+                    onClick = onToggleFullscreen,
+                    modifier = Modifier.size(20.dp)
+                ) {
+                        if (windowState.placement == WindowPlacement.Fullscreen) {
+                            Icon(
+                                imageVector = RestoreWindowIcon,
+                                contentDescription = "Window"
+                            )
+                        }
+                        else {
+                            Icon(
+                                imageVector = SquareLineIcon,
+                                contentDescription = "Fullscreen"
+                            )
+                        }
+                }
+
+                Spacer(Modifier.width(20.dp))
+
+                IconButton(
+                    onClick = onCloseRequest,
+                    modifier = Modifier.size(22.dp)
+                ) {
+                    Icon(
+                        imageVector = CloseWindowIcon,
                         contentDescription = null
                     )
                 }
+
+                Spacer(Modifier.width(5.dp))
             }
         }
     }

@@ -7,6 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.zIndex
 import org.graphApp.view.components.TopBarMenu
 import org.graphApp.view.graph.GraphView
@@ -21,7 +22,13 @@ import org.graphApp.view.graph.RightClickPopupOnEmptyArea
 const val START_ZOOM_POSITION = 250
 
 @Composable
-fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit) {
+fun <E> MainScreen(
+    viewModel: MainScreenViewModel<E>,
+    state: WindowState,
+    onCloseRequest: () -> Unit,
+    onMinimize: () -> Unit,
+    onToggleFullscreen: () -> Unit
+) {
     var mainThemeDark by remember { mutableStateOf(false) }
     var sliderPositionLocal by remember { mutableStateOf(START_ZOOM_POSITION) }
     var showAlgorithmsPanel by remember { mutableStateOf(false) }
@@ -34,8 +41,11 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                 onToggleTheme = { mainThemeDark = !mainThemeDark },
                 onShowNewGraph = { showNewGraphPanel = true },
                 onCloseRequest = onCloseRequest,
+                onMinimize = onMinimize,
+                onToggleFullscreen = onToggleFullscreen,
                 mainThemeDark = mainThemeDark,
-                mainVm = viewModel
+                mainVm = viewModel,
+                windowState = state
             )
 
             Row(modifier = Modifier.fillMaxSize()) {

@@ -281,9 +281,7 @@ fun ZoomSlider(
 
             Slider(
                 value = value.toFloat(),
-                onValueChange = { onValueChange(it.roundToInt())
-
-                                },
+                onValueChange = { onValueChange(it.roundToInt()) },
                 valueRange = valueRange.first.toFloat()..valueRange.last.toFloat(),
                 colors = SliderDefaults.colors(
                     thumbColor = thumbColor,
