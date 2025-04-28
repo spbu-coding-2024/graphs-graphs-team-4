@@ -18,16 +18,15 @@ import org.graphApp.viewmodel.graph.VertexViewModel
 fun <V> VertexView(
     viewModel: VertexViewModel<V>,
     modifier: Modifier = Modifier,
-    zoom: Float = 2.5f
 ) {
     Box(modifier = modifier
-        .size(viewModel.radius * 2 * zoom, viewModel.radius * 2 * zoom)
+        .size(viewModel.radius * 2, viewModel.radius * 2)
         .offset(viewModel.x, viewModel.y)
         .background(
             color = viewModel.color,
             shape = CircleShape
         )
-        .pointerInput(viewModel, zoom) {
+        .pointerInput(viewModel) {
             detectDragGestures { change, dragAmount ->
                 change.consume()
                 viewModel.onDrag(dragAmount)

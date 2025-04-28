@@ -139,14 +139,12 @@ fun <E> RightClickPopupOnEmptyArea(
 @Composable
 fun <E>GraphView(
     viewModel: GraphViewModel<String, E>,
-    zoom: Float
+    mainScreenViewModel: MainScreenViewModel<E>
 ) {
     BoxWithConstraints(modifier = Modifier
         .fillMaxSize()
         .clipToBounds()
         .graphicsLayer {
-            scaleX = zoom
-            scaleY = zoom
             transformOrigin = TransformOrigin(0f, 0f)
         }
     ) {
@@ -158,7 +156,7 @@ fun <E>GraphView(
 
         viewModel.vertices.forEach { v ->
             println("Drawing vertex ${v.value} at (${v.x}, ${v.y})")
-            VertexView(v, Modifier, zoom)
+            VertexView(v, Modifier)
         }
     }
 }

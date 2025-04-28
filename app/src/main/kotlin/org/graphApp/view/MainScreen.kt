@@ -76,7 +76,7 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                 ) {
                     GraphView(
                         viewModel.graphViewModel,
-                        zoom = viewModel.zoomState.floatValue
+                        viewModel,
                     )
 
                     RightClickPopupOnEmptyArea(
