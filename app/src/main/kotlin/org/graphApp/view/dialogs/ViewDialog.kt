@@ -24,7 +24,6 @@ import kotlin.math.roundToInt
 const val START_ZOOM_POSITION = 250
 
 @Composable
-
 fun <E> ViewDialog(
     mainVm: MainScreenViewModel<E>,
     selectedTheme: String,
@@ -38,7 +37,6 @@ fun <E> ViewDialog(
             color = MaterialTheme.colors.surface,
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier.width(350.dp).height(550.dp)
-
         ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -71,7 +69,7 @@ fun <E> ViewDialog(
                         contentDescription = null,
                         modifier = Modifier
                             .size(30.dp)
-                            .offset(30.dp)
+                            .offset(10.dp)
                     )
                     Spacer(Modifier.width(5.dp))
                     Text(
@@ -79,7 +77,7 @@ fun <E> ViewDialog(
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         color = MaterialTheme.colors.onPrimary,
-                        modifier = Modifier.padding(start = 16.dp).offset(14.dp)
+                        modifier = Modifier.padding(start = 8.dp).offset(14.dp)
                     )
                 }
 
@@ -125,7 +123,7 @@ fun <E> ViewDialog(
                         contentDescription = null,
                         modifier = Modifier
                             .size(30.dp)
-                            .offset(30.dp)
+                            .offset(10.dp)
                     )
                     Spacer(Modifier.width(5.dp))
                     Text(
@@ -133,16 +131,14 @@ fun <E> ViewDialog(
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         color = MaterialTheme.colors.onPrimary,
-                        modifier = Modifier.padding(start = 16.dp).offset(14.dp)
+                        modifier = Modifier.padding(start = 8.dp).offset(14.dp)
                     )
                 }
 
                 ZoomSlider(
                     value = sliderPosition,
                     valueRange = 100..400,
-                    onValueChange = { sliderPosition = it
-
-                                    },
+                    onValueChange = { sliderPosition = it },
                     modifier = Modifier.padding(top = 8.dp),
                     zoomInIcon = zoomIn,
                     zoomOutIcon = zoomOut
@@ -163,7 +159,6 @@ fun <E> ViewDialog(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
 
-
                     Column (
                         horizontalAlignment = Alignment.Start,
                         modifier = Modifier.fillMaxWidth(0.5f)
@@ -179,9 +174,7 @@ fun <E> ViewDialog(
                         }, text = "OK")
                     }
                 }
-
             }
-
         }
     }
 }
@@ -288,9 +281,7 @@ fun ZoomSlider(
 
             Slider(
                 value = value.toFloat(),
-                onValueChange = { onValueChange(it.roundToInt())
-
-                                },
+                onValueChange = { onValueChange(it.roundToInt()) },
                 valueRange = valueRange.first.toFloat()..valueRange.last.toFloat(),
                 colors = SliderDefaults.colors(
                     thumbColor = thumbColor,

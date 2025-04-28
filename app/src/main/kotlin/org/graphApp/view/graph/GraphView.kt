@@ -91,7 +91,7 @@ fun <E> RightClickPopupOnEmptyArea(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        "Введите лейбл вершины",
+                        "Enter vertex label",
                         style = MaterialTheme.typography.subtitle1,
                         fontWeight = FontWeight.Bold
                     )

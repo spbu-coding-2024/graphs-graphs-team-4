@@ -1,9 +1,11 @@
 package org.graphApp.view.dialogs
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
@@ -34,41 +36,63 @@ fun AboutDialog(onDismissRequest: () -> Unit) {
                 modifier = Modifier.padding(16.dp)
             ) {
                 Text(
-                    text = "About Program",
+                    text = "About GraphViz",
                     color = MaterialTheme.colors.onBackground,
                     style = MaterialTheme.typography.h6
                 )
-
-                Column {
-                    Text(text = "Graph Editor v1.0", color = MaterialTheme.colors.onBackground)
+                Column (
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     Text(
-                        text = "A lightweight tool for graph visualization",
-                        modifier = Modifier.padding(vertical = 8.dp),
-                        color = MaterialTheme.colors.onBackground
-                    )
-                    Text(
-                        text = "Key features:",
-                        modifier = Modifier.padding(bottom = 4.dp),
+                        text = "Version 1.0",
                         color = MaterialTheme.colors.onBackground,
-                        style =
-                            MaterialTheme.typography.body1.copy(
-                                fontWeight = FontWeight.Bold,
-                                textDecoration = TextDecoration.Underline
+                        style = MaterialTheme.typography.subtitle1.copy(
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.Start,
+                    ) {
+                        Text(
+                            text = "A lightweight tool for graph visualization and analysis",
+                            modifier = Modifier.padding(vertical = 8.dp),
+                            color = MaterialTheme.colors.onBackground,
+                            style = MaterialTheme.typography.body1.copy(
+                                    fontWeight = FontWeight.Medium
                             )
-                    )
-
-                    Text(
-                        text =
-                            """
-                        - Create and edit graphs
-                        - 10+ built-in algorithms
-                        - Export to JSON/SQLite/Neo4j
-                        """
-                                .trimIndent(),
-                        color = MaterialTheme.colors.onBackground
-                    )
+                        )
+                    }
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.Start,
+                    ) {
+                        Text(
+                            text = "Key features:",
+                            modifier = Modifier.padding(vertical = 8.dp),
+                            color = MaterialTheme.colors.onBackground,
+                            style = MaterialTheme.typography.body1.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    textDecoration = TextDecoration.Underline
+                            )
+                        )
+                    }
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.Start,
+                    ) {
+                        Text(
+                            text =
+                                """
+                                        - Create and edit graphs
+                                        - 10+ built-in algorithms
+                                        - Export to JSON/SQLite/Neo4j
+                        """.trimIndent(),
+                            color = MaterialTheme.colors.onBackground
+                        )
+                    }
                 }
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
