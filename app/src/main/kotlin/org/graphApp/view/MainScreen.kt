@@ -16,14 +16,9 @@ import org.graphApp.view.dialogs.AlgorithmsDialog
 import org.graphApp.view.dialogs.NewGraphPanel
 import org.graphApp.view.graph.RightClickPopupOnEmptyArea
 
-
-
-const val START_ZOOM_POSITION = 250
-
 @Composable
 fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit) {
     var mainThemeDark by remember { mutableStateOf(false) }
-    var sliderPositionLocal by remember { mutableStateOf(START_ZOOM_POSITION) }
     var showAlgorithmsPanel by remember { mutableStateOf(false) }
     var showNewGraphPanel by remember { mutableStateOf(false) }
 
@@ -73,17 +68,11 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
+                        .background(MaterialTheme.colors.background)
                 ) {
                     GraphView(
                         viewModel.graphViewModel,
                         viewModel,
-                    )
-
-                    RightClickPopupOnEmptyArea(
-                        viewModel = viewModel,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .zIndex(2f)
                     )
                 }
             }

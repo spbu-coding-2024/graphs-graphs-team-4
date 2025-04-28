@@ -13,7 +13,6 @@ class GraphViewModel<V, E>(
     val showVerticesLabels: State<Boolean>,
     val showEdgesWeights: State<Boolean>,
     val showDirections: State<Boolean>,
-    val zoomState: MutableState<Float>,
 ) {
     private val _vertices = mutableStateMapOf<Long, VertexViewModel<V>>()
     val vertices: Collection<VertexViewModel<V>>
