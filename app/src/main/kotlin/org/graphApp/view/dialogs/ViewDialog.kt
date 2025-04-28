@@ -35,14 +35,12 @@ fun <E> ViewDialog(
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
             color = MaterialTheme.colors.surface,
-            shape = RoundedCornerShape(10.dp), //16
+            shape = RoundedCornerShape(10.dp),
             modifier = Modifier.width(350.dp).height(550.dp)
-
         ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-//                modifier = Modifier.padding(24.dp)
                 modifier = Modifier.padding(4.dp)
             ) {
                 Text(
@@ -50,7 +48,6 @@ fun <E> ViewDialog(
                     style = MaterialTheme.typography.h6,
                     color = MaterialTheme.colors.onPrimary,
                     modifier = Modifier.padding(top = 16.dp)
-//                            modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
                 Divider(
                     modifier = Modifier.padding(
@@ -62,10 +59,6 @@ fun <E> ViewDialog(
                     color = MaterialTheme.colors.onPrimary.copy(alpha = 0.6f),
                     thickness = 1.dp
                 )
-//                Column(
-//                    modifier = Modifier.fillMaxWidth(),
-//                    horizontalAlignment = Alignment.CenterHorizontally
-//                ) {
                 Row(
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically,
@@ -76,7 +69,7 @@ fun <E> ViewDialog(
                         contentDescription = null,
                         modifier = Modifier
                             .size(30.dp)
-                            .offset(30.dp)
+                            .offset(10.dp)
                     )
                     Spacer(Modifier.width(5.dp))
                     Text(
@@ -84,7 +77,7 @@ fun <E> ViewDialog(
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         color = MaterialTheme.colors.onPrimary,
-                        modifier = Modifier.padding(start = 16.dp).offset(14.dp)
+                        modifier = Modifier.padding(start = 8.dp).offset(14.dp)
                     )
                 }
 
@@ -130,7 +123,7 @@ fun <E> ViewDialog(
                         contentDescription = null,
                         modifier = Modifier
                             .size(30.dp)
-                            .offset(30.dp)
+                            .offset(10.dp)
                     )
                     Spacer(Modifier.width(5.dp))
                     Text(
@@ -138,7 +131,7 @@ fun <E> ViewDialog(
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         color = MaterialTheme.colors.onPrimary,
-                        modifier = Modifier.padding(start = 16.dp).offset(14.dp)
+                        modifier = Modifier.padding(start = 8.dp).offset(14.dp)
                     )
                 }
 

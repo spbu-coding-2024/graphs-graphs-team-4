@@ -20,7 +20,6 @@ import org.graphApp.view.dialogs.SaveAsDialog
 import org.graphApp.view.dialogs.ViewDialog
 import org.graphApp.viewmodel.MainScreenViewModel
 
-// какая-то проблема с расположением кнопок во ViewDialog
 // убрать AlgorithmMenu во ViewMenu (???)
 // ViewDialog: вытащить theme и zoom отдельно в view (???)
 // добавить кнопку "Свернуть"
@@ -124,7 +123,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        "New graph",
+                        "New graph...",
                         color = Color.Black,
                         fontWeight = FontWeight.Medium
                     )
@@ -146,6 +145,20 @@ private fun FileMenu(onNewGraph: () -> Unit) {
                         color = MaterialTheme.colors.onSurface,
                         fontWeight = FontWeight.Medium
                     )
+
+                    if (openExpanded) {
+                        Icon(
+                            imageVector = Arrow_drop_down,
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Arrow_right,
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
                 }
             }
 
@@ -244,7 +257,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
             ) {
                 Box(modifier = Modifier.padding(start = 28.dp)) {
                     Text(
-                        "Save as",
+                        "Save as...",
                         color = MaterialTheme.colors.onSurface,
                         fontWeight = FontWeight.Medium
                     )
@@ -252,7 +265,15 @@ private fun FileMenu(onNewGraph: () -> Unit) {
             }
 
             DropdownMenuItem(onClick = { /* TODO: reset */ }) {
-                Box(modifier = Modifier.padding(start = 28.dp)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Reset8,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
                     Text(
                         "Reset",
                         color = MaterialTheme.colors.onSurface,
@@ -352,18 +373,29 @@ private fun <E> ViewMenu(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    Icon(
+                        imageVector = Settings,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
                     Text(
-                        "Settings",
+                        "Theme & Zoom...",
+                        color = MaterialTheme.colors.onSurface,
                         fontWeight = FontWeight.Medium
                     )
                 }
             }
 
-            DropdownMenuItem(onClick = { /* Reset */ }) {
+            DropdownMenuItem(onClick = { /* TODO: reset */ }) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    Icon(
+                        imageVector = Reset8,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
                     Text(
                         "Reset default",
                         color = MaterialTheme.colors.onSurface,
@@ -412,19 +444,29 @@ private fun AlgorithmsMenu(onClick: () -> Unit) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    Icon(
+                        imageVector = Menu,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
                     Text(
-                        "Algorithms",
+                        "Algorithms...",
                         color = MaterialTheme.colors.onSurface,
                         fontWeight = FontWeight.Medium
                     )
                 }
             }
 
-            DropdownMenuItem(onClick = { /* Reset */ }) {
+            DropdownMenuItem(onClick = { /* TODO: reset */ }) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    Icon(
+                        imageVector = Reset8,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
                     Text(
                         "Reset default",
                         color = MaterialTheme.colors.onSurface,
@@ -477,6 +519,20 @@ fun SettingsMenu() {
                         color = MaterialTheme.colors.onSurface,
                         fontWeight = FontWeight.Medium
                     )
+
+                    if (languageExpanded) {
+                        Icon(
+                            imageVector = Arrow_drop_down,
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Arrow_right,
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
                 }
             }
 
@@ -488,8 +544,16 @@ fun SettingsMenu() {
                 Box(modifier = Modifier.padding(start = 40.dp)) { Divider() }
             }
 
-            DropdownMenuItem(onClick = { expanded = false }) {
-                Box(modifier = Modifier.padding(start = 28.dp)) {
+            DropdownMenuItem(onClick = { /* TODO: reset */ }) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Reset8,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
                     Text(
                         "Reset default",
                         color = MaterialTheme.colors.onSurface,
@@ -559,11 +623,21 @@ fun HelpMenu() {
                     showAbout = true
                 }
             ) {
-                Text(
-                    "About Program",
-                    color = MaterialTheme.colors.onSurface,
-                    fontWeight = FontWeight.Medium
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = InstructionManualsBookIcon,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Text(
+                        "About Program...",
+                        color = MaterialTheme.colors.onSurface,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
             }
 
             DropdownMenuItem(
@@ -572,11 +646,21 @@ fun HelpMenu() {
                     showQuickGuide = true
                 }
             ) {
-                Text(
-                    "Quick Start",
-                    color = MaterialTheme.colors.onSurface,
-                    fontWeight = FontWeight.Medium
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = HowToIcon,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Text(
+                        "Quick Start...",
+                        color = MaterialTheme.colors.onSurface,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
             }
         }
     }
