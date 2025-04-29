@@ -1,11 +1,9 @@
 package org.graphApp.viewmodel.graph
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import org.graphApp.model.graph.*
 
 class GraphViewModel<V, E>(
@@ -67,14 +65,10 @@ class GraphViewModel<V, E>(
         _edges += edgevm
         return edgevm
     }
-    fun removeEdge(edgeElement: E) {
-        _edges.removeAll { edgeVM -> edgeVM.label == edgeElement.toString() }
-    }
 
     fun clear() {
         _vertices.clear()
         _edges.clear()
     }
-
 
 }

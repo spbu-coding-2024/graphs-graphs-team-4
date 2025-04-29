@@ -3,8 +3,6 @@ package org.graphApp.view.graph
 import androidx.compose.animation.core.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import org.graphApp.view.graph.edge.EdgeView
-import org.graphApp.view.graph.vertex.VertexView
 import org.graphApp.viewmodel.graph.GraphViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
@@ -26,6 +24,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import org.graphApp.viewmodel.MainScreenViewModel
 import androidx.compose.ui.unit.*
+import androidx.compose.ui.zIndex
 import kotlin.math.sign
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -136,6 +135,9 @@ fun <E> RightClickPopupOnEmptyArea(
 }
 
 
+
+
+
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun <E>GraphView(
@@ -152,7 +154,6 @@ fun <E>GraphView(
     BoxWithConstraints(modifier = Modifier
         .fillMaxSize()
         .clipToBounds()
-
     ) {
         Box(
             modifier = Modifier
