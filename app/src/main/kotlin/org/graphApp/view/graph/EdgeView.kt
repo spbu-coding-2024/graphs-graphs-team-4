@@ -51,8 +51,8 @@ fun <E, V> EdgeView(
         drawLine(
             start = start,
             end = end,
-            color = Color(0xFF696969),
-            strokeWidth = 2f
+            color = Color.Red,
+            strokeWidth = 4f
         )
     }
     if (viewModel.weightVisible) {
@@ -66,7 +66,7 @@ fun <E, V> EdgeView(
         )
     }
 
-    if (true) {
+    if (viewModel.directionVisible) {
 
         Canvas(modifier = modifier.fillMaxSize()) {
             val arrowColor = Color(0xFF696969)

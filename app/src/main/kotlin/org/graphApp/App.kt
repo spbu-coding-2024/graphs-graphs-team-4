@@ -21,8 +21,6 @@ fun App(onCloseRequest: () -> Unit) {
     }
 }
 
-//  надо будет добавить иконку приложения
-//  перенести кнопки управления окном в topbar
 fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,

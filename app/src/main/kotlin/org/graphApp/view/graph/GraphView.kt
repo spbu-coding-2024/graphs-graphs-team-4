@@ -24,7 +24,6 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import org.graphApp.viewmodel.MainScreenViewModel
 import androidx.compose.ui.unit.*
-import androidx.compose.ui.zIndex
 import kotlin.math.sign
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -137,7 +136,6 @@ fun <E> RightClickPopupOnEmptyArea(
 
 
 
-
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun <E>GraphView(
@@ -167,6 +165,9 @@ fun <E>GraphView(
                 }
                 .transformable(state = state)
         ) {
+            RightClickPopupOnEmptyArea(
+                viewModel = mainScreenViewModel
+            )
             Box(modifier = Modifier
                 .graphicsLayer {
                     scaleX = mainScreenViewModel.scale
@@ -177,9 +178,6 @@ fun <E>GraphView(
                     transformOrigin = TransformOrigin(0.5f, 0.5f)
                 })
             {
-                RightClickPopupOnEmptyArea(
-                    viewModel = mainScreenViewModel
-                )
                 println("Drawing ${viewModel.vertices.size} vertices")
 
                 viewModel.edges.forEach { e ->
@@ -188,7 +186,7 @@ fun <E>GraphView(
 
                 viewModel.vertices.forEach { v ->
                     println("Drawing vertex ${v.value} at (${v.x}, ${v.y})")
-                    VertexView(v, Modifier)
+                    VertexView(v, Modifier, onVertexClick = { vertex -> viewModel.onVertexSelected(vertex)})
                 }
             }
         }
