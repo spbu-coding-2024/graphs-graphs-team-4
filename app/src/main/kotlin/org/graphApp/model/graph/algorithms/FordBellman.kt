@@ -94,13 +94,13 @@ private fun <V> pathReconsctract(
     if (parent[to] == null) return null
 
     while (current != null) {
-        path.add(current)
+        path.add(0, current)
         if (current == from) {
             break
         }
         current = parent[current]
     }
-    path.reverse()
+
 
     return if (path.firstOrNull() == from) path else null
 }
