@@ -59,7 +59,13 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                         if (showNewGraphPanel) {
                             NewGraphPanel(
                                 modifier = Modifier.fillMaxWidth(),
-                                onClose = { showNewGraphPanel = false }
+                                onClose = { showNewGraphPanel = false },
+                                onCreateGraph = { showWeights, showDirected ->
+                                    viewModel.showWeight = showWeights
+                                    viewModel.showDirections = showDirected
+                                    viewModel.createNewGraph(showWeights, showDirected)
+                                    viewModel.graphViewModel.clear()
+                                }
                             )
                         }
                     }
