@@ -5,7 +5,7 @@ import org.graphApp.model.graph.*
 fun <V, E> fordBellman(
     graph: Graph<V, E>,
     from: Vertex<V>,
-    to: Vertex<V>? = null
+    to: Vertex<V>
 ): MutableList<Vertex<V>>? {
     val parent = hashMapOf<Vertex<V>, Vertex<V>?>()
     val d = hashMapOf<Vertex<V>, Double>()
