@@ -24,7 +24,6 @@ import kotlin.math.roundToInt
 const val START_ZOOM_POSITION = 250
 
 @Composable
-
 fun <E> ViewDialog(
     mainVm: MainScreenViewModel<E>,
     selectedTheme: String,
@@ -38,11 +37,11 @@ fun <E> ViewDialog(
             color = MaterialTheme.colors.surface,
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier.width(350.dp).height(310.dp)
-
         ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
+//                modifier = Modifier.padding(24.dp)
                 modifier = Modifier.padding(4.dp)
             ) {
                 Text(
@@ -50,6 +49,7 @@ fun <E> ViewDialog(
                     style = MaterialTheme.typography.h6,
                     color = MaterialTheme.colors.onPrimary,
                     modifier = Modifier.padding(top = 16.dp)
+//                            modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
                 Divider(
                     modifier = Modifier.padding(
@@ -61,6 +61,10 @@ fun <E> ViewDialog(
                     color = MaterialTheme.colors.onPrimary.copy(alpha = 0.6f),
                     thickness = 1.dp
                 )
+//                Column(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    horizontalAlignment = Alignment.CenterHorizontally
+//                ) {
                 Row(
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically,
@@ -114,12 +118,10 @@ fun <E> ViewDialog(
                         }
                     }
                 }
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-
 
                     Column (
                         horizontalAlignment = Alignment.Start,
@@ -134,9 +136,7 @@ fun <E> ViewDialog(
                         }, text = "OK")
                     }
                 }
-
             }
-
         }
     }
 }

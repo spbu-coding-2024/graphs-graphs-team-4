@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.sp
 import org.graphApp.view.components.*
 
 // добавить обработку названия графа с подсказками для пользователя, чтобы был корректный ввод
+// чтобы видно было, что можно печатать
 @Composable
 fun SaveAsDialog(
     onDismissRequest: () -> Unit
@@ -38,7 +39,7 @@ fun SaveAsDialog(
                     value = name,
                     onValueChange = { name = it },
                     placeholder = { Text(
-                        "Enter name",
+                        "Enter Graph name",
                         color = Color(0xFFB3B3B3),
                         fontSize = 13.sp) },
                     singleLine = true,
@@ -74,9 +75,7 @@ fun SaveAsDialog(
                             Text(text
                             )
                         }
-
                     }
-
                 }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -100,7 +99,6 @@ fun SaveAsDialog(
                     Spacer(modifier = Modifier.weight(1f))
                     SaveButton(onClick = {  }, text = "Save")
                 }
-
             }
         }
     }

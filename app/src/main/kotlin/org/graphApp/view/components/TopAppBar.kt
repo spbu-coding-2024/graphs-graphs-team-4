@@ -28,7 +28,6 @@ import org.graphApp.viewmodel.MainScreenViewModel
 
 @Composable
 fun <E> TopBarMenu(
-
     onToggleAlgorithms: () -> Unit,
     onShowNewGraph: () -> Unit,
     onCloseRequest: () -> Unit,
@@ -54,7 +53,7 @@ fun <E> TopBarMenu(
             ) {
                 FileMenu(onNewGraph = onShowNewGraph)
                 EditMenu()
-                ViewMenu(onNewGraph = onShowNewGraph, mainVm = mainVm, mainThemeDark, onToggleTheme)
+                ViewMenu(mainVm = mainVm, mainThemeDark, onToggleTheme)
                 AlgorithmsMenu(onClick = onToggleAlgorithms)
                 SettingsMenu()
                 HelpMenu()
@@ -328,12 +327,10 @@ private fun EditMenu() {
 @Composable
 // sliderposition: Int = START_ZOOM_POSITION,
 private fun <E> ViewMenu(
-    onNewGraph: () -> Unit,
     mainVm: MainScreenViewModel<E>,
     mainThemeDark: Boolean,
     onToggleTheme: () -> Unit
     ) {
-
     var expanded by remember { mutableStateOf(false) }
     var showViewDialog by remember { mutableStateOf(false) }
 
@@ -357,7 +354,6 @@ private fun <E> ViewMenu(
                 ) {
                     Text(
                         "Settings",
-
                         fontWeight = FontWeight.Medium
                     )
                 }
@@ -577,7 +573,7 @@ fun HelpMenu() {
                 }
             ) {
                 Text(
-                    "Quick Guide",
+                    "Quick Start",
                     color = MaterialTheme.colors.onSurface,
                     fontWeight = FontWeight.Medium
                 )
