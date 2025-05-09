@@ -1,11 +1,13 @@
 package org.graphApp.viewmodel
 
+import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.runtime.*
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import org.graphApp.model.graph.Graph
 import org.graphApp.viewmodel.graph.GraphViewModel
 import sun.awt.X11.XUtilConstants.ZoomState
-
+import kotlin.math.exp
 
 
 class MainScreenViewModel<E>(graph: Graph<String, E>) {
@@ -36,14 +38,15 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
         get() = _showDirections.value
         set(v) { _showDirections.value = v }
 
-    var zoomState = mutableFloatStateOf(2.5f)
+    var scale by mutableStateOf(1f)
+    var rotation by mutableStateOf(0f)
+    var offset by  mutableStateOf(Offset.Zero)
 
-
-    val graphViewModel = GraphViewModel(graph, _showVerticesLabels, _showEdgesWeights, _showDirections, zoomState)
-
-    fun zoomConverter(sliderValue: Int) : Float {
-        return sliderValue.toFloat() / 100f
+    fun scale(delta: Int) {
+        scale = (scale * exp(delta * 0.2f)).coerceIn(-0.25f, 5f)
     }
+
+    val graphViewModel = GraphViewModel(graph, _showVerticesLabels, _showEdgesWeights, _showDirections)
 
 
 }

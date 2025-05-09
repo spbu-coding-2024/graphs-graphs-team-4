@@ -1,9 +1,8 @@
-package org.graphApp.view.graph.edge
+package org.graphApp.view.graph
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -52,8 +51,8 @@ fun <E, V> EdgeView(
         drawLine(
             start = start,
             end = end,
-            color = Color(0xFF696969),
-            strokeWidth = 2f
+            color = Color.Red,
+            strokeWidth = 4f
         )
     }
     if (viewModel.weightVisible) {
@@ -67,7 +66,7 @@ fun <E, V> EdgeView(
         )
     }
 
-    if (true) {
+    if (viewModel.directionVisible) {
 
         Canvas(modifier = modifier.fillMaxSize()) {
             val arrowColor = Color(0xFF696969)
