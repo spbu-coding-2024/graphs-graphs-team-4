@@ -19,7 +19,8 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun NewGraphPanel(
     modifier: Modifier = Modifier,
-    onClose: () -> Unit
+    onClose: () -> Unit,
+    onCreateGraph: (Boolean, Boolean) -> Unit
 ) {
     var showWeights by remember { mutableStateOf(true) }
     var showDirected by remember { mutableStateOf(false) }
@@ -87,7 +88,21 @@ fun NewGraphPanel(
                         LabelCheckbox("Weights", showWeights) { showWeights = it }
                         LabelCheckbox("Directed", showDirected) { showDirected = it }
                     }
+                    Row (
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                    ){
+                        Button(
+                            onClick = {
+                                onCreateGraph(showWeights, showDirected)
+                                onClose()
+                            }
+                        ) {
+                            Text("Create Graph")
+                        }
+                    }
                 }
+
             }
         }
     }
