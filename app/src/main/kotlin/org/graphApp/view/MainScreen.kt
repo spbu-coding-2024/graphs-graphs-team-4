@@ -5,9 +5,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.compose.ui.graphics.Color
 import org.graphApp.view.components.TopBarMenu
 import org.graphApp.view.graph.GraphView
 import org.graphApp.viewmodel.MainScreenViewModel
@@ -23,7 +26,7 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
     var showNewGraphPanel by remember { mutableStateOf(false) }
 
     GraphTheme(darkTheme = mainThemeDark) {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background)) {
             TopBarMenu(
                 onToggleAlgorithms = { showAlgorithmsPanel = !showAlgorithmsPanel },
                 onToggleTheme = { mainThemeDark = !mainThemeDark },
@@ -38,6 +41,8 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                     visible = showAlgorithmsPanel || showNewGraphPanel,
                     modifier = Modifier.background(MaterialTheme.colors.background)
                 ) {
+
+
                     Column(
                         modifier = Modifier
                             .width(300.dp)
@@ -69,6 +74,7 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                             )
                         }
                     }
+
                 }
 
                 Box(

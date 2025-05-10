@@ -330,7 +330,7 @@ private fun <E> ViewMenu(
     mainVm: MainScreenViewModel<E>,
     mainThemeDark: Boolean,
     onToggleTheme: () -> Unit
-    ) {
+) {
     var expanded by remember { mutableStateOf(false) }
     var showViewDialog by remember { mutableStateOf(false) }
 

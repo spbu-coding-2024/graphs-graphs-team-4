@@ -3,6 +3,7 @@ package org.graphApp.view.graph
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -51,7 +52,7 @@ fun <E, V> EdgeView(
         drawLine(
             start = start,
             end = end,
-            color = Color.Red,
+            color = Color(0xFFD5D5D5),
             strokeWidth = 4f
         )
     }
@@ -97,7 +98,7 @@ fun <E, V> EdgeView(
                     lineTo(basePoint2.x, basePoint2.y)
                     close()
                 },
-                color = arrowColor,
+                color = Color(0xFFD5D5D5),
                 style = androidx.compose.ui.graphics.drawscope.Fill
             )
         }
