@@ -5,6 +5,7 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,9 +23,9 @@ fun <V> VertexView(
     modifier: Modifier = Modifier,
     onVertexClick: (VertexViewModel<V>) -> Unit = {},
 ) {
-    val hotPink = Color.Magenta
-    val softPink = Color.Magenta
-    val selectedColor = Color.Cyan
+    val hotPink = MaterialTheme.colors.primaryVariant
+    val softPink = MaterialTheme.colors.primaryVariant
+    val selectedColor = Color(0xFF8BF1E2)
     val radiusDp = viewModel.radius
 
     Box(modifier = modifier

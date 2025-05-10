@@ -58,7 +58,10 @@ fun NewGraphPanel(
                 )
 
                 IconButton(onClick = onClose) {
-                    Icon(Icons.Default.Close, contentDescription = "Close")
+                    Icon(Icons.Default.Close,
+                        contentDescription = "Close",
+                        tint = MaterialTheme.colors.onSecondary
+                    )
                 }
             }
 
@@ -73,6 +76,7 @@ fun NewGraphPanel(
                 ) {
                     Text(
                         "Check type:",
+
                         style = MaterialTheme.typography.h6.copy(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
@@ -91,6 +95,7 @@ fun NewGraphPanel(
                     Row (
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
+
                     ){
                         Button(
                             onClick = {
@@ -120,7 +125,8 @@ fun LabelCheckbox(text: String, checked: Boolean, onCheckedChange: (Boolean) -> 
         )
         Text(
             text = text,
-            fontSize = 14.sp
+            fontSize = 14.sp,
+            color = MaterialTheme.colors.onSecondary
         )
     }
 }

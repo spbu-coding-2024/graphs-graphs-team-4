@@ -75,7 +75,8 @@ fun <E> ViewDialog(
                         contentDescription = null,
                         modifier = Modifier
                             .size(30.dp)
-                            .offset(30.dp)
+                            .offset(30.dp),
+                        tint = MaterialTheme.colors.onSecondary
                     )
                     Spacer(Modifier.width(5.dp))
                     Text(
@@ -126,6 +127,7 @@ fun <E> ViewDialog(
                     Column (
                         horizontalAlignment = Alignment.Start,
                         modifier = Modifier.fillMaxWidth(0.5f)
+
                     ){
                         CloseButton(onClick = onDismissRequest, text = "Cancel")
                     }
