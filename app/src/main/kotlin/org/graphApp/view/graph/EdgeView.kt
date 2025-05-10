@@ -1,9 +1,8 @@
-package org.graphApp.view.graph.edge
+package org.graphApp.view.graph
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -52,8 +51,8 @@ fun <E, V> EdgeView(
         drawLine(
             start = start,
             end = end,
-            color = Color(0xFF696969),
-            strokeWidth = 2f
+            color = Color.Red,
+            strokeWidth = 4f
         )
     }
     if (viewModel.weightVisible) {
@@ -67,30 +66,40 @@ fun <E, V> EdgeView(
         )
     }
 
-    if (true) {
+    if (viewModel.directionVisible) {
 
         Canvas(modifier = modifier.fillMaxSize()) {
-            val arrowColor = Color(0xFF696969)
+            val arrowColor = Color.Black // Using black color like in the image
             val arrowPosition = Offset(
                 start.x + (end.x - start.x) * PLACE_ARROW_PARAM,
                 start.y + (end.y - start.y) * PLACE_ARROW_PARAM
             )
 
             val angle = atan2(end.y - start.y, end.x - start.x)
-            val arrowLen = 8.dp.toPx()
-            val arrowAngle = Math.toRadians(20.0).toFloat()
+            val arrowLen = 15.dp.toPx()
+            val arrowWidth = 12.dp.toPx()
 
-            val arrowPoint1 = Offset(
-                arrowPosition.x - arrowLen * cos(angle - arrowAngle),
-                arrowPosition.y - arrowLen * sin(angle - arrowAngle)
+            val tip = arrowPosition
+            val baseAngle = angle + Math.toRadians(90.0).toFloat()
+            val basePoint1 = Offset(
+                tip.x - arrowLen * cos(angle) + arrowWidth / 2 * cos(baseAngle),
+                tip.y - arrowLen * sin(angle) + arrowWidth / 2 * sin(baseAngle)
             )
-            val arrowPoint2 = Offset(
-                arrowPosition.x - arrowLen * cos(angle + arrowAngle),
-                arrowPosition.y - arrowLen * sin(angle + arrowAngle)
+            val basePoint2 = Offset(
+                tip.x - arrowLen * cos(angle) - arrowWidth / 2 * cos(baseAngle),
+                tip.y - arrowLen * sin(angle) - arrowWidth / 2 * sin(baseAngle)
             )
 
-            drawLine(color = arrowColor, start = arrowPosition, end = arrowPoint1, strokeWidth = 3f)
-            drawLine(color = arrowColor, start = arrowPosition, end = arrowPoint2, strokeWidth = 3f)
+            drawPath(
+                androidx.compose.ui.graphics.Path().apply {
+                    moveTo(tip.x, tip.y)
+                    lineTo(basePoint1.x, basePoint1.y)
+                    lineTo(basePoint2.x, basePoint2.y)
+                    close()
+                },
+                color = arrowColor,
+                style = androidx.compose.ui.graphics.drawscope.Fill
+            )
         }
     }
 }

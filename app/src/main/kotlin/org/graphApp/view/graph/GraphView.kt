@@ -3,10 +3,11 @@ package org.graphApp.view.graph
 import androidx.compose.animation.core.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import org.graphApp.view.graph.edge.EdgeView
-import org.graphApp.view.graph.vertex.VertexView
 import org.graphApp.viewmodel.graph.GraphViewModel
 import androidx.compose.foundation.background
+import androidx.compose.foundation.focusable
+import androidx.compose.foundation.gestures.rememberTransformableState
+import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -21,15 +22,14 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
-import androidx.compose.ui.zIndex
 import org.graphApp.viewmodel.MainScreenViewModel
 import androidx.compose.ui.unit.*
+import kotlin.math.sign
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun <E> RightClickPopupOnEmptyArea(
     viewModel: MainScreenViewModel<E>,
-    modifier: Modifier = Modifier,
 ) {
     var showPopup by remember { mutableStateOf(false) }
     var popupX by remember { mutableStateOf(0f) }
@@ -39,7 +39,6 @@ fun <E> RightClickPopupOnEmptyArea(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.LightGray)
             .onPointerEvent(PointerEventType.Press) {
                 if (!eventHandledByChild && it.buttons.isSecondaryPressed) {
                     popupX = it.changes.first().position.x
@@ -48,8 +47,6 @@ fun <E> RightClickPopupOnEmptyArea(
                 }
                 eventHandledByChild = false
             }
-            .zIndex(-1f)
-
     ) {
     if (showPopup) {
         val offsetX = popupX - (280.dp.value / 2).toInt()
@@ -76,7 +73,6 @@ fun <E> RightClickPopupOnEmptyArea(
                     .height(200.dp)
                     .padding(16.dp)
                     .graphicsLayer {
-                        transformOrigin = TransformOrigin(0f, 0f)
                         scaleX = scale
                         scaleY = scale
                     },
@@ -112,8 +108,10 @@ fun <E> RightClickPopupOnEmptyArea(
 
                     Button(onClick = {
                         if (vertexLabel.isNotEmpty()) {
-                            val xDp = with(density) { popupX.toDp() - 20.dp }
-                            val yDp = with(density) { popupY.toDp() - 20.dp }
+                            val adjustedX = (popupX - viewModel.offset.x) / viewModel.scale
+                            val adjustedY = (popupY - viewModel.offset.y) / viewModel.scale
+                            val xDp = with(density) { adjustedX.toDp() - 20.dp }
+                            val yDp = with(density) { adjustedY.toDp() - 20.dp }
 
                             viewModel.graphViewModel.addVertex(
                                 vertexLabel,
@@ -136,29 +134,61 @@ fun <E> RightClickPopupOnEmptyArea(
 }
 
 
+
+
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun <E>GraphView(
     viewModel: GraphViewModel<String, E>,
-    zoom: Float
+    mainScreenViewModel: MainScreenViewModel<E>
 ) {
+    val state = rememberTransformableState {
+            zoomChange, offsetChange, rotationChange ->
+        mainScreenViewModel.scale *= zoomChange
+        mainScreenViewModel.rotation += rotationChange
+        mainScreenViewModel.offset += offsetChange
+    }
+
     BoxWithConstraints(modifier = Modifier
         .fillMaxSize()
         .clipToBounds()
-        .graphicsLayer {
-            scaleX = zoom
-            scaleY = zoom
-            transformOrigin = TransformOrigin(0f, 0f)
-        }
     ) {
-        println("Drawing ${viewModel.vertices.size} vertices")
+        Box(
+            modifier = Modifier
+                .background(Color.Gray)
+                .focusable()
+                .onPointerEvent(PointerEventType.Scroll) {
+                    val change = it.changes.first()
+                    val delta = -change.scrollDelta.y.toInt().sign
+                    mainScreenViewModel.scale(delta)
+                    println("Scroll")
+                }
+                .transformable(state = state)
+        ) {
+            RightClickPopupOnEmptyArea(
+                viewModel = mainScreenViewModel
+            )
+            Box(modifier = Modifier
+                .graphicsLayer {
+                    scaleX = mainScreenViewModel.scale
+                    scaleY = mainScreenViewModel.scale
+                    rotationZ = mainScreenViewModel.rotation
+                    translationX = mainScreenViewModel.offset.x
+                    translationY = mainScreenViewModel.offset.y
+                    transformOrigin = TransformOrigin(0.5f, 0.5f)
+                })
+            {
+                println("Drawing ${viewModel.vertices.size} vertices")
 
-        viewModel.edges.forEach { e ->
-            EdgeView(e, Modifier)
-        }
+                viewModel.edges.forEach { e ->
+                    EdgeView(e, Modifier)
+                }
 
-        viewModel.vertices.forEach { v ->
-            println("Drawing vertex ${v.value} at (${v.x}, ${v.y})")
-            VertexView(v, Modifier, zoom)
+                viewModel.vertices.forEach { v ->
+                    println("Drawing vertex ${v.value} at (${v.x}, ${v.y})")
+                    VertexView(v, Modifier, onVertexClick = { vertex -> viewModel.onVertexSelected(vertex)})
+                }
+            }
         }
     }
 }

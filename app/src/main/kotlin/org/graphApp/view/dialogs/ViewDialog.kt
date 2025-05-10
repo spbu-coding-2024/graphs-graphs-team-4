@@ -31,16 +31,17 @@ fun <E> ViewDialog(
     onDismissRequest: () -> Unit
 ) {
     var sliderPosition by remember { mutableStateOf(START_ZOOM_POSITION) }
-    val listOfThemes = listOf("Light", "Dark", "Auto")
+    val listOfThemes = listOf("Light", "Dark")
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
             color = MaterialTheme.colors.surface,
             shape = RoundedCornerShape(10.dp),
-            modifier = Modifier.width(350.dp).height(550.dp)
+            modifier = Modifier.width(350.dp).height(310.dp)
         ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
+//                modifier = Modifier.padding(24.dp)
                 modifier = Modifier.padding(4.dp)
             ) {
                 Text(
@@ -48,6 +49,7 @@ fun <E> ViewDialog(
                     style = MaterialTheme.typography.h6,
                     color = MaterialTheme.colors.onPrimary,
                     modifier = Modifier.padding(top = 16.dp)
+//                            modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
                 Divider(
                     modifier = Modifier.padding(
@@ -59,6 +61,10 @@ fun <E> ViewDialog(
                     color = MaterialTheme.colors.onPrimary.copy(alpha = 0.6f),
                     thickness = 1.dp
                 )
+//                Column(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    horizontalAlignment = Alignment.CenterHorizontally
+//                ) {
                 Row(
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically,
@@ -69,7 +75,7 @@ fun <E> ViewDialog(
                         contentDescription = null,
                         modifier = Modifier
                             .size(30.dp)
-                            .offset(10.dp)
+                            .offset(30.dp)
                     )
                     Spacer(Modifier.width(5.dp))
                     Text(
@@ -77,7 +83,7 @@ fun <E> ViewDialog(
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         color = MaterialTheme.colors.onPrimary,
-                        modifier = Modifier.padding(start = 8.dp).offset(14.dp)
+                        modifier = Modifier.padding(start = 16.dp).offset(14.dp)
                     )
                 }
 
@@ -112,48 +118,6 @@ fun <E> ViewDialog(
                         }
                     }
                 }
-
-                Row(
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Icon(
-                        imageVector = zoomSign,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(30.dp)
-                            .offset(10.dp)
-                    )
-                    Spacer(Modifier.width(5.dp))
-                    Text(
-                        text = "Zoom",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
-                        color = MaterialTheme.colors.onPrimary,
-                        modifier = Modifier.padding(start = 8.dp).offset(14.dp)
-                    )
-                }
-
-                ZoomSlider(
-                    value = sliderPosition,
-                    valueRange = 100..400,
-                    onValueChange = { sliderPosition = it },
-                    modifier = Modifier.padding(top = 8.dp),
-                    zoomInIcon = zoomIn,
-                    zoomOutIcon = zoomOut
-                )
-
-                Row(
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    ResetButton(
-                        onClick = { sliderPosition = 250 },
-                        text = "Reset"
-                    )
-                }
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -168,9 +132,7 @@ fun <E> ViewDialog(
                     Column (horizontalAlignment = Alignment.End,
                         modifier = Modifier.fillMaxWidth()) {
                         OkButton(onClick = {
-                            mainVm.zoomState.floatValue = mainVm.zoomConverter(sliderPosition)
                             onDismissRequest()
-                            println("zoom now is ${mainVm.zoomState}")
                         }, text = "OK")
                     }
                 }
@@ -179,127 +141,3 @@ fun <E> ViewDialog(
     }
 }
 
-@Composable
-fun ZoomSlider(
-    value: Int,
-    valueRange: IntRange = 0..100,
-    onValueChange: (Int) -> Unit,
-    modifier: Modifier = Modifier,
-    zoomInIcon: ImageVector,
-    zoomOutIcon: ImageVector,
-    bubbleColor: Color = Color(0xFF2F2F2F),
-    stemColor: Color = Color(0xFF2F2F2F),
-    thumbColor: Color = MaterialTheme.colors.primaryVariant,
-    activeTrackColor: Color = MaterialTheme.colors.primaryVariant,
-    inactiveTrackColor: Color = Color(0xFFDDDDDD)
-) {
-    val density = LocalDensity.current
-    var rowWidthPx by remember { mutableStateOf(0f) }
-    var sliderHeightPx by remember { mutableStateOf(0f) }
-
-    val thumbRadiusDp = 10.dp
-    val bubbleWidthDp = 36.dp
-    val bubbleHeightDp = 30.dp
-    val stemHeightDp = 8.dp
-    val iconSize = 24.dp
-    val spacerWidthDp = 8.dp
-
-    val fraction = remember(value, valueRange) {
-        val range = (valueRange.last - valueRange.first).coerceAtLeast(1)
-        ((value.toFloat() - valueRange.first) / range).coerceIn(0f, 1f)
-    }
-
-    val bubbleOffsetXpx = remember(fraction, rowWidthPx, density) {
-        if (rowWidthPx > 0) {
-            val iconSizePx = with(density) { iconSize.toPx() }
-            val spacerWidthPx = with(density) { spacerWidthDp.toPx() }
-            val bubbleWidthPx = with(density) { bubbleWidthDp.toPx() }
-            val thumbRadiusPx = with(density) { thumbRadiusDp.toPx() }
-            val trackStartPx = iconSizePx + spacerWidthPx + thumbRadiusPx
-            val trackEndPx = rowWidthPx - iconSizePx - spacerWidthPx - thumbRadiusPx
-            val trackWidthPx = (trackEndPx - trackStartPx).coerceAtLeast(0f)
-            val thumbCenterPx = trackStartPx + trackWidthPx * fraction
-            val bubbleStartX = thumbCenterPx - bubbleWidthPx / 2f
-            bubbleStartX.coerceIn(0f, rowWidthPx - bubbleWidthPx)
-        } else 0f
-    }
-
-    val bubbleOffsetX = with(density) { bubbleOffsetXpx.toDp() }
-
-    Column(modifier = modifier.padding(horizontal = spacerWidthDp)) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(bubbleHeightDp + stemHeightDp + 4.dp)
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .offset(x = bubbleOffsetX)
-                    .align(Alignment.TopStart)
-            ) {
-                Surface(
-                    shape = CircleShape,
-                    color = bubbleColor,
-                    elevation = 2.dp,
-                    modifier = Modifier.size(bubbleWidthDp, bubbleHeightDp)
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Text(
-                            text = value.toString(),
-                            color = Color.White,
-                            style = MaterialTheme.typography.body2,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
-                Box(
-                    modifier = Modifier
-                        .width(2.dp)
-                        .height(stemHeightDp)
-                        .background(stemColor)
-                )
-            }
-        }
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .onGloballyPositioned {
-                    rowWidthPx = it.size.width.toFloat()
-                    sliderHeightPx = it.size.height.toFloat()
-                }
-        ) {
-            Icon(
-                imageVector = zoomOutIcon,
-                contentDescription = "Zoom Out",
-                modifier = Modifier.size(iconSize)
-            )
-
-            Spacer(Modifier.width(spacerWidthDp))
-
-            Slider(
-                value = value.toFloat(),
-                onValueChange = { onValueChange(it.roundToInt()) },
-                valueRange = valueRange.first.toFloat()..valueRange.last.toFloat(),
-                colors = SliderDefaults.colors(
-                    thumbColor = thumbColor,
-                    activeTrackColor = activeTrackColor,
-                    inactiveTrackColor = inactiveTrackColor
-                ),
-                modifier = Modifier
-                    .weight(1f)
-                    .height(20.dp)
-            )
-
-            Spacer(Modifier.width(spacerWidthDp))
-
-            Icon(
-                imageVector = zoomInIcon,
-                contentDescription = "Zoom In",
-                modifier = Modifier.size(iconSize)
-            )
-        }
-    }
-}

@@ -17,10 +17,6 @@ import org.graphApp.view.dialogs.AlgorithmsDialog
 import org.graphApp.view.dialogs.NewGraphPanel
 import org.graphApp.view.graph.RightClickPopupOnEmptyArea
 
-
-
-const val START_ZOOM_POSITION = 250
-
 @Composable
 fun <E> MainScreen(
     viewModel: MainScreenViewModel<E>,
@@ -30,7 +26,6 @@ fun <E> MainScreen(
     onToggleFullscreen: () -> Unit
 ) {
     var mainThemeDark by remember { mutableStateOf(false) }
-    var sliderPositionLocal by remember { mutableStateOf(START_ZOOM_POSITION) }
     var showAlgorithmsPanel by remember { mutableStateOf(false) }
     var showNewGraphPanel by remember { mutableStateOf(false) }
 
@@ -74,7 +69,13 @@ fun <E> MainScreen(
                         if (showNewGraphPanel) {
                             NewGraphPanel(
                                 modifier = Modifier.fillMaxWidth(),
-                                onClose = { showNewGraphPanel = false }
+                                onClose = { showNewGraphPanel = false },
+                                onCreateGraph = { showWeights, showDirected ->
+                                    viewModel.showWeight = showWeights
+                                    viewModel.showDirections = showDirected
+                                    viewModel.createNewGraph(showWeights, showDirected)
+                                    viewModel.graphViewModel.clear()
+                                }
                             )
                         }
                     }
@@ -83,17 +84,11 @@ fun <E> MainScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
+                        .background(MaterialTheme.colors.background)
                 ) {
                     GraphView(
                         viewModel.graphViewModel,
-                        zoom = viewModel.zoomState.floatValue
-                    )
-
-                    RightClickPopupOnEmptyArea(
-                        viewModel = viewModel,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .zIndex(2f)
+                        viewModel,
                     )
                 }
             }

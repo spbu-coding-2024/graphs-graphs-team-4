@@ -18,6 +18,13 @@ class VertexViewModel<V>(
     val scaleFactor: Float = 1f,
     val radius: Dp = 20.dp * scaleFactor,
 ) {
+    private var _selected = mutableStateOf(false)
+    var selected: Boolean
+    get() = _selected.value
+    set(value) {
+        _selected.value = value
+    }
+
     private var _x = mutableStateOf(x)
     var x: Dp
         get() = _x.value
