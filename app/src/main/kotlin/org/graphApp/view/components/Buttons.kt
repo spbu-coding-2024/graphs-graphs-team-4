@@ -19,14 +19,14 @@ fun CloseButton(
         onClick = onClick,
         shape = RoundedCornerShape(15.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color(0xFFB3B3B3),
-            contentColor = Color(0xFF1A0202)
+            backgroundColor =  MaterialTheme.colors.primaryVariant,
+            contentColor = MaterialTheme.colors.surface
         ),
         modifier = Modifier.padding(8.dp)
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.button
+            color = MaterialTheme.colors.onSecondary
         )
     }
 }
@@ -39,14 +39,14 @@ fun SaveButton(
         onClick = onClick,
         shape = RoundedCornerShape(15.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color(0xFFB3B3B3),
-            contentColor = Color(0xFF1A0202)
+            backgroundColor = MaterialTheme.colors.primaryVariant,
+            contentColor = MaterialTheme.colors.surface
         ),
         modifier = Modifier.padding(8.dp)
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.button
+            color = MaterialTheme.colors.onSecondary
         )
     }
 }
@@ -60,14 +60,14 @@ fun ResetButton(
         onClick = onClick,
         shape = RoundedCornerShape(15.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color(0xFFB3B3B3),
-            contentColor = Color(0xFF1A0202)
+            backgroundColor = MaterialTheme.colors.primaryVariant,
+            contentColor = MaterialTheme.colors.surface
         ),
         modifier = Modifier.padding(8.dp)
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.button
+            color = MaterialTheme.colors.onSecondary
         )
     }
 }
@@ -81,14 +81,14 @@ fun OkButton(
         onClick = onClick,
         shape = RoundedCornerShape(15.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color(0xFFB3B3B3),
-            contentColor = Color(0xFF1A0202)
+            backgroundColor = MaterialTheme.colors.primaryVariant,
+            contentColor = MaterialTheme.colors.surface
         ),
         modifier = Modifier.padding(8.dp)
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.button
+            color = MaterialTheme.colors.onSecondary
         )
     }
 }

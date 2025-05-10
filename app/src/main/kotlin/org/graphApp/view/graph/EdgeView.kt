@@ -22,6 +22,7 @@ fun <E, V> EdgeView(
     viewModel: EdgeViewModel<E, V>,
     modifier: Modifier = Modifier,
 ) {
+    val colorMain = MaterialTheme.colors.primaryVariant
     var start = Offset.Zero
     var end = Offset.Zero
     Canvas(modifier = modifier.fillMaxSize()) {
@@ -52,7 +53,7 @@ fun <E, V> EdgeView(
         drawLine(
             start = start,
             end = end,
-            color = Color(0xFFD5D5D5),
+            color = colorMain,
             strokeWidth = 4f
         )
     }
@@ -98,7 +99,7 @@ fun <E, V> EdgeView(
                     lineTo(basePoint2.x, basePoint2.y)
                     close()
                 },
-                color = Color(0xFFD5D5D5),
+                color = colorMain,
                 style = androidx.compose.ui.graphics.drawscope.Fill
             )
         }

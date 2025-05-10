@@ -48,12 +48,12 @@ fun SaveAsDialog(
                     shape = RoundedCornerShape(8.dp),
                     textStyle = MaterialTheme.typography.body2.copy(fontSize = 14.sp, color = Color.White),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
-                        backgroundColor = Color(0xFF3C3030)
+                        backgroundColor = MaterialTheme.colors.surface
                     )
                 )
                 Text(
                     text = "Choose a saving format:",
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Medium,
                 )
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -87,7 +87,7 @@ fun SaveAsDialog(
                     )
                     Text(
                         text = "Add folder",
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Medium
                     )
                 }
 

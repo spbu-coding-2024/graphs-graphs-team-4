@@ -52,10 +52,60 @@ fun <E> TopBarMenu(
                 horizontalArrangement = Arrangement.spacedBy(5.dp)
             ) {
                 FileMenu(onNewGraph = onShowNewGraph)
+                Divider(
+                    color = MaterialTheme.colors.onPrimary.copy(alpha = 0.18f),
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(vertical = 10.dp)
+                        .offset(y = 2.dp)
+
+                        .width(1.dp)
+
+                )
                 EditMenu()
+                Divider(
+                    color = MaterialTheme.colors.onPrimary.copy(alpha = 0.18f),
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(vertical = 10.dp)
+                        .offset(y = 2.dp)
+
+                        .width(1.dp)
+
+                )
                 ViewMenu(mainVm = mainVm, mainThemeDark, onToggleTheme)
+                Divider(
+                    color = MaterialTheme.colors.onPrimary.copy(alpha = 0.18f),
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(vertical = 10.dp)
+                        .offset(y = 2.dp)
+
+                        .width(1.dp)
+
+                )
                 AlgorithmsMenu(onClick = onToggleAlgorithms)
+                Divider(
+                    color = MaterialTheme.colors.onPrimary.copy(alpha = 0.18f),
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(vertical = 10.dp)
+                        .offset(y = 2.dp)
+
+                        .width(1.dp)
+
+                )
                 SettingsMenu()
+                Divider(
+                    color = MaterialTheme.colors.onPrimary.copy(alpha = 0.18f),
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(vertical = 10.dp)
+                        .offset(y = 2.dp)
+
+                        .width(1.dp)
+
+                )
                 HelpMenu()
             }
 
@@ -125,8 +175,8 @@ private fun FileMenu(onNewGraph: () -> Unit) {
                     )
                     Text(
                         "New graph",
-                        color = Color.Black,
-                        fontWeight = FontWeight.Medium
+                        color = MaterialTheme.colors.onSurface,
+                        fontWeight = FontWeight.ExtraLight
                     )
                 }
             }
@@ -144,7 +194,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
                     Text(
                         "Open",
                         color = MaterialTheme.colors.onSurface,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.ExtraLight
                     )
                 }
             }
@@ -162,7 +212,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
                         Text(
                             "Recent graphs:",
                             color = MaterialTheme.colors.onSurface,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.ExtraLight
                         )
                     }
                 }
@@ -171,7 +221,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
                         Text(
                             "ooops-1",
                             color = MaterialTheme.colors.onSurface,
-                            fontWeight = FontWeight.Medium
+                            fontWeight = FontWeight.ExtraLight
                         )
                     }
                 }
@@ -180,7 +230,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
                         Text(
                             "ooops-2",
                             color = MaterialTheme.colors.onSurface,
-                            fontWeight = FontWeight.Medium
+                            fontWeight = FontWeight.ExtraLight
                         )
                     }
                 }
@@ -190,7 +240,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
                         Text(
                             "ooops-3",
                             color = MaterialTheme.colors.onSurface,
-                            fontWeight = FontWeight.Medium
+                            fontWeight = FontWeight.ExtraLight
                         )
                     }
                 }
@@ -209,7 +259,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
                         Text(
                             "Load Graph",
                             color = MaterialTheme.colors.onSurface,
-                            fontWeight = FontWeight.Medium
+                            fontWeight = FontWeight.ExtraLight
                         )
                     }
                 }
@@ -231,7 +281,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
                     Text(
                         "Save",
                         color = MaterialTheme.colors.onSurface,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.ExtraLight
                     )
                 }
             }
@@ -246,7 +296,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
                     Text(
                         "Save as",
                         color = MaterialTheme.colors.onSurface,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.ExtraLight
                     )
                 }
             }
@@ -256,7 +306,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
                     Text(
                         "Reset",
                         color = MaterialTheme.colors.onSurface,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.ExtraLight
                     )
                 }
             }

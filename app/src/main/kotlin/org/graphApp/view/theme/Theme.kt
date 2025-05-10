@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.Color
 // нужно еще будет реализовать переключение темы, а еще цвета подобрать
 val DarkColorScheme = darkColors(
     primary = TopAppBarColor,
-    primaryVariant = Color(0xFF0C0C0C),
+    primaryVariant = Color(0xFFFF48C8),
     background = Color(0xFF1E1E1E),
     surface = Color(0xFF373737),
     onPrimary = Color(0xFFD5D5D5),
@@ -22,11 +22,12 @@ val DarkColorScheme = darkColors(
 val LightColorScheme = lightColors(
     primary = TopAppBarColor,
     background = Color.White,
-    surface = BackgroundDarkGray,
+    primaryVariant = Color(0xFF419FE7),
+    surface = Color(0xFFF3F3F3),
     onPrimary = Color.Black,
-    onSecondary = Color.White,
+    onSecondary = Color.Black,
     onBackground = Color.Black,
-    onSurface = Color.White,
+    onSurface = Color.Black,
 )
 
 @Composable
