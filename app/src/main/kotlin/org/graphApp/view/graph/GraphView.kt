@@ -39,6 +39,7 @@ fun <E> RightClickPopupOnEmptyArea(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colors.background)
             .onPointerEvent(PointerEventType.Press) {
                 if (!eventHandledByChild && it.buttons.isSecondaryPressed) {
                     popupX = it.changes.first().position.x
