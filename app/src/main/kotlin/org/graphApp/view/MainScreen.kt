@@ -67,7 +67,7 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                                     currentLanguage = currentLanguage,
                                     modifier = Modifier.fillMaxWidth(),
                                     onClose = { showAlgorithmsPanel = false },
-                                    onDismissRequest = { startCliked = false}
+                                    onDismissRequest = { startCliked = false }
                                 )
                             }
 
@@ -75,28 +75,29 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                                 Spacer(modifier = Modifier.height(16.dp))
                             }
 
-                        if (showNewGraphPanel) {
-                            NewGraphPanel(
-                                onLanguageChange = { lang ->
+                            if (showNewGraphPanel) {
+                                NewGraphPanel(
+                                    onLanguageChange = { lang ->
                                         currentLanguage = lang
                                     },
-                                currentLanguage = currentLanguage,
-                                modifier = Modifier.fillMaxWidth(),
-                                onClose = { showNewGraphPanel = false },
-                                viewModel
+                                    currentLanguage = currentLanguage,
+                                    modifier = Modifier.fillMaxWidth(),
+                                    onClose = { showNewGraphPanel = false },
+                                    viewModel
+                                )
+                            }
+                        }
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(MaterialTheme.colors.background)
+                        ) {
+                            GraphView(
+                                viewModel.graphViewModel,
+                                viewModel,
                             )
                         }
-                    }
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(MaterialTheme.colors.background)
-                    ) {
-                        GraphView(
-                            viewModel.graphViewModel,
-                            viewModel,
-                        )
                     }
                 }
             }

@@ -376,6 +376,7 @@ private fun <E> ViewMenu(
 ) {
     var expanded by remember { mutableStateOf(false) }
     var showViewDialog by remember { mutableStateOf(false) }
+
     Box {
         TextButton(
             onClick = { expanded = true },
@@ -447,9 +448,7 @@ private fun <E> ViewMenu(
                     )
 
                     Text(
-                        "Vertex labels",
-                        fontWeight = FontWeight.Medium,
-                        resources.resetDefault,
+                        text = "Vertex labels",
                         color = MaterialTheme.colors.onSurface,
                         fontWeight = FontWeight.ExtraLight
                     )

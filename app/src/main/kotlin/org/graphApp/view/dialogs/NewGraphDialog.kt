@@ -34,7 +34,7 @@ fun<E> NewGraphPanel(
         shape = RoundedCornerShape(10.dp)
     ) {
         val scrollState = rememberScrollState()
-
+        val resources = LocalTextResources.current
         Column(
 
             verticalArrangement = Arrangement.spacedBy(16.dp),
