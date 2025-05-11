@@ -97,11 +97,32 @@ fun OkButton(
 fun AddFolderButton(
     onClick: () -> Unit,
 ) {
-        Icon(
-            imageVector = addFolder,
-            contentDescription = "Add Folder",
-            modifier = Modifier.size(40.dp)
-                .clickable(onClick = onClick)
-                .padding(5.dp)
+    Icon(
+        imageVector = addFolder,
+        contentDescription = "Add Folder",
+        modifier = Modifier.size(40.dp)
+            .clickable(onClick = onClick)
+            .padding(5.dp)
+    )
+}
+
+@Composable
+fun startAlgorithmButton(
+    onClick : () -> Unit,
+    text : String
+) {
+    Button(
+        onClick = onClick,
+        shape = RoundedCornerShape(15.dp),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.primaryVariant,
+            contentColor = MaterialTheme.colors.surface
+        ),
+        modifier = Modifier.padding(6.dp)
+    ) {
+        Text(
+            text = text,
+            color = MaterialTheme.colors.onSecondary
         )
+    }
 }

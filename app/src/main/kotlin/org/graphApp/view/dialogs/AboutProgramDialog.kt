@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import org.graphApp.view.components.CloseButton
+import java.awt.Image
 
 // переписать текст
 @Composable

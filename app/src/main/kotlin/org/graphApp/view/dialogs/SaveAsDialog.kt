@@ -11,14 +11,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import org.graphApp.model.AppLanguage
+import org.graphApp.model.LocalTextResources
 import org.graphApp.view.components.*
 
 // добавить обработку названия графа с подсказками для пользователя, чтобы был корректный ввод
 // чтобы видно было, что можно печатать
 @Composable
 fun SaveAsDialog(
+    currentLanguage: AppLanguage,
+    onLanguageSelect: (AppLanguage) -> Unit,
     onDismissRequest: () -> Unit
 ) {
+    val resources = LocalTextResources.current
     var selectedOption by remember { mutableStateOf("JSON")}
     val options = listOf("JSON", "Neo4j", "SQLite")
     var name by remember { mutableStateOf("") }
@@ -39,7 +44,7 @@ fun SaveAsDialog(
                     value = name,
                     onValueChange = { name = it },
                     placeholder = { Text(
-                        "Enter Graph name",
+                        resources.enterGraphName,
                         color = Color(0xFFB3B3B3),
                         fontSize = 13.sp) },
                     singleLine = true,
@@ -52,7 +57,7 @@ fun SaveAsDialog(
                     )
                 )
                 Text(
-                    text = "Choose a saving format:",
+                    text = resources.chooseFormat,
                     fontWeight = FontWeight.Medium,
                 )
                 Row(
@@ -86,7 +91,7 @@ fun SaveAsDialog(
                         onClick = {}
                     )
                     Text(
-                        text = "Add folder",
+                        text = resources.addFolder,
                         fontWeight = FontWeight.Medium
                     )
                 }
@@ -95,9 +100,9 @@ fun SaveAsDialog(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Start
                 ) {
-                    CloseButton(onClick = onDismissRequest, text = "Cancel")
+                    CloseButton(onClick = onDismissRequest, text = resources.cancel)
                     Spacer(modifier = Modifier.weight(1f))
-                    SaveButton(onClick = {  }, text = "Save")
+                    SaveButton(onClick = {  }, text = resources.save)
                 }
             }
         }
