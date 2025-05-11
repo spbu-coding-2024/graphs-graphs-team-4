@@ -17,6 +17,8 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import org.graphApp.model.AppLanguage
+import org.graphApp.model.LocalTextResources
 import org.graphApp.view.components.*
 import org.graphApp.viewmodel.MainScreenViewModel
 import kotlin.math.roundToInt
@@ -25,12 +27,15 @@ const val START_ZOOM_POSITION = 250
 
 @Composable
 fun <E> ViewDialog(
+    currentLanguage: AppLanguage,
+    onLanguageSelect: (AppLanguage) -> Unit,
     mainVm: MainScreenViewModel<E>,
     selectedTheme: String,
     onThemeChange: (String) -> Unit,
     onDismissRequest: () -> Unit
 ) {
-    val listOfThemes = listOf("Light", "Dark")
+    val resources = LocalTextResources.current
+    val listOfThemes = listOf(resources.light, resources.dark)
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
             color = MaterialTheme.colors.surface,
@@ -43,7 +48,7 @@ fun <E> ViewDialog(
                 modifier = Modifier.padding(4.dp)
             ) {
                 Text(
-                    text = "View",
+                    text = resources.viewDialog,
                     style = MaterialTheme.typography.h6,
                     color = MaterialTheme.colors.onPrimary,
                     modifier = Modifier.padding(top = 16.dp)
@@ -73,7 +78,7 @@ fun <E> ViewDialog(
                     )
                     Spacer(Modifier.width(5.dp))
                     Text(
-                        text = "Theme",
+                        text = resources.theme,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         color = MaterialTheme.colors.onPrimary,
@@ -104,8 +109,8 @@ fun <E> ViewDialog(
                             Text(
                                 text = text,
                                 style = MaterialTheme.typography.body1,
-                                color = MaterialTheme.colors.onPrimary,
-                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colors.onSecondary,
+                                fontWeight = FontWeight.Light,
                                 fontSize = 16.sp,
                                 modifier = Modifier.padding(start = 8.dp)
                             )
@@ -122,13 +127,13 @@ fun <E> ViewDialog(
                         modifier = Modifier.fillMaxWidth(0.5f)
 
                     ){
-                        CloseButton(onClick = onDismissRequest, text = "Cancel")
+                        CloseButton(onClick = onDismissRequest, text = resources.cancel)
                     }
                     Column (horizontalAlignment = Alignment.End,
                         modifier = Modifier.fillMaxWidth()) {
                         OkButton(onClick = {
                             onDismissRequest()
-                        }, text = "OK")
+                        }, text = resources.ok)
                     }
                 }
             }

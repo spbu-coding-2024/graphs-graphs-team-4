@@ -94,8 +94,8 @@ fun <E, V> EdgeView(
             )
 
             val angle = atan2(end.y - start.y, end.x - start.x)
-            val arrowLen = 15.dp.toPx()
-            val arrowWidth = 12.dp.toPx()
+            val arrowLen = 28.dp.toPx()
+            val arrowWidth = 19.dp.toPx()
 
             val tip = arrowPosition
             val baseAngle = angle + Math.toRadians(90.0).toFloat()

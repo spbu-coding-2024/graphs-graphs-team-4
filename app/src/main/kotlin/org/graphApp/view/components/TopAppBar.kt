@@ -10,10 +10,11 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import org.graphApp.model.AppLanguage
+import org.graphApp.model.LocalTextResources
 import org.graphApp.view.dialogs.AboutDialog
 import org.graphApp.view.dialogs.QuickGuideDialog
 import org.graphApp.view.dialogs.SaveAsDialog
@@ -22,21 +23,18 @@ import org.graphApp.viewmodel.MainScreenViewModel
 import org.graphApp.viewmodel.graph.GraphViewModel
 import org.jetbrains.exposed.sql.Column
 
-// какая-то проблема с расположением кнопок во ViewDialog
-// убрать AlgorithmMenu во ViewMenu (???)
-// ViewDialog: вытащить theme и zoom отдельно в view (???)
-// добавить кнопку "Свернуть"
-// добавить кнопку "Развернуть"
-
 @Composable
 fun <E> TopBarMenu(
     onToggleAlgorithms: () -> Unit,
     onShowNewGraph: () -> Unit,
     onCloseRequest: () -> Unit,
     onToggleTheme: () -> Unit,
+    onLanguageChange: (AppLanguage) -> Unit,
+    currentLanguage: AppLanguage,
     mainThemeDark: Boolean,
     mainVm: MainScreenViewModel<E>,
 ) {
+    val resources = LocalTextResources.current
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -53,62 +51,36 @@ fun <E> TopBarMenu(
                 modifier = Modifier.weight(1f),
                 horizontalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-                FileMenu(onNewGraph = onShowNewGraph)
-                Divider(
-                    color = MaterialTheme.colors.onPrimary.copy(alpha = 0.18f),
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(vertical = 10.dp)
-                        .offset(y = 2.dp)
-
-                        .width(1.dp)
-
+                FileMenu(
+                    currentLanguage = currentLanguage,
+                    onLanguageSelect1 = onLanguageChange,
+                    resources = resources,
+                    onNewGraph = onShowNewGraph
                 )
-                EditMenu()
-                Divider(
-                    color = MaterialTheme.colors.onPrimary.copy(alpha = 0.18f),
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(vertical = 10.dp)
-                        .offset(y = 2.dp)
-
-                        .width(1.dp)
-
+                MenuDivider()
+                EditMenu(resources = resources)
+                MenuDivider()
+                ViewMenu(
+                    currentLanguage = currentLanguage,
+                    onLanguageChange = onLanguageChange,
+                    resources = resources,
+                    mainVm = mainVm,
+                    mainThemeDark = mainThemeDark,
+                    onToggleTheme = onToggleTheme
                 )
-                ViewMenu(mainVm = mainVm, mainThemeDark, onToggleTheme)
-                Divider(
-                    color = MaterialTheme.colors.onPrimary.copy(alpha = 0.18f),
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(vertical = 10.dp)
-                        .offset(y = 2.dp)
-
-                        .width(1.dp)
-
+                MenuDivider()
+                AlgorithmsMenu(
+                    resources = resources,
+                    onClick = onToggleAlgorithms
                 )
-                AlgorithmsMenu(onClick = onToggleAlgorithms)
-                Divider(
-                    color = MaterialTheme.colors.onPrimary.copy(alpha = 0.18f),
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(vertical = 10.dp)
-                        .offset(y = 2.dp)
-
-                        .width(1.dp)
-
+                MenuDivider()
+                SettingsMenu(
+                    resources = resources,
+                    currentLanguage = currentLanguage,
+                    onLanguageChange = onLanguageChange
                 )
-                SettingsMenu()
-                Divider(
-                    color = MaterialTheme.colors.onPrimary.copy(alpha = 0.18f),
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(vertical = 10.dp)
-                        .offset(y = 2.dp)
-
-                        .width(1.dp)
-
-                )
-                HelpMenu()
+                MenuDivider()
+                HelpMenu(resources = resources)
             }
 
             Box(
@@ -142,7 +114,21 @@ fun <E> TopBarMenu(
 }
 
 @Composable
-private fun FileMenu(onNewGraph: () -> Unit) {
+private fun MenuDivider() {
+    Divider(
+        color = MaterialTheme.colors.onPrimary.copy(alpha = 0.18f),
+        modifier = Modifier
+            .fillMaxHeight()
+            .padding(vertical = 10.dp)
+            .offset(y = 2.dp)
+            .width(1.dp)
+    )
+}
+
+@Composable
+private fun FileMenu(currentLanguage: AppLanguage,
+                     onLanguageSelect1: (AppLanguage) -> Unit,
+                     resources: org.graphApp.model.TextResources, onNewGraph: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     var openExpanded by remember { mutableStateOf(false) }
     var showSaveAsDialog by remember { mutableStateOf(false) }
@@ -152,7 +138,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
             onClick = { expanded = true },
             colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.onPrimary)
         ) {
-            Text("File", fontWeight = FontWeight.Light, color = MaterialTheme.colors.onSecondary)
+            Text(resources.fileMenu, fontWeight = FontWeight.Light, color = MaterialTheme.colors.onSecondary)
         }
 
         DropdownMenu(
@@ -176,7 +162,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        "New graph",
+                        resources.newGraph,
                         color = MaterialTheme.colors.onSurface,
                         fontWeight = FontWeight.ExtraLight
                     )
@@ -194,7 +180,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        "Open",
+                        resources.open,
                         color = MaterialTheme.colors.onSurface,
                         fontWeight = FontWeight.ExtraLight
                     )
@@ -212,7 +198,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
                 ) {
                     Box(modifier = Modifier.padding(start = 40.dp)) {
                         Text(
-                            "Recent graphs:",
+                            resources.recentGraphs,
                             color = MaterialTheme.colors.onSurface,
                             fontWeight = FontWeight.ExtraLight
                         )
@@ -259,7 +245,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
                             modifier = Modifier.size(20.dp)
                         )
                         Text(
-                            "Load Graph",
+                            resources.loadGraph,
                             color = MaterialTheme.colors.onSurface,
                             fontWeight = FontWeight.ExtraLight
                         )
@@ -281,7 +267,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        "Save",
+                        resources.save,
                         color = MaterialTheme.colors.onSurface,
                         fontWeight = FontWeight.ExtraLight
                     )
@@ -296,7 +282,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
             ) {
                 Box(modifier = Modifier.padding(start = 28.dp)) {
                     Text(
-                        "Save as",
+                        resources.saveAs,
                         color = MaterialTheme.colors.onSurface,
                         fontWeight = FontWeight.ExtraLight
                     )
@@ -306,7 +292,7 @@ private fun FileMenu(onNewGraph: () -> Unit) {
             DropdownMenuItem(onClick = { /* TODO: reset */ }) {
                 Box(modifier = Modifier.padding(start = 28.dp)) {
                     Text(
-                        "Reset",
+                        resources.reset,
                         color = MaterialTheme.colors.onSurface,
                         fontWeight = FontWeight.ExtraLight
                     )
@@ -316,12 +302,15 @@ private fun FileMenu(onNewGraph: () -> Unit) {
     }
 
     if (showSaveAsDialog) {
-        SaveAsDialog(onDismissRequest = { showSaveAsDialog = false })
+        SaveAsDialog(
+            currentLanguage = currentLanguage,
+            onLanguageSelect = onLanguageSelect1,
+            onDismissRequest = { showSaveAsDialog = false })
     }
 }
 
 @Composable
-private fun EditMenu() {
+private fun EditMenu(resources: org.graphApp.model.TextResources) {
     var expanded by remember { mutableStateOf(false) }
 
     Box {
@@ -329,7 +318,7 @@ private fun EditMenu() {
             onClick = { expanded = true },
             colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.onPrimary)
         ) {
-            Text("Edit", fontWeight = FontWeight.Light, color = MaterialTheme.colors.onSecondary)
+            Text(resources.editMenu, fontWeight = FontWeight.Light, color = MaterialTheme.colors.onSecondary)
         }
 
         DropdownMenu(
@@ -348,9 +337,9 @@ private fun EditMenu() {
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        "Undo",
+                        resources.undo,
                         color = MaterialTheme.colors.onSurface,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.ExtraLight
                     )
                 }
             }
@@ -366,9 +355,9 @@ private fun EditMenu() {
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        "Redo",
+                        resources.redo,
                         color = MaterialTheme.colors.onSurface,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.ExtraLight
                     )
                 }
             }
@@ -378,19 +367,21 @@ private fun EditMenu() {
 
 @Composable
 private fun <E> ViewMenu(
+    currentLanguage: AppLanguage,
+    onLanguageChange : (AppLanguage) -> Unit,
+    resources: org.graphApp.model.TextResources,
     mainVm: MainScreenViewModel<E>,
     mainThemeDark: Boolean,
     onToggleTheme: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     var showViewDialog by remember { mutableStateOf(false) }
-
     Box {
         TextButton(
             onClick = { expanded = true },
             colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.onPrimary)
         ) {
-            Text("View", fontWeight = FontWeight.Light, color = MaterialTheme.colors.onSecondary)
+            Text(resources.viewMenu, fontWeight = FontWeight.Light, color = MaterialTheme.colors.onSecondary)
         }
 
         DropdownMenu(
@@ -405,8 +396,8 @@ private fun <E> ViewMenu(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        "Settings",
-                        fontWeight = FontWeight.Medium
+                        resources.settings,
+                        fontWeight = FontWeight.ExtraLight
                     )
                 }
             }
@@ -458,14 +449,19 @@ private fun <E> ViewMenu(
                     Text(
                         "Vertex labels",
                         fontWeight = FontWeight.Medium,
+                        resources.resetDefault,
+                        color = MaterialTheme.colors.onSurface,
+                        fontWeight = FontWeight.ExtraLight
                     )
                 }
             }
 
             if (showViewDialog) {
                 ViewDialog(
+                    currentLanguage = currentLanguage,
+                    onLanguageSelect = onLanguageChange,
                     mainVm = mainVm,
-                    selectedTheme = if (mainThemeDark) "Light" else "Dark",
+                    selectedTheme = if (mainThemeDark) resources.themeLight else resources.themeDark,
                     onThemeChange = { newTheme ->
                         onToggleTheme()
                     },
@@ -477,7 +473,7 @@ private fun <E> ViewMenu(
 }
 
 @Composable
-private fun AlgorithmsMenu(onClick: () -> Unit) {
+private fun AlgorithmsMenu(resources: org.graphApp.model.TextResources, onClick: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
 
     Box {
@@ -486,7 +482,7 @@ private fun AlgorithmsMenu(onClick: () -> Unit) {
             colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.onPrimary)
         ) {
             Text(
-                "Algorithms",
+                resources.algorithmsMenu,
                 fontWeight = FontWeight.Light,
                 color = MaterialTheme.colors.onSecondary
             )
@@ -503,20 +499,22 @@ private fun AlgorithmsMenu(onClick: () -> Unit) {
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        "Algorithms",
+                        resources.algorithmsMenu,
                         color = MaterialTheme.colors.onSurface,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.ExtraLight
                     )
                 }
             }
-
-
         }
     }
 }
 
 @Composable
-fun SettingsMenu() {
+fun SettingsMenu(
+    resources: org.graphApp.model.TextResources,
+    currentLanguage: AppLanguage,
+    onLanguageChange: (AppLanguage) -> Unit
+) {
     var expanded by remember { mutableStateOf(false) }
     var languageExpanded by remember { mutableStateOf(false) }
 
@@ -526,11 +524,10 @@ fun SettingsMenu() {
             colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.onPrimary)
         ) {
             Text(
-                "Settings",
+                resources.settingsMenu,
                 fontWeight = FontWeight.Light,
                 color = MaterialTheme.colors.onSecondary
             )
-
         }
 
         DropdownMenu(
@@ -552,9 +549,9 @@ fun SettingsMenu() {
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        "Language",
+                        resources.language,
                         color = MaterialTheme.colors.onSurface,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.ExtraLight
                     )
                 }
             }
@@ -562,36 +559,59 @@ fun SettingsMenu() {
             if (languageExpanded) {
                 Box(modifier = Modifier.padding(start = 40.dp)) { Divider() }
 
-                DropdownMenuItem(onClick = {}) { SelectLanguage() }
+                DropdownMenuItem(onClick = {}) {
+                    SelectLanguage(
+                        resources = resources,
+                        currentLanguage = currentLanguage,
+                        onLanguageChange = onLanguageChange
+                    )
+                }
 
                 Box(modifier = Modifier.padding(start = 40.dp)) { Divider() }
+            }
+
+            DropdownMenuItem(onClick = { expanded = false }) {
+                Box(modifier = Modifier.padding(start = 28.dp)) {
+                    Text(
+                        resources.resetDefault,
+                        color = MaterialTheme.colors.onSurface,
+                        fontWeight = FontWeight.ExtraLight
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-fun SelectLanguage(modifier: Modifier = Modifier) {
-    val radioOptions = listOf("English", "Russian")
-    val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
+fun SelectLanguage(
+    resources: org.graphApp.model.TextResources,
+    currentLanguage: AppLanguage,
+    onLanguageChange: (AppLanguage) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val radioOptions = listOf(
+        Pair(AppLanguage.ENGLISH, resources.english),
+        Pair(AppLanguage.RUSSIAN, resources.russian)
+    )
 
     Column(modifier = modifier.selectableGroup()) {
-        radioOptions.forEach { text ->
+        radioOptions.forEach { (language, text) ->
             Row(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .selectable(
-                        selected = (text == selectedOption),
-                        onClick = { onOptionSelected(text) },
+                        selected = (language == currentLanguage),
+                        onClick = { onLanguageChange(language) },
                         role = Role.RadioButton
                     )
                     .padding(vertical = 4.dp, horizontal = 40.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(
-                    selected = (text == selectedOption),
+                    selected = (language == currentLanguage),
                     onClick = null,
-                    colors =
-                        RadioButtonDefaults.colors(selectedColor = MaterialTheme.colors.primary)
+                    colors = RadioButtonDefaults.colors(selectedColor = MaterialTheme.colors.primaryVariant)
                 )
                 Text(
                     text = text,
@@ -604,7 +624,7 @@ fun SelectLanguage(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun HelpMenu() {
+fun HelpMenu(resources: org.graphApp.model.TextResources) {
     var expanded by remember { mutableStateOf(false) }
     var showQuickGuide by remember { mutableStateOf(false) }
     var showAbout by remember { mutableStateOf(false) }
@@ -614,7 +634,7 @@ fun HelpMenu() {
             onClick = { expanded = true },
             colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.onPrimary)
         ) {
-            Text("Help", fontWeight = FontWeight.Light, color = MaterialTheme.colors.onSecondary)
+            Text(resources.helpMenu, fontWeight = FontWeight.Light, color = MaterialTheme.colors.onSecondary)
         }
 
         DropdownMenu(
@@ -629,9 +649,9 @@ fun HelpMenu() {
                 }
             ) {
                 Text(
-                    "About Program",
+                    resources.aboutProgram,
                     color = MaterialTheme.colors.onSurface,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.ExtraLight
                 )
             }
 
@@ -642,9 +662,9 @@ fun HelpMenu() {
                 }
             ) {
                 Text(
-                    "Quick Start",
+                    resources.quickStart,
                     color = MaterialTheme.colors.onSurface,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.ExtraLight
                 )
             }
         }

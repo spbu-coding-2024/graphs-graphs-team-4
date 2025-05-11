@@ -11,6 +11,9 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import org.graphApp.model.AppLanguage
+import org.graphApp.model.LocalTextResources
+import org.graphApp.model.getResources
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -19,6 +22,8 @@ import org.graphApp.viewmodel.MainScreenViewModel
 
 @Composable
 fun<E> NewGraphPanel(
+    onLanguageChange: (AppLanguage) -> Unit,
+    currentLanguage: AppLanguage,
     modifier: Modifier = Modifier,
     onClose: () -> Unit,
     vm: MainScreenViewModel<E>
@@ -42,10 +47,10 @@ fun<E> NewGraphPanel(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(modifier = Modifier.weight(0.67f))
+                Box(modifier = Modifier.weight(0.6f))
 
                 Text(
-                    text = "New Graph",
+                    text = resources.newGraph,
                     style = MaterialTheme.typography.h6.copy(
                         fontWeight = FontWeight.ExtraBold,
                         fontSize = 16.sp,
@@ -74,7 +79,7 @@ fun<E> NewGraphPanel(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        "Check type:",
+                        resources.chooseType,
 
                         style = MaterialTheme.typography.h6.copy(
                             fontSize = 14.sp,
@@ -90,6 +95,7 @@ fun<E> NewGraphPanel(
                     ) {
                         LabelCheckbox("Weights", vm.isWeightedGraph) { vm.isWeightedGraph = it }
                         LabelCheckbox("Directed", vm.isDirectedGraph) { vm.isDirectedGraph = it }
+
                     }
                     Row (
                         modifier = Modifier
@@ -100,9 +106,10 @@ fun<E> NewGraphPanel(
                             onClick = {
                                 onClose()
                                 vm.createNewGraph(vm.isWeightedGraph, vm.isDirectedGraph)
-                            }
+                            },
                         ) {
-                            Text("Create Graph")
+                            Text(resources.createGraph, color = MaterialTheme.colors.onSecondary)
+
                         }
                     }
                 }

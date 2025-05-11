@@ -1,5 +1,7 @@
 package org.graphApp.view.dialogs
 
+import androidx.compose.animation.core.estimateAnimationDurationMillis
+import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,14 +14,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Color
+import org.graphApp.model.AppLanguage
+import org.graphApp.model.LocalTextResources
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import org.graphApp.view.components.*
 
 @Composable
 fun AlgorithmsDialog(
+    onLanguageChange: (AppLanguage) -> Unit,
+    currentLanguage: AppLanguage,
     modifier: Modifier = Modifier,
-    onClose: () -> Unit
+    onClose: () -> Unit,
+    onDismissRequest : () -> Unit
 ) {
+    val resources = LocalTextResources.current
     Surface(
         color = MaterialTheme.colors.surface,
         shape = RoundedCornerShape(10.dp),
@@ -40,7 +49,7 @@ fun AlgorithmsDialog(
                 Box(modifier = Modifier.weight(0.5f))
 
                 Text(
-                    text = "Algorithms",
+                    text = resources.algorithmsDialog,
                     style = MaterialTheme.typography.h6.copy(
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp,
@@ -66,7 +75,7 @@ fun AlgorithmsDialog(
             )
 
             Text(
-                text = "Basic",
+                text = resources.basic,
                 style = MaterialTheme.typography.h6.copy(
                     fontWeight = FontWeight.Bold, color = MaterialTheme.colors.onPrimary
                 )
@@ -76,13 +85,13 @@ fun AlgorithmsDialog(
                 var checked2 by remember { mutableStateOf(false) }
                 var checked3 by remember { mutableStateOf(false) }
 
-                LabeledCheckbox("Graph layouts on the plane", checked1) { checked1 = it }
-                LabeledCheckbox("Highlighting key vertices", checked2) { checked2 = it }
-                LabeledCheckbox("Find communities", checked3) { checked3 = it }
+                LabeledCheckbox(resources.layout, checked1) { checked1 = it }
+//                LabeledCheckbox("Highlighting key vertices", checked2) { checked2 = it }
+                LabeledCheckbox(resources.findCommunities, checked3) { checked3 = it }
             }
 
             Text(
-                text = "Classical",
+                text = resources.classic,
                 style = MaterialTheme.typography.h6.copy(
                     fontWeight = FontWeight.Bold, color = MaterialTheme.colors.onPrimary
                 )
@@ -91,12 +100,12 @@ fun AlgorithmsDialog(
                 var selectedOption by remember { mutableStateOf("Strongly connected") }
 
                 listOf(
-                    "Strongly connected",
-                    "Find Bridges",
-                    "Find Circle",
-                    "Minimal Spanning Tree",
-                    "Dijkstra Path",
-                    "Ford Bellman"
+                    resources.stronglyConnected,
+//                    "Find Bridges",
+                    resources.findCycles,
+                    resources.minimalTree,
+//                    "Dijkstra Path",
+                    resources.fordBellman
                 ).forEach { option ->
                     LabeledRadioButton(
                         text = option,
@@ -106,11 +115,15 @@ fun AlgorithmsDialog(
                     }
                 }
             }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                startAlgorithmButton(onClick = { onDismissRequest() }, text = resources.startAlgo)
+            }
         }
     }
 }
-
-val activeTrackColor: Color = Color(0xFF1B0B0B)
 
 @Composable
 fun LabeledCheckbox(text: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
