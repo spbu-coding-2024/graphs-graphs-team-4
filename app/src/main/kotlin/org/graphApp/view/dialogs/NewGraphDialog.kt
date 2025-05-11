@@ -18,25 +18,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.graphApp.viewmodel.MainScreenViewModel
 
 @Composable
-fun NewGraphPanel(
+fun<E> NewGraphPanel(
     onLanguageChange: (AppLanguage) -> Unit,
     currentLanguage: AppLanguage,
     modifier: Modifier = Modifier,
     onClose: () -> Unit,
-    onCreateGraph: (Boolean, Boolean) -> Unit
+    vm: MainScreenViewModel<E>
 ) {
-    var showWeights by remember { mutableStateOf(true) }
-    var showDirected by remember { mutableStateOf(false) }
-    val resources = LocalTextResources.current
 
     Surface(
         color = MaterialTheme.colors.surface,
         shape = RoundedCornerShape(10.dp)
     ) {
         val scrollState = rememberScrollState()
-
+        val resources = LocalTextResources.current
         Column(
 
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -95,8 +93,9 @@ fun NewGraphPanel(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        LabelCheckbox(resources.weights, showWeights) { showWeights = it }
-                        LabelCheckbox(resources.directed, showDirected) { showDirected = it }
+                        LabelCheckbox("Weights", vm.isWeightedGraph) { vm.isWeightedGraph = it }
+                        LabelCheckbox("Directed", vm.isDirectedGraph) { vm.isDirectedGraph = it }
+
                     }
                     Row (
                         modifier = Modifier
@@ -105,13 +104,9 @@ fun NewGraphPanel(
                     ){
                         Button(
                             onClick = {
-                                onCreateGraph(showWeights, showDirected)
                                 onClose()
+                                vm.createNewGraph(vm.isWeightedGraph, vm.isDirectedGraph)
                             },
-                            colors = ButtonDefaults.buttonColors(
-                                backgroundColor = MaterialTheme.colors.primaryVariant,
-                                contentColor = MaterialTheme.colors.surface
-                            )
                         ) {
                             Text(resources.createGraph, color = MaterialTheme.colors.onSecondary)
 

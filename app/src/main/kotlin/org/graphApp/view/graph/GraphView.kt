@@ -133,7 +133,95 @@ fun <E> RightClickPopupOnEmptyArea(
     }
 }
 }
+@Composable
+fun EdgeWeightPopup(
+    isVisible: Boolean,
+    position: DpOffset,
+    onDismiss: () -> Unit,
+    onConfirm: (String) -> Unit
+) {
+    if (isVisible) {
+        var weight by remember { mutableStateOf("") }
+        val density = LocalDensity.current
+        Popup(
+            alignment = Alignment.TopStart,
+            offset =
+                with(density) {
+                    IntOffset(
+                        position.x.roundToPx(),
+                        position.y.roundToPx()
+                    )
+                },
+            onDismissRequest = onDismiss,
+            properties = PopupProperties(focusable = true)
+        ) {
+            val animatedProgress = remember { Animatable(0f) }
 
+            LaunchedEffect(key1 = true) {
+                animatedProgress.animateTo(
+                    targetValue = 1f,
+                    animationSpec = tween(500, easing = EaseOutQuint)
+                )
+            }
+
+            val scale = animatedProgress.value
+            Card(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .padding(16.dp)
+                    .graphicsLayer {
+                        scaleX = scale
+                        scaleY = scale
+                    },
+                elevation = 8.dp,
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .width(280.dp)
+                        .height(200.dp)
+                        .padding(8.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        "Enter edge weight",
+                        style = MaterialTheme.typography.subtitle1,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    OutlinedTextField(
+                        value = weight,
+                        onValueChange = { weight = it },
+                        label = { Text("Weight") },
+                        modifier = Modifier.fillMaxWidth().height(70.dp),
+                        singleLine = true
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Button(onClick = onDismiss) {
+                            Text("CANCEL")
+                        }
+
+                        Button(onClick = {
+                            onConfirm(weight)
+                            onDismiss()
+                        }) {
+                            Text("CONFIRM")
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 
 
@@ -168,6 +256,12 @@ fun <E>GraphView(
         ) {
             RightClickPopupOnEmptyArea(
                 viewModel = mainScreenViewModel
+            )
+            EdgeWeightPopup(
+                isVisible = viewModel.showEdgeWeight,
+                position = viewModel.edgeWeightPopupPosition,
+                onDismiss = { viewModel.dismissEdgeWeight() },
+                onConfirm = { weight -> viewModel.confirmEdgeWeight(weight) }
             )
             Box(modifier = Modifier
                 .graphicsLayer {

@@ -1,12 +1,17 @@
 package org.graphApp.view.graph
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import org.graphApp.viewmodel.graph.EdgeViewModel
@@ -58,20 +63,31 @@ fun <E, V> EdgeView(
         )
     }
     if (viewModel.weightVisible) {
-        Text(
-            modifier = Modifier
+        Box(
+            modifier = Modifier.wrapContentSize().padding(8.dp)
                 .offset(
-                    viewModel.u.x + (viewModel.v.x - viewModel.u.x) / 2,
-                    viewModel.u.y + (viewModel.v.y - viewModel.u.y) / 2
-                ),
-            text = viewModel.weight ?: "",
-        )
+                    x = (viewModel.u.x + (viewModel.v.x - viewModel.u.x) / 2) + viewModel.u.radius,
+                    y = (viewModel.u.y + (viewModel.v.y - viewModel.u.y) / 2) + viewModel.u.radius
+                )
+
+        ) {
+            Card(
+                backgroundColor = MaterialTheme.colors.background.copy(alpha = 0.7f),
+                elevation = 2.dp,
+                modifier = Modifier.alpha(0.8f)
+            ) {
+                Text(
+                    text = viewModel.weight ?: "",
+                    color = MaterialTheme.colors.onBackground,
+                    style = MaterialTheme.typography.caption
+                )
+            }
+        }
     }
 
-    if (viewModel.directionVisible) {
+    if (viewModel.directVisible) {
 
         Canvas(modifier = modifier.fillMaxSize()) {
-            val arrowColor = Color.Black // Using black color like in the image
             val arrowPosition = Offset(
                 start.x + (end.x - start.x) * PLACE_ARROW_PARAM,
                 start.y + (end.y - start.y) * PLACE_ARROW_PARAM

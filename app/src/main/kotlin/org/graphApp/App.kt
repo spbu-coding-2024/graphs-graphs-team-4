@@ -9,6 +9,7 @@ import org.graphApp.model.graph.Graph
 import org.graphApp.model.graph.UndirectedGraph
 import org.graphApp.view.MainScreen
 import org.graphApp.viewmodel.MainScreenViewModel
+import org.graphApp.viewmodel.graph.GraphViewModel
 
 val currentGraph: Graph<String, Long> = UndirectedGraph<String, Long>()
 
@@ -17,7 +18,8 @@ val currentGraph: Graph<String, Long> = UndirectedGraph<String, Long>()
 @Preview
 fun App(onCloseRequest: () -> Unit) {
     MaterialTheme {
-        MainScreen(MainScreenViewModel(currentGraph), onCloseRequest = onCloseRequest)
+        val viewModel = MainScreenViewModel(currentGraph)
+        MainScreen(viewModel = viewModel, onCloseRequest = onCloseRequest)
     }
 }
 

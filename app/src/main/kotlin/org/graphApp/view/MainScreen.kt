@@ -21,6 +21,7 @@ import org.graphApp.view.theme.GraphTheme
 import org.graphApp.view.dialogs.AlgorithmsDialog
 import org.graphApp.view.dialogs.NewGraphPanel
 import org.graphApp.view.graph.RightClickPopupOnEmptyArea
+import org.graphApp.viewmodel.graph.GraphViewModel
 
 @Composable
 fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit) {
@@ -29,7 +30,6 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
     var showNewGraphPanel by remember { mutableStateOf(false) }
     var startCliked by remember { mutableStateOf(false)}
     var currentLanguage by remember { mutableStateOf(AppLanguage.ENGLISH) }
-
     val resources = getResources(currentLanguage)
     CompositionLocalProvider(LocalTextResources provides resources) {
         GraphTheme(darkTheme = mainThemeDark) {
@@ -67,7 +67,7 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                                     currentLanguage = currentLanguage,
                                     modifier = Modifier.fillMaxWidth(),
                                     onClose = { showAlgorithmsPanel = false },
-                                    onDismissRequest = { startCliked = false}
+                                    onDismissRequest = { startCliked = false }
                                 )
                             }
 
@@ -83,26 +83,21 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                                     currentLanguage = currentLanguage,
                                     modifier = Modifier.fillMaxWidth(),
                                     onClose = { showNewGraphPanel = false },
-                                    onCreateGraph = { showWeights, showDirected ->
-                                        viewModel.showWeight = showWeights
-                                        viewModel.showDirections = showDirected
-                                        viewModel.createNewGraph(showWeights, showDirected)
-                                        viewModel.graphViewModel.clear()
-                                    }
+                                    viewModel
                                 )
                             }
                         }
-                    }
 
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(MaterialTheme.colors.background)
-                    ) {
-                        GraphView(
-                            viewModel.graphViewModel,
-                            viewModel,
-                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(MaterialTheme.colors.background)
+                        ) {
+                            GraphView(
+                                viewModel.graphViewModel,
+                                viewModel,
+                            )
+                        }
                     }
                 }
             }

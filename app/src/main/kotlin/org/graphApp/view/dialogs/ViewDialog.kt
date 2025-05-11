@@ -35,7 +35,6 @@ fun <E> ViewDialog(
     onDismissRequest: () -> Unit
 ) {
     val resources = LocalTextResources.current
-    var sliderPosition by remember { mutableStateOf(START_ZOOM_POSITION) }
     val listOfThemes = listOf(resources.light, resources.dark)
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
@@ -64,10 +63,6 @@ fun <E> ViewDialog(
                     color = MaterialTheme.colors.onPrimary.copy(alpha = 0.6f),
                     thickness = 1.dp
                 )
-//                Column(
-//                    modifier = Modifier.fillMaxWidth(),
-//                    horizontalAlignment = Alignment.CenterHorizontally
-//                ) {
                 Row(
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically,

@@ -20,6 +20,8 @@ import org.graphApp.view.dialogs.QuickGuideDialog
 import org.graphApp.view.dialogs.SaveAsDialog
 import org.graphApp.view.dialogs.ViewDialog
 import org.graphApp.viewmodel.MainScreenViewModel
+import org.graphApp.viewmodel.graph.GraphViewModel
+import org.jetbrains.exposed.sql.Column
 
 @Composable
 fun <E> TopBarMenu(
@@ -30,7 +32,7 @@ fun <E> TopBarMenu(
     onLanguageChange: (AppLanguage) -> Unit,
     currentLanguage: AppLanguage,
     mainThemeDark: Boolean,
-    mainVm: MainScreenViewModel<E>
+    mainVm: MainScreenViewModel<E>,
 ) {
     val resources = LocalTextResources.current
     Surface(
@@ -374,6 +376,7 @@ private fun <E> ViewMenu(
 ) {
     var expanded by remember { mutableStateOf(false) }
     var showViewDialog by remember { mutableStateOf(false) }
+
     Box {
         TextButton(
             onClick = { expanded = true },
@@ -386,6 +389,7 @@ private fun <E> ViewMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
             modifier = Modifier.background(MaterialTheme.colors.surface)
+                .wrapContentSize().padding(end = 8.dp)
         ) {
             DropdownMenuItem(onClick = { showViewDialog = true }) {
                 Row(
@@ -398,14 +402,53 @@ private fun <E> ViewMenu(
                     )
                 }
             }
+            Column (
+                modifier = Modifier.background(MaterialTheme.colors.surface),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.Start
 
-            DropdownMenuItem(onClick = { /* Reset */ }) {
+            ) {
+                if (mainVm.isWeightedGraph) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Checkbox(
+                            checked = mainVm.showEdgesWeight,
+                            onCheckedChange = {
+                                mainVm.showEdgesWeight = it
+                            },
+                            colors = CheckboxDefaults.colors(
+                                checkedColor = MaterialTheme.colors.primaryVariant,
+                                uncheckedColor = MaterialTheme.colors.onPrimary
+                            ),
+                        )
+
+                        Text(
+                            "Edge weights",
+                            fontWeight = FontWeight.Medium,
+                        )
+                    }
+                }
+
+
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.Start
                 ) {
+                    Checkbox(
+                        checked = mainVm.showVertexLabels,
+                        onCheckedChange = {
+                            mainVm.showVertexLabels = it
+                        },
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = MaterialTheme.colors.primaryVariant,
+                            uncheckedColor = MaterialTheme.colors.onPrimary
+                        ),
+                    )
+
                     Text(
-                        resources.resetDefault,
+                        text = "Vertex labels",
                         color = MaterialTheme.colors.onSurface,
                         fontWeight = FontWeight.ExtraLight
                     )
@@ -456,19 +499,6 @@ private fun AlgorithmsMenu(resources: org.graphApp.model.TextResources, onClick:
                 ) {
                     Text(
                         resources.algorithmsMenu,
-                        color = MaterialTheme.colors.onSurface,
-                        fontWeight = FontWeight.ExtraLight
-                    )
-                }
-            }
-
-            DropdownMenuItem(onClick = { /* Reset */ }) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text(
-                        resources.resetDefault,
                         color = MaterialTheme.colors.onSurface,
                         fontWeight = FontWeight.ExtraLight
                     )
