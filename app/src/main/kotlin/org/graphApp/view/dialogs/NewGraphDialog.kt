@@ -15,15 +15,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.graphApp.viewmodel.MainScreenViewModel
 
 @Composable
-fun NewGraphPanel(
+fun<E> NewGraphPanel(
     modifier: Modifier = Modifier,
     onClose: () -> Unit,
-    onCreateGraph: (Boolean, Boolean) -> Unit
+    vm: MainScreenViewModel<E>
 ) {
-    var showWeights by remember { mutableStateOf(true) }
-    var showDirected by remember { mutableStateOf(false) }
 
     Surface(
         color = MaterialTheme.colors.surface,
@@ -89,8 +88,8 @@ fun NewGraphPanel(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        LabelCheckbox("Weights", showWeights) { showWeights = it }
-                        LabelCheckbox("Directed", showDirected) { showDirected = it }
+                        LabelCheckbox("Weights", vm.isWeightedGraph) { vm.isWeightedGraph = it }
+                        LabelCheckbox("Directed", vm.isDirectedGraph) { vm.isDirectedGraph = it }
                     }
                     Row (
                         modifier = Modifier
@@ -99,8 +98,8 @@ fun NewGraphPanel(
                     ){
                         Button(
                             onClick = {
-                                onCreateGraph(showWeights, showDirected)
                                 onClose()
+                                vm.createNewGraph(vm.isWeightedGraph, vm.isDirectedGraph)
                             }
                         ) {
                             Text("Create Graph")

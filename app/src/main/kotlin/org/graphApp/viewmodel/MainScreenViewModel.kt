@@ -16,54 +16,69 @@ import kotlin.math.exp
 
 
 class MainScreenViewModel<E>(graph: Graph<String, E>) {
-    private var _showVerticesLabels = mutableStateOf(false)
+
     private var localGraph: Graph<String, E> = graph
-
-    var showVerticesLabels: Boolean
-        get() = _showVerticesLabels.value
-        set(value) {
-            _showVerticesLabels.value = value
-        }
-
-    private var _showEdgesLabels = mutableStateOf(false)
-    var showEdgesLabels: Boolean
-        get() = _showEdgesLabels.value
-        set(value) {
-            _showEdgesLabels.value = value
-        }
-
-    private var _showEdgesWeights = mutableStateOf(false)
-    var showWeight: Boolean
-        get() = _showEdgesWeights.value
-        set(value) {
-            _showEdgesWeights.value = value
-        }
-    private var _showDirections = mutableStateOf(false)
-    var showDirections: Boolean
-        get() = _showDirections.value
-        set(v) { _showDirections.value = v }
 
     var scale by mutableStateOf(1f)
     var rotation by mutableStateOf(0f)
     var offset by  mutableStateOf(Offset.Zero)
 
+
+    private var _isWeightedGraphState = mutableStateOf(false)
+    var isWeightedGraph: Boolean
+        get() = _isWeightedGraphState.value
+        set(value) {
+        _isWeightedGraphState.value = value
+        }
+
+
+    private var _isDirectedGraphState = mutableStateOf(false)
+    var isDirectedGraph: Boolean
+        get() = _isDirectedGraphState.value
+        set(value) {
+            _isDirectedGraphState.value = value
+        }
+
+
+    private var _showVertexLabels = mutableStateOf(false)
+    var showVertexLabels: Boolean
+        get() = _showVertexLabels.value
+        set(value) {
+            _showVertexLabels.value = value
+        }
+
+
+    private var _showEdgesWeights = mutableStateOf(false)
+    var showEdgesWeight: Boolean
+        get() = _showEdgesWeights.value
+        set(value) {
+            _showEdgesWeights.value = value
+        }
+
     fun scale(delta: Int) {
         scale = (scale * exp(delta * 0.2f)).coerceIn(-0.25f, 5f)
     }
 
-    var graphViewModel = GraphViewModel(graph, _showVerticesLabels, _showEdgesWeights, _showDirections)
+    var graphViewModel = GraphViewModel(
+        graph = graph,
+        showVerticesLabels = _showVertexLabels,
+        showEdgesWeights = _showEdgesWeights,
+        isWeightedGraph = _isWeightedGraphState,
+        isDirectedGraph = _isDirectedGraphState,
+    )
 
-    fun createNewGraph(showWeights: Boolean, showDirected: Boolean) {
+    fun createNewGraph(isWeighted: Boolean, isDirected: Boolean) {
+        graphViewModel.clear()
         val newGraph: Graph<String, E> = when {
-            showDirected && showWeights -> {
+            isDirected && isWeighted -> {
                 DirectWeightedGraph<String, E>()
             }
 
-                !showDirected && showWeights -> {
-                    WeightedGraph<String, E>()
-                }
+            !isDirected && isWeighted -> {
+                WeightedGraph<String, E>()
+            }
 
-            showDirected && !showWeights -> {
+            isDirected && !isWeighted -> {
                 DirectGraph<String, E>()
             }
 
@@ -75,10 +90,15 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
         localGraph.vertices.forEach { vertex -> newGraph.addVertex(vertex.element)}
         localGraph.edges.forEach { edge -> newGraph.addEdge(edge.vertices.first.element, edge.vertices.second.element, edge.element)}
 
-        showWeight = showWeights
-        showDirections = showDirected
+        isWeightedGraph = isWeighted
+        isDirectedGraph = isDirected
 
-        graphViewModel = GraphViewModel(newGraph, _showVerticesLabels, _showEdgesWeights, _showDirections)
+        graphViewModel = GraphViewModel(
+            graph = newGraph,
+            showVerticesLabels = _showVertexLabels,
+            showEdgesWeights = _showEdgesWeights,
+            isWeightedGraph = _isWeightedGraphState,
+            isDirectedGraph = _isDirectedGraphState
+        )
     }
-
 }

@@ -26,8 +26,7 @@ class SQLiteMainLogic<E, V>(val connection: SQLiteExposed) {
     fun saveToSQLiteDataBase(viewModel: GraphViewModel<V, E>, name: String) {
         val id = connection.addGraph(
             name,
-            viewModel.showDirections.value,
-            viewModel.showEdgesWeights.value
+            viewModel.showEdgesWeights.value,
         )
         if (id == -1) return
         connection.addAllVertices(id, viewModel.vertices)
@@ -97,13 +96,12 @@ class SQLiteExposed(dbName: String) {
         }
     }
 
-    fun addGraph(graphName: String, isDirectedVal: Boolean, isWeightedVal: Boolean): Int {
+    fun addGraph(graphName: String, isWeightedVal: Boolean): Int {
         var id = -1
         transaction(dataBaseConnection) {
             try {
                 val t = Graphs.insertAndGetId {
                     it[Graphs.GraphName] = graphName
-                    it[Graphs.isDirected] = isDirectedVal
                     it[Graphs.isWeighted] = isWeightedVal
                     it[Graphs.label] = ""
                 }

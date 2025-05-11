@@ -19,6 +19,8 @@ import org.graphApp.view.dialogs.QuickGuideDialog
 import org.graphApp.view.dialogs.SaveAsDialog
 import org.graphApp.view.dialogs.ViewDialog
 import org.graphApp.viewmodel.MainScreenViewModel
+import org.graphApp.viewmodel.graph.GraphViewModel
+import org.jetbrains.exposed.sql.Column
 
 // какая-то проблема с расположением кнопок во ViewDialog
 // убрать AlgorithmMenu во ViewMenu (???)
@@ -33,7 +35,7 @@ fun <E> TopBarMenu(
     onCloseRequest: () -> Unit,
     onToggleTheme: () -> Unit,
     mainThemeDark: Boolean,
-    mainVm: MainScreenViewModel<E>
+    mainVm: MainScreenViewModel<E>,
 ) {
     Surface(
         modifier = Modifier
@@ -375,7 +377,6 @@ private fun EditMenu() {
 }
 
 @Composable
-// sliderposition: Int = START_ZOOM_POSITION,
 private fun <E> ViewMenu(
     mainVm: MainScreenViewModel<E>,
     mainThemeDark: Boolean,
@@ -396,6 +397,7 @@ private fun <E> ViewMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
             modifier = Modifier.background(MaterialTheme.colors.surface)
+                .wrapContentSize().padding(end = 8.dp)
         ) {
             DropdownMenuItem(onClick = { showViewDialog = true }) {
                 Row(
@@ -408,16 +410,54 @@ private fun <E> ViewMenu(
                     )
                 }
             }
+            Column (
+                modifier = Modifier.background(MaterialTheme.colors.surface),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.Start
 
-            DropdownMenuItem(onClick = { /* Reset */ }) {
+            ) {
+                if (mainVm.isWeightedGraph) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Checkbox(
+                            checked = mainVm.showEdgesWeight,
+                            onCheckedChange = {
+                                mainVm.showEdgesWeight = it
+                            },
+                            colors = CheckboxDefaults.colors(
+                                checkedColor = MaterialTheme.colors.primaryVariant,
+                                uncheckedColor = MaterialTheme.colors.onPrimary
+                            ),
+                        )
+
+                        Text(
+                            "Edge weights",
+                            fontWeight = FontWeight.Medium,
+                        )
+                    }
+                }
+
+
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.Start
                 ) {
+                    Checkbox(
+                        checked = mainVm.showVertexLabels,
+                        onCheckedChange = {
+                            mainVm.showVertexLabels = it
+                        },
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = MaterialTheme.colors.primaryVariant,
+                            uncheckedColor = MaterialTheme.colors.onPrimary
+                        ),
+                    )
+
                     Text(
-                        "Reset default",
-                        color = MaterialTheme.colors.onSurface,
-                        fontWeight = FontWeight.Medium
+                        "Vertex labels",
+                        fontWeight = FontWeight.Medium,
                     )
                 }
             }
@@ -470,18 +510,7 @@ private fun AlgorithmsMenu(onClick: () -> Unit) {
                 }
             }
 
-            DropdownMenuItem(onClick = { /* Reset */ }) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text(
-                        "Reset default",
-                        color = MaterialTheme.colors.onSurface,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
-            }
+
         }
     }
 }
@@ -536,16 +565,6 @@ fun SettingsMenu() {
                 DropdownMenuItem(onClick = {}) { SelectLanguage() }
 
                 Box(modifier = Modifier.padding(start = 40.dp)) { Divider() }
-            }
-
-            DropdownMenuItem(onClick = { expanded = false }) {
-                Box(modifier = Modifier.padding(start = 28.dp)) {
-                    Text(
-                        "Reset default",
-                        color = MaterialTheme.colors.onSurface,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
             }
         }
     }

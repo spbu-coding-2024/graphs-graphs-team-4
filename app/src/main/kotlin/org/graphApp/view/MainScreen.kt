@@ -18,6 +18,7 @@ import org.graphApp.view.theme.GraphTheme
 import org.graphApp.view.dialogs.AlgorithmsDialog
 import org.graphApp.view.dialogs.NewGraphPanel
 import org.graphApp.view.graph.RightClickPopupOnEmptyArea
+import org.graphApp.viewmodel.graph.GraphViewModel
 
 @Composable
 fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit) {
@@ -33,7 +34,7 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                 onShowNewGraph = { showNewGraphPanel = true },
                 onCloseRequest = onCloseRequest,
                 mainThemeDark = mainThemeDark,
-                mainVm = viewModel
+                mainVm = viewModel,
             )
 
             Row(modifier = Modifier.fillMaxSize()) {
@@ -65,12 +66,7 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                             NewGraphPanel(
                                 modifier = Modifier.fillMaxWidth(),
                                 onClose = { showNewGraphPanel = false },
-                                onCreateGraph = { showWeights, showDirected ->
-                                    viewModel.showWeight = showWeights
-                                    viewModel.showDirections = showDirected
-                                    viewModel.createNewGraph(showWeights, showDirected)
-                                    viewModel.graphViewModel.clear()
-                                }
+                                viewModel
                             )
                         }
                     }

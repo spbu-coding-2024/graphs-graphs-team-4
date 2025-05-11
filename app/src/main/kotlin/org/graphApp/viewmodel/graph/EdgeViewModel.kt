@@ -11,7 +11,7 @@ class EdgeViewModel<E, V>(
     val v: VertexViewModel<V>,
     private var edge: Edge<E, V>,
     private val _weightVisible: State<Boolean>,
-    private val _directionVisible: State<Boolean>,
+    private val _directVisible: State<Boolean>
 ) {
     val label: String
         get() = edge.element.toString()
@@ -23,17 +23,10 @@ class EdgeViewModel<E, V>(
     val weightVisible: Boolean
         get() = _weightVisible.value && weightedEdge != null
 
-
-
-
+    val directVisible: Boolean
+        get() = _directVisible.value && directedEdge != null
 
     val weight: String?
         get() = weightedEdge?.weight
-
-    val directionVisible: Boolean
-        get() = _directionVisible.value && directedEdge != null
-
-    val isDirected: Boolean?
-        get() = directedEdge?.let { it.from.id == u.vertexID && it.to.id == v.vertexID }
 
 }
