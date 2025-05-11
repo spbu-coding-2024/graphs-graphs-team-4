@@ -348,7 +348,7 @@ private fun EditMenu() {
                     Text(
                         "Undo",
                         color = MaterialTheme.colors.onSurface,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.ExtraLight
                     )
                 }
             }
@@ -366,7 +366,7 @@ private fun EditMenu() {
                     Text(
                         "Redo",
                         color = MaterialTheme.colors.onSurface,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.ExtraLight
                     )
                 }
             }
@@ -404,7 +404,7 @@ private fun <E> ViewMenu(
                 ) {
                     Text(
                         "Settings",
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.ExtraLight
                     )
                 }
             }
@@ -417,7 +417,7 @@ private fun <E> ViewMenu(
                     Text(
                         "Reset default",
                         color = MaterialTheme.colors.onSurface,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.ExtraLight
                     )
                 }
             }
@@ -465,7 +465,7 @@ private fun AlgorithmsMenu(onClick: () -> Unit) {
                     Text(
                         "Algorithms",
                         color = MaterialTheme.colors.onSurface,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.ExtraLight
                     )
                 }
             }
@@ -478,7 +478,7 @@ private fun AlgorithmsMenu(onClick: () -> Unit) {
                     Text(
                         "Reset default",
                         color = MaterialTheme.colors.onSurface,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.ExtraLight
                     )
                 }
             }
@@ -525,7 +525,7 @@ fun SettingsMenu() {
                     Text(
                         "Language",
                         color = MaterialTheme.colors.onSurface,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.ExtraLight
                     )
                 }
             }
@@ -543,7 +543,7 @@ fun SettingsMenu() {
                     Text(
                         "Reset default",
                         color = MaterialTheme.colors.onSurface,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.ExtraLight
                     )
                 }
             }
@@ -612,7 +612,7 @@ fun HelpMenu() {
                 Text(
                     "About Program",
                     color = MaterialTheme.colors.onSurface,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.ExtraLight
                 )
             }
 
@@ -625,7 +625,7 @@ fun HelpMenu() {
                 Text(
                     "Quick Start",
                     color = MaterialTheme.colors.onSurface,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.ExtraLight
                 )
             }
         }
