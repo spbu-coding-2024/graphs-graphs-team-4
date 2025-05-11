@@ -11,6 +11,9 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import org.graphApp.model.AppLanguage
+import org.graphApp.model.LocalTextResources
+import org.graphApp.model.getResources
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -18,12 +21,15 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun NewGraphPanel(
+    onLanguageChange: (AppLanguage) -> Unit,
+    currentLanguage: AppLanguage,
     modifier: Modifier = Modifier,
     onClose: () -> Unit,
     onCreateGraph: (Boolean, Boolean) -> Unit
 ) {
     var showWeights by remember { mutableStateOf(true) }
     var showDirected by remember { mutableStateOf(false) }
+    val resources = LocalTextResources.current
 
     Surface(
         color = MaterialTheme.colors.surface,
@@ -43,10 +49,10 @@ fun NewGraphPanel(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(modifier = Modifier.weight(0.67f))
+                Box(modifier = Modifier.weight(0.6f))
 
                 Text(
-                    text = "New Graph",
+                    text = resources.newGraph,
                     style = MaterialTheme.typography.h6.copy(
                         fontWeight = FontWeight.ExtraBold,
                         fontSize = 16.sp,
@@ -75,7 +81,7 @@ fun NewGraphPanel(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        "Check type:",
+                        resources.chooseType,
 
                         style = MaterialTheme.typography.h6.copy(
                             fontSize = 14.sp,
@@ -89,8 +95,8 @@ fun NewGraphPanel(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        LabelCheckbox("Weights", showWeights) { showWeights = it }
-                        LabelCheckbox("Directed", showDirected) { showDirected = it }
+                        LabelCheckbox(resources.weights, showWeights) { showWeights = it }
+                        LabelCheckbox(resources.directed, showDirected) { showDirected = it }
                     }
                     Row (
                         modifier = Modifier
@@ -101,9 +107,14 @@ fun NewGraphPanel(
                             onClick = {
                                 onCreateGraph(showWeights, showDirected)
                                 onClose()
-                            }
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = MaterialTheme.colors.primaryVariant,
+                                contentColor = MaterialTheme.colors.surface
+                            )
                         ) {
-                            Text("Create Graph")
+                            Text(resources.createGraph, color = MaterialTheme.colors.onSecondary)
+
                         }
                     }
                 }
