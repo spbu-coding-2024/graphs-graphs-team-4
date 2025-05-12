@@ -48,43 +48,44 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                 )
 
                 Row(modifier = Modifier.fillMaxSize()) {
-                    Column(
-                        modifier = Modifier
-                            .width(300.dp)
-                            .fillMaxHeight()
-                            .padding(10.dp),
-                        verticalArrangement = Arrangement.Top
-                    ) {
-                        AnimatedVisibility(visible = showAlgorithmsPanel) {
-                            AlgorithmsDialog(
-                                onLanguageChange = { lang ->
-                                    currentLanguage = lang
-                                },
-                                currentLanguage = currentLanguage,
-                                modifier = Modifier.fillMaxWidth(),
-                                onClose = { showAlgorithmsPanel = false },
-                                onDismissRequest = { startCliked = false }
-                            )
-                        }
+                    AnimatedVisibility(visible = showAlgorithmsPanel || showNewGraphPanel) {
+                        Column(
+                            modifier = Modifier
+                                .width(300.dp)
+                                .fillMaxHeight()
+                                .padding(10.dp),
+                            verticalArrangement = Arrangement.Top
+                        ) {
+                            AnimatedVisibility(visible = showAlgorithmsPanel) {
+                                AlgorithmsDialog(
+                                    onLanguageChange = { lang ->
+                                        currentLanguage = lang
+                                    },
+                                    currentLanguage = currentLanguage,
+                                    modifier = Modifier.fillMaxWidth(),
+                                    onClose = { showAlgorithmsPanel = false },
+                                    onDismissRequest = { startCliked = false }
+                                )
+                            }
 
-                        // Spacer с анимацией, только если обе панели видимы
-                        AnimatedVisibility(visible = showAlgorithmsPanel && showNewGraphPanel) {
-                            Spacer(modifier = Modifier.height(16.dp))
-                        }
+                            // Spacer с анимацией, только если обе панели видимы
+                            AnimatedVisibility(visible = showAlgorithmsPanel && showNewGraphPanel) {
+                                Spacer(modifier = Modifier.height(16.dp))
+                            }
 
-                        AnimatedVisibility(visible = showNewGraphPanel) {
-                            NewGraphPanel(
-                                onLanguageChange = { lang ->
-                                    currentLanguage = lang
-                                },
-                                currentLanguage = currentLanguage,
-                                modifier = Modifier.fillMaxWidth(),
-                                onClose = { showNewGraphPanel = false },
-                                vm = viewModel
-                            )
+                            AnimatedVisibility(visible = showNewGraphPanel) {
+                                NewGraphPanel(
+                                    onLanguageChange = { lang ->
+                                        currentLanguage = lang
+                                    },
+                                    currentLanguage = currentLanguage,
+                                    modifier = Modifier.fillMaxWidth(),
+                                    onClose = { showNewGraphPanel = false },
+                                    vm = viewModel
+                                )
+                            }
                         }
                     }
-
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
