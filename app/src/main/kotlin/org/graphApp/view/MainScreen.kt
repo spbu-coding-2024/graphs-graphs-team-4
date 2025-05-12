@@ -47,51 +47,55 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                     mainVm = viewModel
                 )
 
-                Row(modifier = Modifier.fillMaxSize()) {
-                    Column(
-                        modifier = Modifier
-                            .width(350.dp)
-                            .fillMaxHeight()
-                            .padding(10.dp),
-                        verticalArrangement = Arrangement.Top
-                    ) {
-                        AnimatedVisibility(visible = showAlgorithmsPanel) {
-                            AlgorithmsDialog(
-                                onLanguageChange = { lang ->
-                                    currentLanguage = lang
-                                },
-                                currentLanguage = currentLanguage,
-                                modifier = Modifier.fillMaxWidth(),
-                                onClose = { showAlgorithmsPanel = false },
-                                onDismissRequest = { startCliked = false }
-                            )
+                    Row(modifier = Modifier.fillMaxSize()) {
+                        AnimatedVisibility(visible = showAlgorithmsPanel || showNewGraphPanel) {
+                            Column(
+                                modifier = Modifier
+                                    .width(350.dp)
+                                    .fillMaxHeight()
+                                    .padding(10.dp),
+                                verticalArrangement = Arrangement.Top
+                            ) {
+                                AnimatedVisibility(visible = showAlgorithmsPanel) {
+                                    AlgorithmsDialog(
+                                        onLanguageChange = { lang ->
+                                            currentLanguage = lang
+                                        },
+                                        currentLanguage = currentLanguage,
+                                        modifier = Modifier.fillMaxWidth(),
+                                        onClose = { showAlgorithmsPanel = false },
+                                        onDismissRequest = { startCliked = false }
+                                    )
+                                }
+                                AnimatedVisibility(visible = showAlgorithmsPanel && showNewGraphPanel) {
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                }
+
+                                AnimatedVisibility(visible = showNewGraphPanel) {
+                                    NewGraphPanel(
+                                        onLanguageChange = { lang ->
+                                            currentLanguage = lang
+                                        },
+                                        currentLanguage = currentLanguage,
+                                        modifier = Modifier.fillMaxWidth(),
+                                        onClose = { showNewGraphPanel = false },
+                                        vm = viewModel
+                                    )
+                                }
+                            }
                         }
-                        AnimatedVisibility(visible = showAlgorithmsPanel && showNewGraphPanel) {
-                            Spacer(modifier = Modifier.height(16.dp))
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(MaterialTheme.colors.background)
+                        ) {
+                            GraphView(
+                                viewModel.graphViewModel,
+                                viewModel,
+                            )
                         }
 
-                        AnimatedVisibility(visible = showNewGraphPanel) {
-                            NewGraphPanel(
-                                onLanguageChange = { lang ->
-                                    currentLanguage = lang
-                                },
-                                currentLanguage = currentLanguage,
-                                modifier = Modifier.fillMaxWidth(),
-                                onClose = { showNewGraphPanel = false },
-                                vm = viewModel
-                            )
-                        }
-                    }
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(MaterialTheme.colors.background)
-                    ) {
-                        GraphView(
-                            viewModel.graphViewModel,
-                            viewModel,
-                        )
-                    }
+
                 }
 
             }
