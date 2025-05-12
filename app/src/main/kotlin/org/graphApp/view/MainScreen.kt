@@ -83,21 +83,20 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                                     currentLanguage = currentLanguage,
                                     modifier = Modifier.fillMaxWidth(),
                                     onClose = { showNewGraphPanel = false },
-                                    viewModel
+                                    vm = viewModel
                                 )
                             }
                         }
-
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(MaterialTheme.colors.background)
-                        ) {
-                            GraphView(
-                                viewModel.graphViewModel,
-                                viewModel,
-                            )
-                        }
+                    }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colors.background)
+                    ) {
+                        GraphView(
+                            viewModel.graphViewModel,
+                            viewModel,
+                        )
                     }
                 }
             }
