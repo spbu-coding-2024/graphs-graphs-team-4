@@ -50,7 +50,7 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                 Row(modifier = Modifier.fillMaxSize()) {
                     Column(
                         modifier = Modifier
-                            .width(300.dp)
+                            .width(350.dp)
                             .fillMaxHeight()
                             .padding(10.dp),
                         verticalArrangement = Arrangement.Top
@@ -66,8 +66,6 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                                 onDismissRequest = { startCliked = false }
                             )
                         }
-
-                        // Spacer с анимацией, только если обе панели видимы
                         AnimatedVisibility(visible = showAlgorithmsPanel && showNewGraphPanel) {
                             Spacer(modifier = Modifier.height(16.dp))
                         }
@@ -84,7 +82,6 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                             )
                         }
                     }
-
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
@@ -96,6 +93,7 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                         )
                     }
                 }
+
             }
         }
     }

@@ -66,7 +66,9 @@ data class TextResources(
     val createGraph : String,
     val enterGraphName : String,
     val chooseFormat : String,
-    val addFolder : String
+    val addFolder : String,
+    val showWeights : String,
+    val showVertexLabels : String
 )
 
 val englishResources = TextResources(
@@ -128,7 +130,9 @@ val englishResources = TextResources(
 
     enterGraphName = "Enter graph name",
     chooseFormat = "Choose a saving format:",
-    addFolder = "Add Folder"
+    addFolder = "Add Folder",
+    showWeights = "Edge weights",
+    showVertexLabels = "Vertex labels",
 )
 
 val russianResources = TextResources(
@@ -184,13 +188,15 @@ val russianResources = TextResources(
 
     close = "Закрыть",
     chooseType = "Выберите тип:",
-    weights = "С весом",
-    directed = "Ориент.",
+    weights = "Весовой",
+    directed = "Ориентированный",
     createGraph = "Создать граф",
 
     enterGraphName = "Введите имя графа",
     chooseFormat = "Введите формат сохранения:",
-    addFolder = "Добавьте папку"
+    addFolder = "Добавьте папку",
+    showWeights = "Веса ребер",
+    showVertexLabels = "Лейблы вершин",
 
 )
 

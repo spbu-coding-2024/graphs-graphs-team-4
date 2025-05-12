@@ -52,7 +52,7 @@ fun AlgorithmsDialog(
                     text = resources.algorithmsDialog,
                     style = MaterialTheme.typography.h6.copy(
                         fontWeight = FontWeight.SemiBold,
-                        fontSize = 16.sp,
+                        fontSize = 20.sp,
                         color = MaterialTheme.colors.onPrimary
                     ),
                     modifier = Modifier

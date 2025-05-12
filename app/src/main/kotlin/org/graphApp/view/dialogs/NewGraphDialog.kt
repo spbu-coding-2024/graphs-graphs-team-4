@@ -93,8 +93,8 @@ fun<E> NewGraphPanel(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        LabelCheckbox("Weights", vm.isWeightedGraph) { vm.isWeightedGraph = it }
-                        LabelCheckbox("Directed", vm.isDirectedGraph) { vm.isDirectedGraph = it }
+                        LabelCheckbox(text = resources.weights, vm.isWeightedGraph) { vm.isWeightedGraph = it }
+                        LabelCheckbox(text = resources.directed, vm.isDirectedGraph) { vm.isDirectedGraph = it }
 
                     }
                     Row (

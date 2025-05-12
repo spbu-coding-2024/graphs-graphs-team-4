@@ -84,6 +84,9 @@ fun <V> VertexView(
             },
         contentAlignment = Alignment.Center
     ) {
+
+    }
+    Box(){
         if (viewModel.labelVisible) {
             Card(
                 backgroundColor = MaterialTheme.colors.background.copy(alpha = 0.8f),
