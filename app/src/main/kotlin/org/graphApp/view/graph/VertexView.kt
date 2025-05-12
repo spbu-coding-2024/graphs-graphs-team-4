@@ -9,6 +9,11 @@ import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -16,7 +21,11 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.modifier.ModifierLocalReadScope
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import org.graphApp.viewmodel.graph.VertexViewModel
 
@@ -26,6 +35,16 @@ fun <V> VertexView(
     modifier: Modifier = Modifier,
     onVertexClick: (VertexViewModel<V>) -> Unit = {},
 ) {
+    var textWidth by remember { mutableStateOf(0) }
+    println(viewModel.value.length)
+    val measurer = rememberTextMeasurer()
+    LaunchedEffect(viewModel.value) {
+        val layout = measurer.measure(AnnotatedString(viewModel.value))
+        textWidth = layout.size.width
+    }
+
+
+
     val hotPink = MaterialTheme.colors.primaryVariant
     val softPink = MaterialTheme.colors.primaryVariant
     val selectedColor = Color(0xFF8BF1E2)
@@ -85,16 +104,27 @@ fun <V> VertexView(
         contentAlignment = Alignment.Center
     ) {
 
+
     }
-    Box(){
+    Box(modifier = Modifier
+        .offset {
+            IntOffset(
+                x = viewModel.x.roundToPx() - textWidth / 2,
+                y = viewModel.y.roundToPx() - 30
+            )
+        }
+        .wrapContentSize(align = Alignment.TopCenter),
+        contentAlignment = Alignment.Center
+    ) {
         if (viewModel.labelVisible) {
             Card(
                 backgroundColor = MaterialTheme.colors.background.copy(alpha = 0.8f),
                 elevation = 2.dp,
                 modifier = Modifier
                     .alpha(0.8f)
-                    .wrapContentSize()
+                    .wrapContentSize(Alignment.Center)
                     .padding(2.dp)
+
             ) {
                 Text(
                     color = MaterialTheme.colors.onBackground,

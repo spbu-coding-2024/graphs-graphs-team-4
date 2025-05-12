@@ -23,7 +23,7 @@ fun <V, E> fordBellman(
         }
     }
     return if (to != null) {
-        pathReconsctract(from, to, parent)
+        pathReconsctruct(from, to, parent)
     } else {
         null
     }
@@ -81,7 +81,7 @@ private fun <V> tryRelax(
         parent[to] = from
     }
 }
-private fun <V> pathReconsctract(
+private fun <V> pathReconsctruct(
     from : Vertex<V>,
     to : Vertex<V>,
     parent : HashMap<Vertex<V>, Vertex<V>?>
