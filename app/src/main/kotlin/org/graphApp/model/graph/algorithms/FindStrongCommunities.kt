@@ -16,6 +16,7 @@ internal class FindStrongCommunities<V,E>(
                 vertex -> vertex.id to false
         }.toMutableMap()
     }
+
     private val _edges = graph.edges
     private val _vertices = graph.vertices
     private val _graphInfo = mutableMapOf<Long, MutableList<Vertex<V>>>()
