@@ -55,19 +55,21 @@ class MinimalSpanningTree<V, E>(
     ) : List<WeightedEdge<E,V>>? {
         resetUsedFlags()
         val result = mutableListOf<WeightedEdge<E,V>>()
-        val queue: ArrayDeque<WeightedEdge<E,V>> = ArrayDeque()
-        queue.add(_sortedEdges[0])
-        _used[_sortedEdges[0].vertices.first.id] = true
+        val queue: ArrayDeque<Vertex<V>> = ArrayDeque()
+        queue.add(_vertices.first())
+        _used[_vertices.first().id] = true
         while(queue.isNotEmpty()) {
-            val currentEdge = queue.first()
+            val currentVertex = queue.first()
             queue.removeFirst()
             _sortedEdges
-                .filter { it.vertices.first.id == currentEdge.vertices.first.id }
+                .filterIsInstance<WeightedEdge<E, V>>()
+                .filter { it.vertices.first.id == currentVertex.id || it.vertices.second.id == currentVertex.id }
                 .forEach { edge ->
-                    result.add(edge)
-                    if(_used[currentEdge.vertices.second.id] != false) {
-                        queue.add(edge)
-                        _used[edge.vertices.first.id] = true
+                    val neightboor = if(edge.vertices.first.id == currentVertex.id) {edge.vertices.second} else {edge.vertices.first}
+                    if(_used[neightboor.id] == false) {
+                        _used[neightboor.id] = true
+                        queue.add(neightboor)
+                        result.add(edge)
                     }
                 }
         }
