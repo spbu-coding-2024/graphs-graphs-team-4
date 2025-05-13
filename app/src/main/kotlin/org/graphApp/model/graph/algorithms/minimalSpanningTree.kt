@@ -3,7 +3,6 @@ package org.graphApp.model.graph.algorithms
 import org.graphApp.model.graph.Graph
 import org.graphApp.model.graph.Vertex
 import org.graphApp.model.graph.WeightedEdge
-import org.jetbrains.exposed.sql.Query
 
 
 
@@ -62,7 +61,6 @@ class MinimalSpanningTree<V, E>(
             val currentVertex = queue.first()
             queue.removeFirst()
             _sortedEdges
-                .filterIsInstance<WeightedEdge<E, V>>()
                 .filter { it.vertices.first.id == currentVertex.id || it.vertices.second.id == currentVertex.id }
                 .forEach { edge ->
                     val neightboor = if(edge.vertices.first.id == currentVertex.id) {edge.vertices.second} else {edge.vertices.first}
