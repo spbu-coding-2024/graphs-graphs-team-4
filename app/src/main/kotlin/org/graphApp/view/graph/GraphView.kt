@@ -120,7 +120,7 @@ fun <E> RightClickPopupOnEmptyArea(
                                 yDp
                             )
 
-                            println("Added vertex: $vertexLabel at ($popupX, $popupY)")
+                          //  println("Added vertex: $vertexLabel at ($popupX, $popupY)")
                             vertexLabel = ""
                             showPopup = false
                         }
@@ -250,7 +250,7 @@ fun <E>GraphView(
                     val change = it.changes.first()
                     val delta = -change.scrollDelta.y.toInt().sign
                     mainScreenViewModel.scale(delta)
-                    println("Scroll")
+                   // println("Scroll")
                 }
                 .transformable(state = state)
         ) {
@@ -273,14 +273,14 @@ fun <E>GraphView(
                     transformOrigin = TransformOrigin(0.5f, 0.5f)
                 })
             {
-                println("Drawing ${viewModel.vertices.size} vertices")
+              //  println("Drawing ${viewModel.vertices.size} vertices")
 
                 viewModel.edges.forEach { e ->
                     EdgeView(e, Modifier)
                 }
 
                 viewModel.vertices.forEach { v ->
-                    println("Drawing vertex ${v.value} at (${v.x}, ${v.y})")
+                  //  println("Drawing vertex ${v.value} at (${v.x}, ${v.y})")
                     VertexView(v, Modifier, onVertexClick = { vertex -> viewModel.onVertexSelected(vertex)})
                 }
             }

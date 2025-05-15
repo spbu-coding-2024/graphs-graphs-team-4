@@ -18,15 +18,17 @@ import org.graphApp.model.AppLanguage
 import org.graphApp.model.LocalTextResources
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import org.graphApp.view.algorithms.AlgorithmsView
 import org.graphApp.view.components.*
 
 @Composable
-fun AlgorithmsDialog(
+fun <V, E> AlgorithmsDialog(
     onLanguageChange: (AppLanguage) -> Unit,
     currentLanguage: AppLanguage,
     modifier: Modifier = Modifier,
+    algoVM: AlgorithmsView<V, E>,
     onClose: () -> Unit,
-    onDismissRequest : () -> Unit
+    onDismissRequest: () -> Unit
 ) {
     val resources = LocalTextResources.current
     Surface(
@@ -61,7 +63,8 @@ fun AlgorithmsDialog(
                 )
 
                 IconButton(onClick = onClose) {
-                    Icon(Icons.Default.Close,
+                    Icon(
+                        Icons.Default.Close,
                         contentDescription = "Close",
                         tint = MaterialTheme.colors.onSecondary
                     )
@@ -96,8 +99,9 @@ fun AlgorithmsDialog(
                     fontWeight = FontWeight.Bold, color = MaterialTheme.colors.onPrimary
                 )
             )
+            var selectedOption by remember { mutableStateOf("Strongly connected") }
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                var selectedOption by remember { mutableStateOf("Strongly connected") }
+
 
                 listOf(
                     resources.stronglyConnected,
@@ -119,7 +123,14 @@ fun AlgorithmsDialog(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                startAlgorithmButton(onClick = { onDismissRequest() }, text = resources.startAlgo)
+                startAlgorithmButton(onClick = {
+                    onDismissRequest()
+                    when(selectedOption) {
+                        resources.stronglyConnected -> algoVM.findStrongCommunities()
+                        resources.minimalTree -> algoVM.minimalSpanningTree()
+                    }
+                }, text = resources.startAlgo)
+
             }
         }
     }

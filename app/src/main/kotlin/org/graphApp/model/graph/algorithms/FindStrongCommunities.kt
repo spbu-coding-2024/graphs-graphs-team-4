@@ -6,7 +6,6 @@ import kotlin.collections.forEach
 
 internal class FindStrongCommunities<V,E>(
     private val graph: Graph<V,E>,
-    private val isDirectedGraph: Boolean,
 ) {
 
     private var _used: MutableMap<Long, Boolean> = mutableMapOf()
@@ -59,11 +58,9 @@ internal class FindStrongCommunities<V,E>(
     fun findStrongCommunitiesInGraph(
 
     ) : List<List<Vertex<V>>>? {
+
         val resultStrongCommunities = mutableListOf<List<Vertex<V>>>()
 
-        if (!isDirectedGraph) {
-            return null
-        }
         resetUsedFlags()
         convertToList()
         _vertices.forEach { vertex ->
@@ -79,6 +76,7 @@ internal class FindStrongCommunities<V,E>(
                 _component.clear()
             }
         }
+
         return resultStrongCommunities
     }
 }

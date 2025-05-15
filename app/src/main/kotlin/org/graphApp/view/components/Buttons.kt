@@ -126,3 +126,24 @@ fun startAlgorithmButton(
         )
     }
 }
+
+@Composable
+fun resetButton(
+    onClick : () -> Unit,
+    text : String
+) {
+    Button(
+        onClick = onClick,
+        shape = RoundedCornerShape(15.dp),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.primaryVariant,
+            contentColor = MaterialTheme.colors.surface
+        ),
+        modifier = Modifier.padding(6.dp)
+    ) {
+        Text(
+            text = text,
+            color = MaterialTheme.colors.onSecondary
+        )
+    }
+}

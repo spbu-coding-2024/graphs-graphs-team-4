@@ -16,6 +16,7 @@ class GraphViewModel<V, E>(
     val isWeightedGraph: State<Boolean>,
     val isDirectedGraph: State<Boolean>
 ) {
+    private var edgeId = 0L
     private val _vertices = mutableStateMapOf<Long, VertexViewModel<V>>()
     val vertices: Collection<VertexViewModel<V>>
         get() = _vertices.values
@@ -80,7 +81,7 @@ class GraphViewModel<V, E>(
 
     fun confirmEdgeWeight(weight: String) {
         if (pendingFromId != null && pendingToId != null) {
-            createEdge(pendingFromId!!, pendingToId!!,null as E, weight)
+            createEdge(pendingFromId!!, pendingToId!!,weight)
         }
         dismissEdgeWeight()
     }
@@ -134,7 +135,7 @@ class GraphViewModel<V, E>(
                         showEdgeWeight(_selectFirstVertex.value!!, vertex)
                     } else {
                         createEdge(_selectFirstVertex.value!!.vertexID,
-                            vertex.vertexID, null as E)
+                            vertex.vertexID, null)
                     }
                 }
                 _selectFirstVertex.value?.selected = false
@@ -145,8 +146,9 @@ class GraphViewModel<V, E>(
     }
 
 
-    fun createEdge (fromV: Long, toV: Long, edgeV: E, weight: String? = null): EdgeViewModel<E,V>? {
-        return addEdge(fromV, toV,edgeV, weight)
+    fun createEdge(from: Long, to: Long, weight: String? = null) {
+        val id = edgeId++
+        addEdge(from, to, id as E, weight)
     }
 
 }

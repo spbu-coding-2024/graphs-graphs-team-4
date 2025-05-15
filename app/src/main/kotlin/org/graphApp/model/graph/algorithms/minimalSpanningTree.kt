@@ -1,5 +1,6 @@
 package org.graphApp.model.graph.algorithms
 
+import org.graphApp.model.graph.Edge
 import org.graphApp.model.graph.Graph
 import org.graphApp.model.graph.Vertex
 import org.graphApp.model.graph.WeightedEdge
@@ -9,8 +10,6 @@ import org.graphApp.model.graph.WeightedEdge
 
 class MinimalSpanningTree<V, E>(
     private val graph: Graph<V,E>,
-    private val isDirectedGraph: Boolean,
-    private val isWeightedGraph: Boolean
 ) {
     private val _edges = graph.edges
     private val _vertices = graph.vertices
@@ -50,17 +49,17 @@ class MinimalSpanningTree<V, E>(
     }
 
 
-    private fun bfsSpanningTree (
-    ) : List<WeightedEdge<E,V>>? {
+    fun bfsSpanningTree (
+    ) : List<Edge<E,V>>? {
         resetUsedFlags()
-        val result = mutableListOf<WeightedEdge<E,V>>()
+        val result = mutableListOf<Edge<E, V>>()
         val queue: ArrayDeque<Vertex<V>> = ArrayDeque()
         queue.add(_vertices.first())
         _used[_vertices.first().id] = true
         while(queue.isNotEmpty()) {
             val currentVertex = queue.first()
             queue.removeFirst()
-            _sortedEdges
+            graph.edges
                 .filter { it.vertices.first.id == currentVertex.id || it.vertices.second.id == currentVertex.id }
                 .forEach { edge ->
                     val neightboor = if(edge.vertices.first.id == currentVertex.id) {edge.vertices.second} else {edge.vertices.first}
@@ -71,10 +70,11 @@ class MinimalSpanningTree<V, E>(
                     }
                 }
         }
+        println("${result.size} spanning tree")
         return result
     }
 
-    private fun kraskalSpanningTree () : List<WeightedEdge<E,V>>? {
+    fun kraskalSpanningTree () : List<WeightedEdge<E,V>>? {
         dsuInit()
         var cost = 0
         val res = mutableListOf<WeightedEdge<E,V>>()
@@ -89,21 +89,7 @@ class MinimalSpanningTree<V, E>(
                 dsuUnit(startV, endV)
             }
         }
+        println("${res.size} kraskal SpanningTree")
         return res
-    }
-
-fun minimalSpanningTree (
-
-) : List<WeightedEdge<E,V>>? {
-    if (isDirectedGraph) {
-        return null
-    }
-
-    if (isWeightedGraph) {
-        return kraskalSpanningTree()
-    } else {
-        return bfsSpanningTree()
-    }
-
     }
 }

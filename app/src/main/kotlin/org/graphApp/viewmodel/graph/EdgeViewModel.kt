@@ -1,7 +1,9 @@
 package org.graphApp.viewmodel.graph
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.graphApp.model.graph.*
@@ -20,6 +22,7 @@ class EdgeViewModel<E, V>(
     private val weightedEdge get() = edge as? WeightedEdge<*, *>
     private val directedEdge get() = edge as? DirectedEdge<*, *>
 
+
     val weightVisible: Boolean
         get() = _weightVisible.value && weightedEdge != null
 
@@ -29,4 +32,10 @@ class EdgeViewModel<E, V>(
     val weight: String?
         get() = weightedEdge?.weight
 
+    private var _color = mutableStateOf(Color.Magenta)
+    var color: Color
+        get() = _color.value
+        set(value) {
+            _color.value = value
+        }
 }

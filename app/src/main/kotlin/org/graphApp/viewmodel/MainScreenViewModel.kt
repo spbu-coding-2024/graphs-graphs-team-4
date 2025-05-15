@@ -10,6 +10,7 @@ import org.graphApp.model.graph.Graph
 import org.graphApp.model.graph.UndirectedGraph
 import org.graphApp.model.graph.UndirectedWeightedGraph
 import org.graphApp.model.graph.WeightedGraph
+import org.graphApp.view.algorithms.AlgorithmsView
 import org.graphApp.viewmodel.graph.GraphViewModel
 import sun.awt.X11.XUtilConstants.ZoomState
 import kotlin.math.exp
@@ -18,7 +19,11 @@ import kotlin.math.exp
 class MainScreenViewModel<E>(graph: Graph<String, E>) {
 
     private var localGraph: Graph<String, E> = graph
-
+    var currentGraph: Graph<String, E>
+        get() = localGraph
+    set(value) {
+        localGraph = value
+    }
     var scale by mutableStateOf(1f)
     var rotation by mutableStateOf(0f)
     var offset by  mutableStateOf(Offset.Zero)
