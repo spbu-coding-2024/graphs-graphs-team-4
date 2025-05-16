@@ -32,7 +32,8 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
     var startCliked by remember { mutableStateOf(false)}
     var currentLanguage by remember { mutableStateOf(AppLanguage.ENGLISH) }
     val resources = getResources(currentLanguage)
-    val algoVM = AlgorithmsView(mainScreenViewModel = viewModel, viewModel = viewModel.graphViewModel)
+    println("${viewModel.graphViewModel.vertices.size}")
+    val algoVM = AlgorithmsView(viewModel = viewModel.graphViewModel)
     CompositionLocalProvider(LocalTextResources provides resources) {
         GraphTheme(darkTheme = mainThemeDark) {
             Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background)) {

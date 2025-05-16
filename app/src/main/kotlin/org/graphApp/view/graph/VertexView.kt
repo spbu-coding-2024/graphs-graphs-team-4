@@ -1,10 +1,8 @@
 package org.graphApp.view.graph
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -35,19 +33,13 @@ fun <V> VertexView(
     onVertexClick: (VertexViewModel<V>) -> Unit = {},
 ) {
     var textWidth by remember { mutableStateOf(0) }
-    println(viewModel.value.length)
     val measurer = rememberTextMeasurer()
     LaunchedEffect(viewModel.value) {
         val layout = measurer.measure(AnnotatedString(viewModel.value))
         textWidth = layout.size.width
     }
 
-    val baseColor      = viewModel.color
-    val auraMultiplier = if (viewModel.selected) 1f else 0.3f
-    val radiusDp       = viewModel.radius
-
-    val hotPink = MaterialTheme.colors.primaryVariant
-    val softPink = MaterialTheme.colors.primaryVariant
+    val radiusDp      = viewModel.radius
     val selectedColor = Color.Cyan
 
     Box(

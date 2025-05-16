@@ -119,8 +119,6 @@ fun <E> RightClickPopupOnEmptyArea(
                                 xDp,
                                 yDp
                             )
-
-                          //  println("Added vertex: $vertexLabel at ($popupX, $popupY)")
                             vertexLabel = ""
                             showPopup = false
                         }
@@ -273,14 +271,14 @@ fun <E>GraphView(
                     transformOrigin = TransformOrigin(0.5f, 0.5f)
                 })
             {
-              //  println("Drawing ${viewModel.vertices.size} vertices")
+                println(viewModel.edges.size)
 
                 viewModel.edges.forEach { e ->
                     EdgeView(e, Modifier)
                 }
-
+                println(viewModel.vertices.size)
                 viewModel.vertices.forEach { v ->
-                  //  println("Drawing vertex ${v.value} at (${v.x}, ${v.y})")
+
                     VertexView(v, Modifier, onVertexClick = { vertex -> viewModel.onVertexSelected(vertex)})
                 }
             }

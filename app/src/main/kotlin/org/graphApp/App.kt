@@ -11,7 +11,7 @@ import org.graphApp.view.MainScreen
 import org.graphApp.viewmodel.MainScreenViewModel
 import org.graphApp.viewmodel.graph.GraphViewModel
 
-val currentGraph: Graph<String, Long> = UndirectedGraph<String, Long>()
+val currentGraph: Graph<String, Long> = UndirectedGraph()
 
 
 @Composable

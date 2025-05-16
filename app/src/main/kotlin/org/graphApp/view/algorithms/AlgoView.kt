@@ -1,19 +1,12 @@
 package org.graphApp.view.algorithms
 
 import androidx.compose.ui.graphics.Color
-import data.SQLiteMainLogic.Edges.fromVertex
-import org.graphApp.currentGraph
-import org.graphApp.model.graph.Edge
-import org.graphApp.model.graph.Vertex
-import org.graphApp.model.graph.WeightedEdge
 import org.graphApp.model.graph.algorithms.FindStrongCommunities
 import org.graphApp.model.graph.algorithms.MinimalSpanningTree
-import org.graphApp.viewmodel.MainScreenViewModel
 import org.graphApp.viewmodel.graph.GraphViewModel
 
-class AlgorithmsView<V, E>(
-    private val viewModel: GraphViewModel<V, E>,
-    private val mainScreenViewModel: MainScreenViewModel<E>
+class AlgorithmsView<V,E>(
+    val viewModel: GraphViewModel<V, E>,
 ) {
     private val highlightColor = Color(0xFF8BF1E2)
     private val communitiesColors = listOf(
@@ -35,37 +28,49 @@ class AlgorithmsView<V, E>(
     )
 
     fun findStrongCommunities() {
-        if(!viewModel.isDirectedGraph.value) {
-            return
+        resetAllColorsToDefaults()
+        val strongCommunitiesFinder = FindStrongCommunities(graph = viewModel.graph)
+        val communities = strongCommunitiesFinder.findStrongCommunitiesInGraph()
+
+        communities?.forEachIndexed { communityIndex, community ->
+            val colorIndex = communityIndex % communitiesColors.size
+            val communityColor = communitiesColors[colorIndex]
+
+            community.forEach { vertex ->
+                val vertexId = vertex.id
+                viewModel.vertices.find { it.vertexID == vertexId }?.let { vertexViewModel ->
+                    vertexViewModel.color = communityColor
+                }
+            }
         }
-
-
-        val result = FindStrongCommunities(graph = viewModel.graph)
-            .findStrongCommunitiesInGraph() ?: return
-
-        val vertexIdToVM = viewModel.vertices.associateBy { it.vertexID }
-
-        viewModel.vertices.forEach { evm ->
-                evm.color = Color.Red
-        }
-
     }
 
     fun minimalSpanningTree() {
         resetAllColorsToDefaults()
-        val mst = MinimalSpanningTree(graph = viewModel.graph)
-        val mstColor = Color(0xFF4CAF50)
+        val mstFinder = MinimalSpanningTree(graph = viewModel.graph)
+        val mstEdges = mstFinder.kraskalSpanningTree()
+        val resultEdges = mstEdges ?: mstFinder.bfsSpanningTree()
 
-        viewModel.edges.forEach { evm ->
-            evm.color = mstColor
+        viewModel.edges.forEach { edgeVM ->
+            edgeVM.color = Color.Gray.copy(alpha = 0.3f)
+        }
+        val mstColor = Color(0xFF4CAF50)
+        resultEdges?.forEach { edge ->
+            val edgeId = findEdgeByVertices(edge.vertices.first.id, edge.vertices.second.id)
+            edgeId?.let { edgeVM ->
+                edgeVM.color = mstColor
+            }
         }
     }
 
+    private fun findEdgeByVertices(fromId: Long, toId: Long) = viewModel.edges.find { edgeVM ->
+        (edgeVM.u.vertexID == fromId && edgeVM.v.vertexID == toId) ||
+                (edgeVM.u.vertexID == toId && edgeVM.v.vertexID == fromId)
+    }
     fun resetAllColorsToDefaults() {
         viewModel.vertices.forEach { vertex ->
             vertex.color = highlightColor
         }
-
         viewModel.edges.forEach { edge ->
             edge.color = highlightColor
         }

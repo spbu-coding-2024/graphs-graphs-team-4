@@ -18,12 +18,7 @@ import kotlin.math.exp
 
 class MainScreenViewModel<E>(graph: Graph<String, E>) {
 
-    private var localGraph: Graph<String, E> = graph
-    var currentGraph: Graph<String, E>
-        get() = localGraph
-    set(value) {
-        localGraph = value
-    }
+
     var scale by mutableStateOf(1f)
     var rotation by mutableStateOf(0f)
     var offset by  mutableStateOf(Offset.Zero)
@@ -64,15 +59,16 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
         scale = (scale * exp(delta * 0.2f)).coerceIn(-0.25f, 5f)
     }
 
-    var graphViewModel = GraphViewModel(
+    var graphViewModel by mutableStateOf(GraphViewModel(
         graph = graph,
         showVerticesLabels = _showVertexLabels,
         showEdgesWeights = _showEdgesWeights,
         isWeightedGraph = _isWeightedGraphState,
         isDirectedGraph = _isDirectedGraphState,
-    )
+    ))
 
     fun createNewGraph(isWeighted: Boolean, isDirected: Boolean) {
+
         graphViewModel.clear()
         val newGraph: Graph<String, E> = when {
             isDirected && isWeighted -> {
@@ -91,9 +87,6 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
                 UndirectedGraph<String, E>()
             }
         }
-
-        localGraph.vertices.forEach { vertex -> newGraph.addVertex(vertex.element)}
-        localGraph.edges.forEach { edge -> newGraph.addEdge(edge.vertices.first.element, edge.vertices.second.element, edge.element)}
 
         isWeightedGraph = isWeighted
         isDirectedGraph = isDirected

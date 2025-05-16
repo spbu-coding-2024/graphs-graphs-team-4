@@ -22,11 +22,11 @@ import org.graphApp.view.algorithms.AlgorithmsView
 import org.graphApp.view.components.*
 
 @Composable
-fun <V, E> AlgorithmsDialog(
+fun <V,E> AlgorithmsDialog(
     onLanguageChange: (AppLanguage) -> Unit,
     currentLanguage: AppLanguage,
     modifier: Modifier = Modifier,
-    algoVM: AlgorithmsView<V, E>,
+    algoVM: AlgorithmsView<V,E>,
     onClose: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
@@ -89,7 +89,6 @@ fun <V, E> AlgorithmsDialog(
                 var checked3 by remember { mutableStateOf(false) }
 
                 LabeledCheckbox(resources.layout, checked1) { checked1 = it }
-//                LabeledCheckbox("Highlighting key vertices", checked2) { checked2 = it }
                 LabeledCheckbox(resources.findCommunities, checked3) { checked3 = it }
             }
 
@@ -128,6 +127,12 @@ fun <V, E> AlgorithmsDialog(
                     when(selectedOption) {
                         resources.stronglyConnected -> algoVM.findStrongCommunities()
                         resources.minimalTree -> algoVM.minimalSpanningTree()
+                        resources.fordBellman -> {
+
+                        }
+                        resources.findCycles -> {
+
+                        }
                     }
                 }, text = resources.startAlgo)
 
