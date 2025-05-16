@@ -61,12 +61,8 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                             ) {
                                 AnimatedVisibility(visible = showAlgorithmsPanel) {
                                     AlgorithmsDialog(
-                                        onLanguageChange = { lang ->
-                                            currentLanguage = lang
-                                        },
-                                        currentLanguage = currentLanguage,
+
                                         algoVM = algoVM,
-                                        modifier = Modifier.fillMaxWidth(),
                                         onClose = { showAlgorithmsPanel = false },
                                         onDismissRequest = { startCliked = false }
                                     )

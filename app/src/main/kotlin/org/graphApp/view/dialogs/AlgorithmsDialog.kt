@@ -23,9 +23,6 @@ import org.graphApp.view.components.*
 
 @Composable
 fun <V,E> AlgorithmsDialog(
-    onLanguageChange: (AppLanguage) -> Unit,
-    currentLanguage: AppLanguage,
-    modifier: Modifier = Modifier,
     algoVM: AlgorithmsView<V,E>,
     onClose: () -> Unit,
     onDismissRequest: () -> Unit
@@ -84,12 +81,11 @@ fun <V,E> AlgorithmsDialog(
                 )
             )
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                var checked1 by remember { mutableStateOf(true) }
+                var checked1 by remember { mutableStateOf(false) }
                 var checked2 by remember { mutableStateOf(false) }
-                var checked3 by remember { mutableStateOf(false) }
 
                 LabeledCheckbox(resources.layout, checked1) { checked1 = it }
-                LabeledCheckbox(resources.findCommunities, checked3) { checked3 = it }
+                LabeledCheckbox(resources.findCommunities, checked2) { checked2 = it }
             }
 
             Text(
@@ -98,16 +94,14 @@ fun <V,E> AlgorithmsDialog(
                     fontWeight = FontWeight.Bold, color = MaterialTheme.colors.onPrimary
                 )
             )
-            var selectedOption by remember { mutableStateOf("Strongly connected") }
+            var selectedOption by remember { mutableStateOf("") }
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
 
 
                 listOf(
                     resources.stronglyConnected,
-//                    "Find Bridges",
                     resources.findCycles,
                     resources.minimalTree,
-//                    "Dijkstra Path",
                     resources.fordBellman
                 ).forEach { option ->
                     LabeledRadioButton(
