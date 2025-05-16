@@ -1,10 +1,8 @@
 package org.graphApp.view.graph
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -21,7 +19,6 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.modifier.ModifierLocalReadScope
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
@@ -36,51 +33,45 @@ fun <V> VertexView(
     onVertexClick: (VertexViewModel<V>) -> Unit = {},
 ) {
     var textWidth by remember { mutableStateOf(0) }
-    println(viewModel.value.length)
     val measurer = rememberTextMeasurer()
     LaunchedEffect(viewModel.value) {
         val layout = measurer.measure(AnnotatedString(viewModel.value))
         textWidth = layout.size.width
     }
 
-
-
-    val hotPink = MaterialTheme.colors.primaryVariant
-    val softPink = MaterialTheme.colors.primaryVariant
-    val selectedColor = Color(0xFF8BF1E2)
-    val radiusDp = viewModel.radius
+    val radiusDp      = viewModel.radius
+    val selectedColor = Color.Cyan
 
     Box(
         modifier = modifier
             .size(radiusDp * 2, radiusDp * 2)
             .offset(viewModel.x, viewModel.y)
-            .background(if (viewModel.selected) selectedColor else Color.Black, CircleShape)
             .drawBehind {
                 for (i in 15 downTo 1) {
                     drawCircle(
-                        color = (if (viewModel.selected) selectedColor else hotPink).copy(alpha = 0.03f),
+                        color = (if (viewModel.selected) selectedColor else viewModel.color).copy(alpha = 0.03f),
                         radius = size.minDimension / 2 + i * 4f
                     )
                 }
 
                 for (i in 7 downTo 1) {
                     drawCircle(
-                        color = (if (viewModel.selected) selectedColor else hotPink).copy(alpha = 0.05f),
+                        color = (if (viewModel.selected) selectedColor else viewModel.color).copy(alpha = 0.05f),
                         radius = size.minDimension / 2 + i * 2.5f
                     )
                 }
 
                 for (i in 5 downTo 1) {
                     drawCircle(
-                        color = (if (viewModel.selected) selectedColor else hotPink).copy(alpha = 0.1f),
+                        color = (if (viewModel.selected) selectedColor else viewModel.color).copy(alpha = 0.1f),
                         radius = size.minDimension / 2 + i * 1.5f
                     )
                 }
                 drawCircle(
                     brush = Brush.radialGradient(
                         colors = listOf(
-                            if (viewModel.selected) selectedColor else softPink,
-                            if (viewModel.selected) selectedColor else hotPink
+                            if (viewModel.selected) selectedColor else viewModel.color,
+                            if (viewModel.selected) selectedColor else viewModel.color
                         ),
                         center = center,
                         radius = 20.0F

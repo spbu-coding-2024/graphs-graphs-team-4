@@ -12,7 +12,6 @@ import org.graphApp.model.graph.Vertex
 class VertexViewModel<V>(
     x: Dp = 0.dp,
     y: Dp = 0.dp,
-    color: Color = Color.Black,
     private val v: Vertex<V>,
     private val _labelVisible: State<Boolean>,
     val scaleFactor: Float = 1f,
@@ -37,7 +36,7 @@ class VertexViewModel<V>(
         set(value) {
             _y.value = value
         }
-    private var _color = mutableStateOf(color)
+    private var _color = mutableStateOf(Color(0xFF8BF1E2))
     var color: Color
         get() = _color.value
         set(value) {

@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import org.graphApp.model.AppLanguage
 import org.graphApp.model.LocalTextResources
 import org.graphApp.model.getResources
+import org.graphApp.view.algorithms.AlgorithmsView
 import org.graphApp.view.components.TopBarMenu
 import org.graphApp.view.graph.GraphView
 import org.graphApp.viewmodel.MainScreenViewModel
@@ -31,6 +32,8 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
     var startCliked by remember { mutableStateOf(false)}
     var currentLanguage by remember { mutableStateOf(AppLanguage.ENGLISH) }
     val resources = getResources(currentLanguage)
+    println("${viewModel.graphViewModel.vertices.size}")
+    val algoVM = AlgorithmsView(viewModel = viewModel.graphViewModel)
     CompositionLocalProvider(LocalTextResources provides resources) {
         GraphTheme(darkTheme = mainThemeDark) {
             Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background)) {
@@ -58,11 +61,8 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                             ) {
                                 AnimatedVisibility(visible = showAlgorithmsPanel) {
                                     AlgorithmsDialog(
-                                        onLanguageChange = { lang ->
-                                            currentLanguage = lang
-                                        },
-                                        currentLanguage = currentLanguage,
-                                        modifier = Modifier.fillMaxWidth(),
+
+                                        algoVM = algoVM,
                                         onClose = { showAlgorithmsPanel = false },
                                         onDismissRequest = { startCliked = false }
                                     )

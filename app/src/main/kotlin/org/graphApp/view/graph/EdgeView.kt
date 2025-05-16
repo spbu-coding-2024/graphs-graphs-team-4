@@ -27,7 +27,7 @@ fun <E, V> EdgeView(
     viewModel: EdgeViewModel<E, V>,
     modifier: Modifier = Modifier,
 ) {
-    val colorMain = MaterialTheme.colors.primaryVariant
+    val colorMain = viewModel.color
     var start = Offset.Zero
     var end = Offset.Zero
     Canvas(modifier = modifier.fillMaxSize()) {
