@@ -5,12 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
-import androidx.compose.ui.graphics.Color
 import org.graphApp.model.AppLanguage
 import org.graphApp.model.LocalTextResources
 import org.graphApp.model.getResources
@@ -21,8 +17,6 @@ import org.graphApp.viewmodel.MainScreenViewModel
 import org.graphApp.view.theme.GraphTheme
 import org.graphApp.view.dialogs.AlgorithmsDialog
 import org.graphApp.view.dialogs.NewGraphPanel
-import org.graphApp.view.graph.RightClickPopupOnEmptyArea
-import org.graphApp.viewmodel.graph.GraphViewModel
 
 @Composable
 fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit) {
