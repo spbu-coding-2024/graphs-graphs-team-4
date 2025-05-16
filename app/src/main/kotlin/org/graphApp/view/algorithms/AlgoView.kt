@@ -10,13 +10,15 @@ import org.graphApp.model.graph.Edge
 import org.graphApp.model.graph.Vertex
 import org.graphApp.model.graph.algorithms.FindStrongCommunities
 import org.graphApp.model.graph.algorithms.MinimalSpanningTree
+import org.graphApp.viewmodel.MainScreenViewModel
 import org.graphApp.viewmodel.graph.GraphViewModel
 import org.graphApp.viewmodel.graph.VertexViewModel
 
 class AlgorithmsView<V, E>(
     val viewModel: GraphViewModel<V, E>,
 ) {
-    private val highlightColor = Color(0xFF8BF1E2)
+    private val highlightColor = Color(0xFF419FE7)
+
     private val communitiesColors = listOf(
         Color(0xFFEF5350),
         Color(0xFFAB47BC),

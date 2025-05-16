@@ -40,8 +40,8 @@ fun <V> VertexView(
     }
 
     val radiusDp      = viewModel.radius
-    val selectedColor = Color.Cyan
-
+    val selectedColor = MaterialTheme.colors.primaryVariant
+    viewModel
     Box(
         modifier = modifier
             .size(radiusDp * 2, radiusDp * 2)
