@@ -1,11 +1,10 @@
-
 package org.graphApp.model.graph.algorithms
 
 import org.graphApp.model.graph.*
 import kotlin.collections.set
 
-class FindCycles<V,E>(
-    private val graph : Graph<V,E>
+class FindCycles<V, E>(
+    private val graph: Graph<V, E>
 ) {
     private val _edges = graph.edges
     private val _vertices = graph.vertices
@@ -24,27 +23,25 @@ class FindCycles<V,E>(
 
     fun findCycleUndirected(
         startVertex: Vertex<V>
-    ) : Pair<MutableList<Long>?, List<Edge<E, V>>>? {
+    ): Pair<MutableList<Long>?, List<Edge<E, V>>>? {
         init()
         val vertexPath = dfsUndirected(startVertex.id)
         val edgePath = reconstructEdges(vertexPath)
         return Pair(vertexPath, edgePath)
     }
 
-
     private fun dfsUndirected(
-        current : Long
-    ) : MutableList<Long>? {
+        current: Long
+    ): MutableList<Long>? {
         visited[current] = true
 
         for (edge in _edges) {
-            if (edge.incident(current)) continue
+            if (!edge.incident(current)) continue
 
             val neighbor = if (edge.vertices.first.id == current) edge.vertices.second.id else edge.vertices.first.id
 
             if (visited[neighbor] != true) {
                 parent[neighbor] = current
-
                 val cycle = dfsUndirected(neighbor)
                 if (cycle != null) {
                     return cycle
@@ -59,19 +56,30 @@ class FindCycles<V,E>(
 
     private fun reconstructCycleUndirected(
         current: Long,
-        target: Long,
+        target: Long
     ): MutableList<Long> {
         val cycle = mutableListOf<Long>()
 
-        cycle.add(current)
-        cycle.add(target)
-
         var vertex = current
+        cycle.add(vertex)
+
         while (vertex != target) {
             vertex = parent[vertex] ?: break
-            if (vertex != target) {
-                cycle.add(0, vertex)
+            cycle.add(vertex)
+        }
+
+        if (vertex != target) {
+            val targetPath = mutableListOf<Long>()
+            vertex = target
+            while (!cycle.contains(vertex)) {
+                targetPath.add(vertex)
+                vertex = parent[vertex] ?: break
             }
+            cycle.addAll(targetPath.reversed())
+        }
+
+        if (cycle.first() != current) {
+            cycle.add(current)
         }
 
         return cycle
@@ -79,7 +87,7 @@ class FindCycles<V,E>(
 
     fun findCycleDirected(
         startVertex: Vertex<V>
-    ) : Pair<MutableList<Long>?, List<Edge<E, V>>>? {
+    ): Pair<MutableList<Long>?, List<Edge<E, V>>>? {
         init()
         val vertexPath = dfsDirected(startVertex.id)
         val edgePath = reconstructEdges(vertexPath)
@@ -87,21 +95,18 @@ class FindCycles<V,E>(
     }
 
     private fun dfsDirected(
-        current : Long
-    ) : MutableList<Long>? {
+        current: Long
+    ): MutableList<Long>? {
         visited[current] = true
         stack.add(current)
 
         for (edge in _edges) {
-            if (!((edge.vertices.first.id == current) || (edge.vertices.second.id == current))) {
-                continue
-            }
+            if (edge !is DirectedEdge<*, *> || edge.from.id != current) continue
 
-            val neighbor = if (edge.vertices.first.id == current) edge.vertices.second.id else edge.vertices.first.id
+            val neighbor = edge.to.id
 
             if (visited[neighbor] != true) {
                 parent[neighbor] = current
-
                 val cycle = dfsDirected(neighbor)
                 if (cycle != null) {
                     return cycle
@@ -116,25 +121,27 @@ class FindCycles<V,E>(
     }
 
     private fun reconstructCycleDirected(
-        current : Long,
-        target : Long,
-    ) : MutableList<Long> {
+        current: Long,
+        target: Long
+    ): MutableList<Long> {
         val cycle = mutableListOf<Long>()
 
-        cycle.add(current)
-
         var vertex = current
+        cycle.add(vertex)
+
         while (vertex != target) {
             vertex = parent[vertex] ?: break
-            cycle.add(0, vertex)
+            cycle.add(vertex)
         }
 
-        cycle.add(0, target)
+        if (cycle.first() != current) {
+            cycle.add(current)
+        }
 
         return cycle
     }
 
-    private fun findEdge(from : Long, to : Long) : Edge<E,V>? {
+    private fun findEdge(from: Long, to: Long): Edge<E, V>? {
         return _edges.find { edge ->
             if (edge is DirectedEdge<*, *>) {
                 edge.from.id == from && edge.to.id == to
@@ -145,19 +152,29 @@ class FindCycles<V,E>(
         }
     }
 
-    private fun reconstructEdges(vertexPath: List<Long>?) : List<Edge<E, V>> {
+    private fun reconstructEdges(vertexPath: List<Long>?): List<Edge<E, V>> {
         if (vertexPath == null || vertexPath.size <= 1) {
             return emptyList()
         }
 
         val edgePath = mutableListOf<Edge<E, V>>()
-        val n = vertexPath.size
-        for (i in 0 until n) {
+        for (i in 0 until vertexPath.size - 1) {
             val fromId = vertexPath[i]
-            val toId = vertexPath[(i + 1) % n]
+            val toId = vertexPath[i + 1]
 
-            val edge = findEdge(fromId, toId) ?: continue
-            edgePath.add(edge)
+            val edge = findEdge(fromId, toId)
+            if (edge != null) {
+                edgePath.add(edge)
+            }
+        }
+
+        val firstVertex = vertexPath.first()
+        val lastVertex = vertexPath.last()
+        if (firstVertex != lastVertex) {
+            val closingEdge = findEdge(lastVertex, firstVertex)
+            if (closingEdge != null) {
+                edgePath.add(closingEdge)
+            }
         }
 
         return edgePath

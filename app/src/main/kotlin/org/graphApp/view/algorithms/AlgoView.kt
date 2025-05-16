@@ -2,6 +2,7 @@ package org.graphApp.view.algorithms
 
 import androidx.compose.ui.graphics.Color
 import org.graphApp.model.graph.Vertex
+import org.graphApp.model.graph.*
 import org.graphApp.model.graph.algorithms.FindStrongCommunities
 import org.graphApp.model.graph.algorithms.FordBellman
 import org.graphApp.model.graph.algorithms.MinimalSpanningTree
@@ -66,7 +67,49 @@ class AlgorithmsView<V,E>(
         }
     }
 
+    fun findCycles(
+        startVertexIdOrLabel: String
+    ) {
+        resetAllColorsToDefaults()
 
+        viewModel.edges.forEach { edgeVM ->
+            edgeVM.color = Color.Gray.copy(alpha = 0.3f)
+        }
+
+        val startVertex = findVertexByLabel(startVertexIdOrLabel) ?: return
+
+        val findCycle = FindCycles(graph = viewModel.graph)
+
+        val isDirected = viewModel.graph.edges.firstOrNull() is DirectedEdge<*, *>
+
+        val result = if (isDirected) {
+            findCycle.findCycleDirected(startVertex)
+        } else {
+            findCycle.findCycleUndirected(startVertex)
+        }
+
+        if (result == null) {
+            return
+        }
+
+        val (vertexPath, edgePath) = result
+
+        val cycleColor = Color(0xFFFF9800) // Orange
+
+        vertexPath?.forEach { vertexId ->
+            viewModel.vertices.find { it.vertexID == vertexId }?.let { vertexVM ->
+                vertexVM.color = cycleColor
+            }
+        }
+
+        edgePath.forEach { edge ->
+            val fromId = edge.vertices.first.id
+            val toId = edge.vertices.second.id
+
+            val edgeVM = findEdgeByVertices(fromId, toId)
+            edgeVM?.let { it.color = cycleColor }
+        }
+    }
     fun fordBellman(
         startVertexId: String,
         endVertexId: String
