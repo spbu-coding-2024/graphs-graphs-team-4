@@ -98,6 +98,24 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
 
                 }
 
+                // я пытался сделать это align(Alignment.TopEnd)
+                AnimatedVisibility(
+                    visible = showNewGraphPanel,
+                    modifier = Modifier
+                        .padding(top = 60.dp, end = 16.dp)
+                        .zIndex(1f)
+                ) {
+                    NewGraphPanel(
+                        onLanguageChange = { lang ->
+                            currentLanguage = lang
+                        },
+                        currentLanguage = currentLanguage,
+                        modifier = Modifier.width(350.dp),
+                        onClose = { showNewGraphPanel = false },
+                        vm = viewModel
+                    )
+                }
+
             }
         }
     }

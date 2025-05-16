@@ -5,7 +5,7 @@ interface Edge<E, V> {
     val element: E
     val vertices: Pair<Vertex<V>, Vertex<V>>
 
-    fun incident(v: Vertex<V>) = v == vertices.first || v == vertices.second
+    fun incident(v: Long) = v == vertices.first.id || v == vertices.second.id
 }
 
 interface WeightedEdge<E, V> : Edge<E, V> {

@@ -1,12 +1,10 @@
 package org.graphApp.view.dialogs
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.estimateAnimationDurationMillis
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,15 +16,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Outline
 import org.graphApp.model.AppLanguage
 import org.graphApp.model.LocalTextResources
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import org.graphApp.view.algorithms.AlgorithmsView
 import org.graphApp.view.components.*
-import kotlin.math.exp
 
 @Composable
 fun <V, E> AlgorithmsDialog(
@@ -36,12 +31,9 @@ fun <V, E> AlgorithmsDialog(
 ) {
     val resources = LocalTextResources.current
     Surface(
-
         color = MaterialTheme.colors.surface,
         shape = RoundedCornerShape(10.dp),
-
-        ) {
-
+    ) {
         val scrollState = rememberScrollState()
 
         var startVertex by remember { mutableStateOf("") }
@@ -81,7 +73,6 @@ fun <V, E> AlgorithmsDialog(
                 }
             }
 
-
             Divider(
                 color = MaterialTheme.colors.onPrimary.copy(alpha = 0.5f),
                 thickness = 1.dp
@@ -95,7 +86,6 @@ fun <V, E> AlgorithmsDialog(
                 )
             )
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-
                 var checked1 by remember { mutableStateOf(false) }
                 var checked2 by remember { mutableStateOf(false) }
 
@@ -111,8 +101,6 @@ fun <V, E> AlgorithmsDialog(
             )
             var selectedOption by remember { mutableStateOf("") }
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-
-
                 listOf(
                     resources.stronglyConnected,
                     resources.minimalTree,
@@ -192,7 +180,6 @@ fun <V, E> AlgorithmsDialog(
                             fontWeight = FontWeight.Light,
                             color = MaterialTheme.colors.onPrimary,
                             fontSize = 16.sp,
-
                         )
 
                         OutlinedTextField(
@@ -211,7 +198,6 @@ fun <V, E> AlgorithmsDialog(
                                 focusedBorderColor = MaterialTheme.colors.primaryVariant,
                                 unfocusedLabelColor = MaterialTheme.colors.onPrimary,
                                 textColor = MaterialTheme.colors.onPrimary
-
                             )
                         )
 
@@ -233,7 +219,6 @@ fun <V, E> AlgorithmsDialog(
                                 textColor = MaterialTheme.colors.onPrimary
                             )
                         )
-
                     }
                 }
             }
@@ -248,15 +233,13 @@ fun <V, E> AlgorithmsDialog(
                         resources.stronglyConnected -> algoVM.findStrongCommunities()
                         resources.minimalTree -> algoVM.minimalSpanningTree()
                         resources.fordBellman -> {
-
+                            algoVM.fordBellman(startVertex, finishVertex)
                         }
-
                         resources.findCycles -> {
-
+                           algoVM.findCycles(startVertexCycle)
                         }
                     }
                 }, text = resources.startAlgo)
-
             }
         }
     }
@@ -282,7 +265,6 @@ fun LabeledCheckbox(
             fontSize = 15.sp,
             color = MaterialTheme.colors.onPrimary,
             fontWeight = FontWeight.Light
-
         )
     }
 }

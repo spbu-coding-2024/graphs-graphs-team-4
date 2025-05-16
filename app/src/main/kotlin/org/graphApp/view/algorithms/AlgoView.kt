@@ -1,8 +1,11 @@
 package org.graphApp.view.algorithms
 
 import androidx.compose.ui.graphics.Color
+import org.graphApp.model.graph.Vertex
 import org.graphApp.model.graph.algorithms.FindStrongCommunities
+import org.graphApp.model.graph.algorithms.FordBellman
 import org.graphApp.model.graph.algorithms.MinimalSpanningTree
+import org.graphApp.model.graph.algorithms.FindCycles
 import org.graphApp.viewmodel.graph.GraphViewModel
 
 class AlgorithmsView<V,E>(
@@ -63,10 +66,70 @@ class AlgorithmsView<V,E>(
         }
     }
 
+
+    fun fordBellman(
+        startVertexId: String,
+        endVertexId: String
+    ) {
+        resetAllColorsToDefaults()
+
+        viewModel.edges.forEach { edgeVM ->
+            edgeVM.color = Color.Gray.copy(alpha = 0.3f)
+        }
+
+        val startVertex = findVertexByLabel(startVertexId)
+        val endVertex = findVertexByLabel(endVertexId)
+
+        if (startVertex == null || endVertex == null) {
+            return
+        }
+
+        val fordBellman = FordBellman(graph = viewModel.graph)
+
+        val result = fordBellman.fordBellman(startVertex, endVertex)
+
+        if (result == null) {
+            return
+        }
+
+        val (vertexPath, edgePath) = result
+
+        val pathColor = Color(0xFFF44336)
+
+        vertexPath?.forEach { vertexId ->
+            viewModel.vertices.find { it.vertexID == vertexId }?.let { vertexVM ->
+                vertexVM.color = pathColor
+            }
+        }
+
+        edgePath.forEach { edge ->
+            val fromId = if (edge.vertices != null) edge.vertices.first.id else -1L
+            val toId = if (edge.vertices != null) edge.vertices.second.id else -1L
+
+            val edgeVM = findEdgeByVertices(fromId, toId)
+            edgeVM?.let { it.color = pathColor }
+        }
+    }
+
+    private fun findVertexByLabel(
+        idOrLabel: String
+    ): Vertex<V>? {
+        val id = idOrLabel.toLongOrNull()
+
+        return if (id != null) {
+            viewModel.graph.vertices.find { it.id == id }
+        } else {
+            viewModel.graph.vertices.find {
+                it.element.toString().equals(idOrLabel, ignoreCase = true)
+            }
+        }
+    }
+
     private fun findEdgeByVertices(fromId: Long, toId: Long) = viewModel.edges.find { edgeVM ->
         (edgeVM.u.vertexID == fromId && edgeVM.v.vertexID == toId) ||
                 (edgeVM.u.vertexID == toId && edgeVM.v.vertexID == fromId)
     }
+
     fun resetAllColorsToDefaults() {
         viewModel.vertices.forEach { vertex ->
             vertex.color = highlightColor
