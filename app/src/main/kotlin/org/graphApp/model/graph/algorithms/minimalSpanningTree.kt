@@ -70,7 +70,6 @@ class MinimalSpanningTree<V, E>(
                     }
                 }
         }
-        println("${result.size} spanning tree")
         return result
     }
 
@@ -89,7 +88,6 @@ class MinimalSpanningTree<V, E>(
                 dsuUnit(startV, endV)
             }
         }
-        println("${res.size} kraskal SpanningTree")
         return res
     }
 }
