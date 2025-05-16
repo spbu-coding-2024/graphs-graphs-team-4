@@ -250,13 +250,17 @@ fun <V, E> AlgorithmsDialog(
                         resources.fordBellman -> {
 
                         }
-
                         resources.findCycles -> {
 
                         }
                     }
                 }, text = resources.startAlgo)
-
+                resetButton(
+                    onClick = {
+                        algoVM.resetAllColorsToDefaults()
+                    },
+                    text = resources.reset
+                )
             }
         }
     }

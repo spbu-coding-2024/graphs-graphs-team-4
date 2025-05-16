@@ -36,7 +36,7 @@ class VertexViewModel<V>(
         set(value) {
             _y.value = value
         }
-    private var _color = mutableStateOf(Color(0xFF8BF1E2))
+    private var _color = mutableStateOf(Color(0xFF419FE7))
     var color: Color
         get() = _color.value
         set(value) {
