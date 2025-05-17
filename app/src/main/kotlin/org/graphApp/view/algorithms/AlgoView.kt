@@ -1,6 +1,10 @@
 package org.graphApp.view.algorithms
 
 import androidx.compose.ui.graphics.Color
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.graphApp.model.graph.Vertex
 import org.graphApp.model.graph.*
 import org.graphApp.model.graph.algorithms.FindStrongCommunities
@@ -70,87 +74,99 @@ class AlgorithmsView<V,E>(
     fun findCycles(
         startVertexIdOrLabel: String
     ) {
-        resetAllColorsToDefaults()
+        CoroutineScope(Dispatchers.Default).launch {
+            resetAllColorsToDefaults()
 
-        viewModel.edges.forEach { edgeVM ->
-            edgeVM.color = Color.Gray.copy(alpha = 0.3f)
-        }
-
-        val startVertex = findVertexByLabel(startVertexIdOrLabel) ?: return
-
-        val findCycle = FindCycles(graph = viewModel.graph)
-
-        val isDirected = viewModel.graph.edges.firstOrNull() is DirectedEdge<*, *>
-
-        val result = if (isDirected) {
-            findCycle.findCycleDirected(startVertex)
-        } else {
-            findCycle.findCycleUndirected(startVertex)
-        }
-
-        if (result == null) {
-            return
-        }
-
-        val (vertexPath, edgePath) = result
-
-        val cycleColor = Color(0xFFFF9800) // Orange
-
-        vertexPath?.forEach { vertexId ->
-            viewModel.vertices.find { it.vertexID == vertexId }?.let { vertexVM ->
-                vertexVM.color = cycleColor
+            viewModel.edges.forEach { edgeVM ->
+                edgeVM.color = Color.Gray.copy(alpha = 0.3f)
             }
-        }
 
-        edgePath.forEach { edge ->
-            val fromId = edge.vertices.first.id
-            val toId = edge.vertices.second.id
+            val startVertex = findVertexByLabel(startVertexIdOrLabel) ?: return@launch
 
-            val edgeVM = findEdgeByVertices(fromId, toId)
-            edgeVM?.let { it.color = cycleColor }
+            val findCycle = FindCycles(graph = viewModel.graph)
+
+            val isDirected = viewModel.graph.edges.firstOrNull() is DirectedEdge<*, *>
+
+            val result = if (isDirected) {
+                findCycle.findCycleDirected(startVertex)
+            } else {
+                findCycle.findCycleUndirected(startVertex)
+            }
+
+            if (result == null) {
+                return@launch
+            }
+
+            val (vertexPath, edgePath) = result
+
+            val cycleColor = Color(0xFFFF9800)
+
+            vertexPath?.forEach { vertexId ->
+                viewModel.vertices.find { it.vertexID == vertexId }?.let { vertexVM ->
+                    vertexVM.color = cycleColor
+                    delay(500L)
+                }
+            }
+
+            edgePath.forEach { edge ->
+                val fromId = edge.vertices.first.id
+                val toId = edge.vertices.second.id
+
+                val edgeVM = findEdgeByVertices(fromId, toId)
+                edgeVM?.let {
+                    it.color = cycleColor
+                    delay(500L)
+                }
+            }
         }
     }
     fun fordBellman(
         startVertexId: String,
         endVertexId: String
     ) {
-        resetAllColorsToDefaults()
+        CoroutineScope(Dispatchers.Default).launch {
+            resetAllColorsToDefaults()
 
-        viewModel.edges.forEach { edgeVM ->
-            edgeVM.color = Color.Gray.copy(alpha = 0.3f)
-        }
-
-        val startVertex = findVertexByLabel(startVertexId)
-        val endVertex = findVertexByLabel(endVertexId)
-
-        if (startVertex == null || endVertex == null) {
-            return
-        }
-
-        val fordBellman = FordBellman(graph = viewModel.graph)
-
-        val result = fordBellman.fordBellman(startVertex, endVertex)
-
-        if (result == null) {
-            return
-        }
-
-        val (vertexPath, edgePath) = result
-
-        val pathColor = Color(0xFFF44336)
-
-        vertexPath?.forEach { vertexId ->
-            viewModel.vertices.find { it.vertexID == vertexId }?.let { vertexVM ->
-                vertexVM.color = pathColor
+            viewModel.edges.forEach { edgeVM ->
+                edgeVM.color = Color.Gray.copy(alpha = 0.3f)
             }
-        }
 
-        edgePath.forEach { edge ->
-            val fromId = if (edge.vertices != null) edge.vertices.first.id else -1L
-            val toId = if (edge.vertices != null) edge.vertices.second.id else -1L
+            val startVertex = findVertexByLabel(startVertexId)
+            val endVertex = findVertexByLabel(endVertexId)
 
-            val edgeVM = findEdgeByVertices(fromId, toId)
-            edgeVM?.let { it.color = pathColor }
+            if (startVertex == null || endVertex == null) {
+                return@launch
+            }
+
+            val fordBellman = FordBellman(graph = viewModel.graph)
+
+            val result = fordBellman.fordBellman(startVertex, endVertex)
+
+            if (result == null) {
+                return@launch
+            }
+
+            val (vertexPath, edgePath) = result
+
+            val pathColor = Color(0xFFF44336)
+
+            vertexPath?.forEach { vertexId ->
+                viewModel.vertices.find { it.vertexID == vertexId }?.let { vertexVM ->
+                    vertexVM.color = pathColor
+                    delay(300L)
+                }
+            }
+
+            edgePath.forEach { edge ->
+                val fromId = if (edge.vertices != null) edge.vertices.first.id else -1L
+                val toId = if (edge.vertices != null) edge.vertices.second.id else -1L
+
+                val edgeVM = findEdgeByVertices(fromId, toId)
+                edgeVM?.let {
+                    it.color = pathColor
+                    delay(300L)
+                }
+            }
         }
     }
 
