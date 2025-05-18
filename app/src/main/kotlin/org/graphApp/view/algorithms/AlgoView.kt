@@ -39,7 +39,9 @@ class AlgorithmsView<V, E>(
 
     fun findStrongCommunities() {
         CoroutineScope(Dispatchers.Default).launch {
-            if (!viewModel.isDirectedGraph.value) return@launch
+            if (!viewModel.isDirectedGraph.value) {
+                return@launch
+            }
             resetAllColorsToDefaults()
             val strongCommunitiesFinder = FindStrongCommunities(graph = viewModel.graph)
             val communities = strongCommunitiesFinder.findStrongCommunitiesInGraph()

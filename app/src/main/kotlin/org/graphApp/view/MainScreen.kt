@@ -58,7 +58,8 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
 
                                         algoVM = algoVM,
                                         onClose = { showAlgorithmsPanel = false },
-                                        onDismissRequest = { startCliked = false }
+                                        onDismissRequest = { startCliked = false },
+                                        viewModel = viewModel
                                     )
                                 }
                                 AnimatedVisibility(visible = showAlgorithmsPanel && showNewGraphPanel) {
