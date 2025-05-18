@@ -20,15 +20,26 @@ import org.graphApp.model.LocalTextResources
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import org.graphApp.view.algorithms.AlgorithmsView
+import org.graphApp.view.algorithms.GraphsLayout
 import org.graphApp.view.components.*
+
+import org.graphApp.view.theme.GraphTheme
+import org.graphApp.viewmodel.MainScreenViewModel
+import org.graphApp.viewmodel.graph.GraphViewModel
+import kotlin.math.exp
+
 
 @Composable
 fun <V, E> AlgorithmsDialog(
     algoVM: AlgorithmsView<V, E>,
     onClose: () -> Unit,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
+    viewModel: MainScreenViewModel<E>
 ) {
     val resources = LocalTextResources.current
+
+    val algoLayout: GraphsLayout<V,E> = GraphsLayout()
+
     Surface(
         color = MaterialTheme.colors.surface,
         shape = RoundedCornerShape(10.dp),
@@ -38,7 +49,8 @@ fun <V, E> AlgorithmsDialog(
         var startVertex by remember { mutableStateOf("") }
         var finishVertex by remember { mutableStateOf("") }
         var startVertexCycle by remember { mutableStateOf("") }
-
+        var checked1 by remember { mutableStateOf(false) }
+        var checked2 by remember { mutableStateOf(false) }
         Column(
             modifier = Modifier
                 .padding(16.dp)
@@ -87,6 +99,9 @@ fun <V, E> AlgorithmsDialog(
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 var checked1 by remember { mutableStateOf(false) }
                 var checked2 by remember { mutableStateOf(false) }
+
+
+
 
                 LabeledCheckbox(resources.layout, checked1) { checked1 = it }
                 LabeledCheckbox(resources.findCommunities, checked2) { checked2 = it }
@@ -238,7 +253,18 @@ fun <V, E> AlgorithmsDialog(
                            algoVM.findCycles(startVertexCycle)
                         }
                     }
+
+                    if(checked1) {
+                        algoLayout.place(1000.0,900.0, viewModel.graphViewModel as GraphViewModel<V, E>)
+                    }
+
                 }, text = resources.startAlgo)
+                resetButton(
+                    onClick = {
+                        algoVM.resetAllColorsToDefaults()
+                    },
+                    text = resources.reset
+                )
             }
         }
     }

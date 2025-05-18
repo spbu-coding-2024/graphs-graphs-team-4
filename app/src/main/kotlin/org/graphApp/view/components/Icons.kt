@@ -258,7 +258,7 @@ public val zoomSign: ImageVector
 private var _search: ImageVector? = null
 
 
-public val chooseYourTheme: ImageVector
+val chooseYourTheme: ImageVector
     get() {
         if (_theme != null) {
             return _theme!!

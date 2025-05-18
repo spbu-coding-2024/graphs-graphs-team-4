@@ -6,7 +6,7 @@ import org.graphApp.model.graph.Vertex
 import org.graphApp.model.graph.WeightedEdge
 
 
-
+const val NUM = 10e5
 
 class MinimalSpanningTree<V, E>(
     private val graph: Graph<V,E>,
@@ -14,7 +14,7 @@ class MinimalSpanningTree<V, E>(
     private val _edges = graph.edges
     private val _vertices = graph.vertices
     private var _used: MutableMap<Long, Boolean> = mutableMapOf()
-
+    private val _component: MutableMap<Long, Int> = mutableMapOf()
     private val _sortedEdges: List<WeightedEdge<E, V>> =
         _edges
             .filterIsInstance<WeightedEdge<E, V>>()
@@ -70,7 +70,6 @@ class MinimalSpanningTree<V, E>(
                     }
                 }
         }
-        println("${result.size} spanning tree")
         return result
     }
 
@@ -89,7 +88,21 @@ class MinimalSpanningTree<V, E>(
                 dsuUnit(startV, endV)
             }
         }
-        println("${res.size} kraskal SpanningTree")
         return res
     }
+
+    private fun dfsForCheckingСonnectivity (v: Vertex<V>, num: Int) {
+        _component[v.id] = num
+        graph.edges
+            .filter{it.vertices.first.id == v.id || it.vertices.second.id == v.id}
+            .forEach { edge ->
+                val firstV = edge.vertices.first
+                val secondV = edge.vertices.second
+                if(!_component.containsKey(edge.vertices.first.id)) {
+                    dfsForCheckingСonnectivity(edge.vertices.first, num)
+                }
+            }
+    }
+
+
 }
