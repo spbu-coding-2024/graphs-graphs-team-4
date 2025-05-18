@@ -6,27 +6,32 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import org.graphApp.model.AppLanguage
 import org.graphApp.model.LocalTextResources
 import org.graphApp.view.components.*
+import org.graphApp.viewmodel.graph.GraphViewModel
+import data.SQLiteMainLogic.SQLiteExposed
+import data.SQLiteMainLogic.SQLiteMainLogic
+import kotlinx.coroutines.launch
 
-// добавить обработку названия графа с подсказками для пользователя, чтобы был корректный ввод
-// чтобы видно было, что можно печатать
 @Composable
 fun SaveAsDialog(
-    currentLanguage: AppLanguage,
-    onLanguageSelect: (AppLanguage) -> Unit,
-    onDismissRequest: () -> Unit
+    graphViewModel: GraphViewModel<Any, Any>?,
+    onDismissRequest: () -> Unit,
+    onSaveSuccess: (String, String) -> Unit = { _, _ -> },
+    onSaveError: (String) -> Unit = { }
 ) {
     val resources = LocalTextResources.current
-    var selectedOption by remember { mutableStateOf("JSON")}
+    var selectedOption by remember { mutableStateOf("SQLite")}
     val options = listOf("JSON", "Neo4j", "SQLite")
     var name by remember { mutableStateOf("") }
+    var isLoading by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
+
+    val coroutineScope = rememberCoroutineScope()
 
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
@@ -42,20 +47,33 @@ fun SaveAsDialog(
             ) {
                 OutlinedTextField(
                     value = name,
-                    onValueChange = { name = it },
+                    onValueChange = {
+                        name = it
+                        errorMessage = ""
+                    },
                     placeholder = { Text(
                         resources.enterGraphName,
-                        color = Color(0xFFB3B3B3),
+                        color = MaterialTheme.colors.onPrimary,
                         fontSize = 13.sp) },
                     singleLine = true,
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    enabled = !isLoading,
+                    isError = errorMessage.isNotEmpty(),
+                    modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
-                    textStyle = MaterialTheme.typography.body2.copy(fontSize = 14.sp, color = Color.White),
+                    textStyle = MaterialTheme.typography.body2.copy(fontSize = 14.sp, color = MaterialTheme.colors.onBackground),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         backgroundColor = MaterialTheme.colors.surface
                     )
                 )
+
+                if (errorMessage.isNotEmpty()) {
+                    Text(
+                        text = errorMessage,
+                        color = MaterialTheme.colors.error,
+                        fontSize = 12.sp
+                    )
+                }
+
                 Text(
                     text = resources.chooseFormat,
                     fontWeight = FontWeight.Medium,
@@ -65,20 +83,19 @@ fun SaveAsDialog(
                     horizontalArrangement = Arrangement.spacedBy(5.dp)
                 ) {
                     options.forEach { text ->
-
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             RadioButton(
                                 selected = text == selectedOption,
                                 onClick = { selectedOption = text },
+                                enabled = !isLoading,
                                 colors = RadioButtonDefaults.colors(
-                                    selectedColor = Color.Black
+                                    selectedColor = MaterialTheme.colors.primaryVariant
                                 )
                             )
                             Spacer(Modifier.width(4.dp))
-                            Text(text
-                            )
+                            Text(text)
                         }
                     }
                 }
@@ -88,7 +105,7 @@ fun SaveAsDialog(
                 ) {
                     Spacer(Modifier.width(8.dp))
                     AddFolderButton(
-                        onClick = {}
+                        onClick = { /* TODO: Implement folder selection */ }
                     )
                     Text(
                         text = resources.addFolder,
@@ -100,9 +117,77 @@ fun SaveAsDialog(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Start
                 ) {
-                    CloseButton(onClick = onDismissRequest, text = resources.cancel)
+                    CloseButton(
+                        onClick = onDismissRequest,
+                        text = resources.cancel
+                    )
                     Spacer(modifier = Modifier.weight(1f))
-                    SaveButton(onClick = {  }, text = resources.save)
+
+                    if (isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        SaveButton(
+                            onClick = {
+                                if (name.isBlank()) {
+                                    errorMessage = "Enter a graph name"
+                                    return@SaveButton
+                                }
+
+                                if (graphViewModel == null) {
+                                    errorMessage = "No graph to save"
+                                    return@SaveButton
+                                }
+
+                                isLoading = true
+                                errorMessage = ""
+
+                                coroutineScope.launch {
+                                    try {
+                                        when (selectedOption) {
+                                            "SQLite" -> {
+                                                try {
+                                                    val sanitizedName = name.replace(Regex("[^a-zA-Z0-9_-]"), "_")
+                                                    val dbFolder = "src/main/kotlin/org/graphApp/data/SQLite/StorageSQLite"
+                                                    val dbFileName = "$dbFolder/$sanitizedName.db"
+                                                    val sqliteConnection = SQLiteExposed(dbFileName)
+
+                                                    val graphViewModel = graphViewModel as GraphViewModel<Any, Any>
+
+                                                    val sqliteLogic = SQLiteMainLogic<Any, Any>(sqliteConnection)
+                                                    val success = sqliteLogic.saveToSQLiteDataBase(graphViewModel, sanitizedName)
+
+                                                    if (success) {
+                                                        onSaveSuccess(sanitizedName, selectedOption)
+                                                        onDismissRequest()
+                                                    } else {
+                                                        errorMessage = "Failed to save graph to SQLite database"
+                                                    }
+                                                } catch (sqliteException: Exception) {
+                                                    errorMessage = "SQLite error: ${sqliteException.localizedMessage ?: "Database connection failed"}"
+                                                    println("SQLite Exception details: ${sqliteException.printStackTrace()}")
+                                                }
+                                            }
+                                            "JSON" -> {
+                                                errorMessage = "todo"
+                                            }
+                                            "Neo4j" -> {
+                                                errorMessage = "todo"
+                                            }
+                                        }
+                                    } catch (e: Exception) {
+                                        errorMessage = "Error saving graph: ${e.localizedMessage ?: "Unknown error"}"
+                                        println("General Exception: ${e.printStackTrace()}")
+                                    } finally {
+                                        isLoading = false
+                                    }
+                                }
+                            },
+                            text = resources.save
+                        )
+                    }
                 }
             }
         }

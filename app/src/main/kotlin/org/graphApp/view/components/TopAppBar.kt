@@ -21,7 +21,6 @@ import org.graphApp.view.dialogs.SaveAsDialog
 import org.graphApp.view.dialogs.ViewDialog
 import org.graphApp.viewmodel.MainScreenViewModel
 import org.graphApp.viewmodel.graph.GraphViewModel
-import org.jetbrains.exposed.sql.Column
 
 @Composable
 fun <E> TopBarMenu(
@@ -52,8 +51,7 @@ fun <E> TopBarMenu(
                 horizontalArrangement = Arrangement.spacedBy(5.dp)
             ) {
                 FileMenu(
-                    currentLanguage = currentLanguage,
-                    onLanguageSelect1 = onLanguageChange,
+                    mainVm = mainVm,
                     resources = resources,
                     onNewGraph = onShowNewGraph
                 )
@@ -70,6 +68,7 @@ fun <E> TopBarMenu(
                 )
                 MenuDivider()
                 AlgorithmsMenu(
+
                     resources = resources,
                     onClick = onToggleAlgorithms
                 )
@@ -126,9 +125,11 @@ private fun MenuDivider() {
 }
 
 @Composable
-private fun FileMenu(currentLanguage: AppLanguage,
-                     onLanguageSelect1: (AppLanguage) -> Unit,
-                     resources: org.graphApp.model.TextResources, onNewGraph: () -> Unit) {
+private fun <E> FileMenu(
+    mainVm : MainScreenViewModel<E>,
+    resources: org.graphApp.model.TextResources,
+    onNewGraph: () -> Unit
+) {
     var expanded by remember { mutableStateOf(false) }
     var openExpanded by remember { mutableStateOf(false) }
     var showSaveAsDialog by remember { mutableStateOf(false) }
@@ -303,9 +304,9 @@ private fun FileMenu(currentLanguage: AppLanguage,
 
     if (showSaveAsDialog) {
         SaveAsDialog(
-            currentLanguage = currentLanguage,
-            onLanguageSelect = onLanguageSelect1,
-            onDismissRequest = { showSaveAsDialog = false })
+            graphViewModel = mainVm.graphViewModel as GraphViewModel<Any, Any>,
+            onDismissRequest = { showSaveAsDialog = false }
+        )
     }
 }
 
