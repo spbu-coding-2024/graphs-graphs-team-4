@@ -16,6 +16,9 @@ import org.graphApp.viewmodel.graph.GraphViewModel
 import data.SQLiteMainLogic.SQLiteExposed
 import data.SQLiteMainLogic.SQLiteMainLogic
 import kotlinx.coroutines.launch
+import java.io.File
+import javax.swing.JFileChooser
+
 
 @Composable
 fun SaveAsDialog(
@@ -30,14 +33,13 @@ fun SaveAsDialog(
     var name by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
-
+    var folderChoose by remember { mutableStateOf("~/")}
     val coroutineScope = rememberCoroutineScope()
-
+    var selectedFolder by remember {mutableStateOf<File?>(null) }
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
             shape = RoundedCornerShape(10.dp),
             color = MaterialTheme.colors.surface,
-            modifier = Modifier,
             elevation = 8.dp
         ) {
             Column(
@@ -105,7 +107,12 @@ fun SaveAsDialog(
                 ) {
                     Spacer(Modifier.width(8.dp))
                     AddFolderButton(
-                        onClick = { /* TODO: Implement folder selection */ }
+                        onClick = {
+                            val folder = chooseFolder()
+                            if (folder != null) {
+                                selectedFolder = folder
+                            }
+                        }
                     )
                     Text(
                         text = resources.addFolder,
@@ -150,7 +157,7 @@ fun SaveAsDialog(
                                             "SQLite" -> {
                                                 try {
                                                     val sanitizedName = name.replace(Regex("[^a-zA-Z0-9_-]"), "_")
-                                                    val dbFolder = "src/main/kotlin/org/graphApp/data/SQLite/StorageSQLite"
+                                                    val dbFolder = if (selectedFolder != null ) selectedFolder else "src/main/kotlin/org/graphApp/data/SQLite/StorageSQLite"
                                                     val dbFileName = "$dbFolder/$sanitizedName.db"
                                                     val sqliteConnection = SQLiteExposed(dbFileName)
 
@@ -192,4 +199,13 @@ fun SaveAsDialog(
             }
         }
     }
+}
+
+fun chooseFolder(): File? {
+    val chooser = JFileChooser()
+    chooser.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
+    chooser.dialogTitle = "Choose a folder for saving"
+    val result = chooser.showOpenDialog(null)
+    return if (result == JFileChooser.APPROVE_OPTION) chooser.selectedFile else null
+
 }

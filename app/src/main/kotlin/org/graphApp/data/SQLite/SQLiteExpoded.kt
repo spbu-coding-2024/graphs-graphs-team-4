@@ -1,5 +1,6 @@
 package data.SQLiteMainLogic
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.graphApp.viewmodel.graph.*
@@ -23,45 +24,66 @@ class SQLiteMainLogic<E, V>(val connection: SQLiteExposed) {
 
     fun saveToSQLiteDataBase(viewModel: GraphViewModel<V, E>, name: String): Boolean {
         return try {
+            println("Saving graph: $name")
+            println("Vertices: ${viewModel.vertices}")
+            println("Edges: ${viewModel.edges}")
+
             val id = connection.addGraph(
                 name,
                 viewModel.showEdgesWeights.value,
                 isDirected = viewModel.graph.edges.any { it is DirectedEdge<*, *> }
             )
-            if (id == -1) return false
+            if (id == -1) {
+                println("Graph not added, ID is -1 (maybe duplicate name?)")
+                return false
+            }
+
             connection.addAllVertices(id, viewModel.vertices)
             connection.addAllEdges(id, viewModel.edges)
             true
         } catch (e: Exception) {
+            println("Exception while saving graph: ${e.message}")
             e.printStackTrace()
             false
         }
     }
 
-    fun readFromSQLiteDataBase(name: String): Pair<Graph<String, String>, Map<VertexViewModel<String>, Pair<Dp?, Dp?>?>>? {
+    fun <V,E> readFromSQLiteDataBase(name: String): GraphViewModel<V,E>? {
+
         val gi = connection.getGraph(name) ?: return null
         val vertices = connection.getVertices(gi.id)
         val edges = connection.getEdges(gi.id)
-        val placement = mutableMapOf<VertexViewModel<String>, Pair<Dp, Dp>>()
 
-        val graph: Graph<String, String> = when {
+        val graph: Graph<V, E> = when {
             gi.isDirected && gi.isWeighted -> DirectWeightedGraph()
             gi.isDirected && !gi.isWeighted -> DirectGraph()
             !gi.isDirected && gi.isWeighted -> WeightedGraph()
             else -> UndirectedGraph()
         }
 
-        val vertexMap = mutableMapOf<Long, VertexViewModel<String>>()
+        val showVerticesLabels = mutableStateOf(true)
+        val showEdgeWeights = mutableStateOf(true)
+        val isWeightedGraph = mutableStateOf(gi.isWeighted)
+        val isDirectedGraph = mutableStateOf(gi.isDirected)
+
+        val viewModel = GraphViewModel(
+            graph = graph,
+            showVerticesLabels = showVerticesLabels,
+            showEdgesWeights = showEdgeWeights,
+            isWeightedGraph = isWeightedGraph,
+            isDirectedGraph = isDirectedGraph
+        )
+
+        val vertexMap = mutableMapOf<Long, VertexViewModel<V>>()
         vertices.forEach { vertexInfo ->
-            val vertex = graph.addVertex(vertexInfo.label)
-            val vertexViewModel = VertexViewModel(
+            val vertexViewModel = viewModel.addVertex(
+                label = vertexInfo.label as V,
                 x = vertexInfo.x.dp,
-                y = vertexInfo.y.dp,
-                v = vertex,
-                _labelVisible = androidx.compose.runtime.mutableStateOf(true)
+                y = vertexInfo.y.dp
             )
+
             vertexMap[vertexInfo.id] = vertexViewModel
-            placement[vertexViewModel] = Pair(vertexInfo.x.dp, vertexInfo.y.dp)
+
         }
 
         edges.forEach { edgeInfo ->
@@ -69,50 +91,24 @@ class SQLiteMainLogic<E, V>(val connection: SQLiteExposed) {
             val toVertex = vertexMap[edgeInfo.vertexTo]
 
             if (fromVertex != null && toVertex != null) {
-                when {
-                    gi.isDirected && gi.isWeighted -> {
-                        (graph as DirectedWeightedGraph<String, String>).addEdge(
-                            fromVertex.value,
-                            toVertex.value,
-                            edgeInfo.label,
-                            edgeInfo.weight
-                        )
-                    }
-                    gi.isDirected && !gi.isWeighted -> {
-                        (graph as DirectedUnWeightedGraph<String, String>).addEdge(
-                            fromVertex.value,
-                            toVertex.value,
-                            edgeInfo.label
-                        )
-                    }
-                    !gi.isDirected && gi.isWeighted -> {
-                        (graph as UndirectedWeightedGraph<String, String>).addEdge(
-                            fromVertex.value,
-                            toVertex.value,
-                            edgeInfo.label,
-                            edgeInfo.weight
-                        )
-                    }
-                    else -> {
-                        graph.addEdge(
-                            fromVertex.value,
-                            toVertex.value,
-                            edgeInfo.label
-                        )
-                    }
-                }
+                viewModel.addEdge(
+                    fromVertedID = fromVertex.vertexID,
+                    toVertexID = toVertex.vertexID,
+                    edgeValue = edgeInfo.label as E,
+                    weight = edgeInfo.weight
+                )
             }
         }
 
-        return graph to placement
+        return viewModel
     }
 }
 
 object Graphs : IntIdTable() {
     val graphName = varchar("name", 255).uniqueIndex()
     val isDirected = bool("directed")
-    val label = text("label")
     val isWeighted = bool("weighted")
+    val label = text("label")
 }
 
 object Vertices : IntIdTable() {

@@ -8,6 +8,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Matrix
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -129,6 +130,27 @@ fun startAlgorithmButton(
 
 @Composable
 fun resetButton(
+    onClick : () -> Unit,
+    text : String
+) {
+    Button(
+        onClick = onClick,
+        shape = RoundedCornerShape(15.dp),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.primaryVariant,
+            contentColor = MaterialTheme.colors.surface
+        ),
+        modifier = Modifier.padding(6.dp)
+    ) {
+        Text(
+            text = text,
+            color = MaterialTheme.colors.onSecondary
+        )
+    }
+}
+
+@Composable
+fun loadButton(
     onClick : () -> Unit,
     text : String
 ) {

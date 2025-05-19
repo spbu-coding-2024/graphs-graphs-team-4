@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import org.graphApp.model.AppLanguage
 import org.graphApp.model.LocalTextResources
 import org.graphApp.view.dialogs.AboutDialog
+import org.graphApp.view.dialogs.OpenDialog
 import org.graphApp.view.dialogs.QuickGuideDialog
 import org.graphApp.view.dialogs.SaveAsDialog
 import org.graphApp.view.dialogs.ViewDialog
@@ -133,6 +134,7 @@ private fun <E> FileMenu(
     var expanded by remember { mutableStateOf(false) }
     var openExpanded by remember { mutableStateOf(false) }
     var showSaveAsDialog by remember { mutableStateOf(false) }
+    var showOpenAsDialog by remember { mutableStateOf(false) }
 
     Box {
         TextButton(
@@ -170,7 +172,9 @@ private fun <E> FileMenu(
                 }
             }
 
-            DropdownMenuItem(onClick = { openExpanded = !openExpanded }) {
+            DropdownMenuItem(
+                onClick = { openExpanded = !openExpanded }
+            ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -197,7 +201,9 @@ private fun <E> FileMenu(
                     onClick = {},
                     enabled = false
                 ) {
-                    Box(modifier = Modifier.padding(start = 40.dp)) {
+                    Box(
+                        modifier = Modifier.padding(start = 40.dp)
+                    ) {
                         Text(
                             resources.recentGraphs,
                             color = MaterialTheme.colors.onSurface,
@@ -205,8 +211,12 @@ private fun <E> FileMenu(
                         )
                     }
                 }
-                DropdownMenuItem(onClick = { /* TODO: open */ }) {
-                    Box(modifier = Modifier.padding(start = 55.dp)) {
+                DropdownMenuItem(
+                    onClick = { /* TODO: open */ }
+                ) {
+                    Box(
+                        modifier = Modifier.padding(start = 55.dp)
+                    ) {
                         Text(
                             "ooops-1",
                             color = MaterialTheme.colors.onSurface,
@@ -214,7 +224,9 @@ private fun <E> FileMenu(
                         )
                     }
                 }
-                DropdownMenuItem(onClick = { /* TODO: open */ }) {
+                DropdownMenuItem(
+                    onClick = { /* TODO: open */ }
+                ) {
                     Box(modifier = Modifier.padding(start = 55.dp)) {
                         Text(
                             "ooops-2",
@@ -225,7 +237,9 @@ private fun <E> FileMenu(
                 }
 
                 DropdownMenuItem(onClick = { /* TODO: open */ }) {
-                    Box(modifier = Modifier.padding(start = 55.dp)) {
+                    Box(
+                        modifier = Modifier.padding(start = 55.dp)
+                    ) {
                         Text(
                             "ooops-3",
                             color = MaterialTheme.colors.onSurface,
@@ -234,7 +248,9 @@ private fun <E> FileMenu(
                     }
                 }
 
-                DropdownMenuItem(onClick = { /* TODO: Load */ }) {
+                DropdownMenuItem(
+                    onClick = { showOpenAsDialog = !showOpenAsDialog}
+                ) {
                     Row(
                         modifier = Modifier.padding(start = 40.dp),
                         verticalAlignment = Alignment.CenterVertically,
@@ -306,6 +322,11 @@ private fun <E> FileMenu(
         SaveAsDialog(
             graphViewModel = mainVm.graphViewModel as GraphViewModel<Any, Any>,
             onDismissRequest = { showSaveAsDialog = false }
+        )
+    }
+    if (showOpenAsDialog) {
+        OpenDialog(
+            onDismissRequest = { showOpenAsDialog =  false}
         )
     }
 }
