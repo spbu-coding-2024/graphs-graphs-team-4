@@ -100,11 +100,8 @@ fun <V, E> AlgorithmsDialog(
                 var checked1 by remember { mutableStateOf(false) }
                 var checked2 by remember { mutableStateOf(false) }
 
-
-
-
                 LabeledCheckbox(resources.layout, checked1) { checked1 = it }
-                LabeledCheckbox(resources.findCommunities, checked2) { checked2 = it }
+//                LabeledCheckbox(resources.findCommunities, checked2) { checked2 = it }
             }
 
             Text(
@@ -119,7 +116,8 @@ fun <V, E> AlgorithmsDialog(
                     resources.stronglyConnected,
                     resources.minimalTree,
                     resources.findCycles,
-                    resources.fordBellman
+                    resources.fordBellman,
+                    resources.findCommunities
                 ).forEach { option ->
                     LabeledRadioButton(
                         text = option,
@@ -251,6 +249,9 @@ fun <V, E> AlgorithmsDialog(
                         }
                         resources.findCycles -> {
                            algoVM.findCycles(startVertexCycle)
+                        }
+                        resources.findCommunities -> {
+                            algoVM.findCommunities()
                         }
                     }
 

@@ -12,6 +12,7 @@ repositories {
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     maven("https://raw.github.com/gephi/gephi/mvn-thirdparty-repo/")
+    maven("https://jitpack.io")
 }
 
 dependencies {
@@ -26,6 +27,8 @@ dependencies {
     implementation("org.slf4j", "slf4j-simple", "1.7.29")
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
     implementation("org.gephi", "gephi-toolkit", "0.10.1", classifier = "all")
+    implementation("com.github.JetBrains-Research:louvain:main-SNAPSHOT")
+
 }
 
 java { toolchain { languageVersion.set(JavaLanguageVersion.of(21)) } }

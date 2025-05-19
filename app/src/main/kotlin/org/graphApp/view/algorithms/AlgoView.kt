@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.graphApp.currentGraph
 import org.graphApp.model.graph.Vertex
 import org.graphApp.model.graph.*
 import org.graphApp.model.graph.Edge
@@ -13,8 +14,13 @@ import org.graphApp.model.graph.algorithms.FindStrongCommunities
 import org.graphApp.model.graph.algorithms.FordBellman
 import org.graphApp.model.graph.algorithms.MinimalSpanningTree
 import org.graphApp.model.graph.algorithms.FindCycles
+import org.graphApp.model.graph.algorithms.FindCommunities
 import org.graphApp.viewmodel.graph.GraphViewModel
 import org.graphApp.viewmodel.graph.VertexViewModel
+import kotlin.Int
+import kotlin.Long
+import kotlin.collections.List
+import kotlin.collections.Map
 
 class AlgorithmsView<V, E>(
     val viewModel: GraphViewModel<V, E>,
@@ -194,7 +200,49 @@ class AlgorithmsView<V, E>(
             }
         }
     }
+    fun findCommunities() {
+        CoroutineScope(Dispatchers.Default).launch {
+            resetAllColorsToDefaults()
 
+            viewModel.edges.forEach { edgeVM ->
+                edgeVM.color = Color.Gray.copy(alpha = 0.3f)
+            }
+
+            val findCommunitiesAlgorithm = FindCommunities(graph = viewModel.graph)
+            val communities = findCommunitiesAlgorithm.findCommunities()
+
+            if (communities == null) {
+                return@launch
+            }
+
+            communities.entries.forEachIndexed { index, (communityId, vertexIds) ->
+                val colorIndex = index % communitiesColors.size
+                val communityColor = communitiesColors[colorIndex]
+
+                vertexIds.forEach { vertexId ->
+                    viewModel.vertices.find { it.vertexID == vertexId }?.let { vertexViewModel ->
+                        vertexViewModel.color = communityColor
+                    }
+                }
+
+                delay(500)
+            }
+
+            communities.entries.forEach { (communityId, vertexIds) ->
+                val colorIndex = communities.keys.indexOf(communityId) % communitiesColors.size
+                val communityColor = communitiesColors[colorIndex]
+
+                viewModel.edges.forEach { edgeVM ->
+                    val uVertexId = edgeVM.u.vertexID
+                    val vVertexId = edgeVM.v.vertexID
+
+                    if (vertexIds.contains(uVertexId) && vertexIds.contains(vVertexId)) {
+                        edgeVM.color = communityColor.copy(alpha = 0.8f)
+                    }
+                }
+            }
+        }
+    }
     private fun findVertexByLabel(
         idOrLabel: String
     ): Vertex<V>? {
