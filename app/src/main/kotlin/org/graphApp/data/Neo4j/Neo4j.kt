@@ -6,10 +6,8 @@ import org.graphApp.model.graph.Vertex
 import org.graphApp.model.graph.WeightedDirectedEdge
 import org.graphApp.model.graph.WeightedEdge
 import org.graphApp.viewmodel.graph.GraphViewModel
-import org.neo4j.driver.AuthToken
 import org.neo4j.driver.AuthTokens
 import org.neo4j.driver.GraphDatabase
-import java.security.AuthProvider
 
 class Neo4jDataBase<V,E> (
     val viewModel : GraphViewModel<V,E>,
