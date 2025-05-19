@@ -92,8 +92,8 @@ class GraphViewModel<V, E>(
         if (from == null || to == null) return null
 
         val edge = when (graph) {
-            is WeightedGraph -> (graph as WeightedGraph<V, E>).addEdge(from.vertex.element, to.vertex.element, edgeValue, weight ?: "0")
-            is DirectedWeightedGraph -> (graph as DirectedWeightedGraph<V, E>).addEdge(from.vertex.element, to.vertex.element, edgeValue, weight ?: "0")
+            is WeightedGraph -> (graph).addEdge(from.vertex.element, to.vertex.element, edgeValue, weight ?: "0")
+            is DirectedWeightedGraph -> (graph).addEdge(from.vertex.element, to.vertex.element, edgeValue, weight ?: "0")
             else -> graph.addEdge(from.vertex.element, to.vertex.element, edgeValue)
         }
 

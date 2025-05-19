@@ -1,11 +1,8 @@
 package org.graphApp.viewmodel.graph
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import org.graphApp.model.graph.*
 
 class EdgeViewModel<E, V>(
