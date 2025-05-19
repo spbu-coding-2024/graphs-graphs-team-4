@@ -18,14 +18,13 @@ import data.SQLiteMainLogic.SQLiteMainLogic
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.swing.JFileChooser
+import javax.swing.filechooser.FileNameExtensionFilter
 
 
 @Composable
-fun SaveAsDialog(
-    graphViewModel: GraphViewModel<Any, Any>?,
+fun OpenDialog(
     onDismissRequest: () -> Unit,
-    onSaveSuccess: (String, String) -> Unit = { _, _ -> },
-    onSaveError: (String) -> Unit = { }
+    onLoadSuccess: (GraphViewModel<Any, Any>, String, String) -> Unit = { _, _, _ -> },
 ) {
     val resources = LocalTextResources.current
     var selectedOption by remember { mutableStateOf("SQLite")}
@@ -33,9 +32,9 @@ fun SaveAsDialog(
     var name by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
-    var folderChoose by remember { mutableStateOf("~/")}
     val coroutineScope = rememberCoroutineScope()
-    var selectedFolder by remember {mutableStateOf<File?>(null) }
+    var selectedFile by remember { mutableStateOf<File?>(null) }
+
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
             shape = RoundedCornerShape(10.dp),
@@ -47,27 +46,6 @@ fun SaveAsDialog(
                 horizontalAlignment = Alignment.Start,
                 modifier = Modifier.padding(16.dp)
             ) {
-                OutlinedTextField(
-                    value = name,
-                    onValueChange = {
-                        name = it
-                        errorMessage = ""
-                    },
-                    placeholder = { Text(
-                        resources.enterGraphName,
-                        color = MaterialTheme.colors.onPrimary,
-                        fontSize = 13.sp) },
-                    singleLine = true,
-                    enabled = !isLoading,
-                    isError = errorMessage.isNotEmpty(),
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp),
-                    textStyle = MaterialTheme.typography.body2.copy(fontSize = 14.sp, color = MaterialTheme.colors.onBackground),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        backgroundColor = MaterialTheme.colors.surface
-                    )
-                )
-
                 if (errorMessage.isNotEmpty()) {
                     Text(
                         text = errorMessage,
@@ -77,7 +55,7 @@ fun SaveAsDialog(
                 }
 
                 Text(
-                    text = resources.chooseFormat,
+                    text = "Choose a format",
                     fontWeight = FontWeight.Medium,
                 )
                 Row(
@@ -108,14 +86,15 @@ fun SaveAsDialog(
                     Spacer(Modifier.width(8.dp))
                     AddFolderButton(
                         onClick = {
-                            val folder = chooseFolder()
-                            if (folder != null) {
-                                selectedFolder = folder
+                            val file = chooseDbFile()
+                            if (file != null) {
+                                selectedFile = file
+                                name = file.nameWithoutExtension
                             }
                         }
                     )
                     Text(
-                        text = resources.addFolder,
+                        text = "Choose a file",
                         fontWeight = FontWeight.Medium
                     )
                 }
@@ -136,17 +115,8 @@ fun SaveAsDialog(
                             strokeWidth = 2.dp
                         )
                     } else {
-                        SaveButton(
+                        loadButton(
                             onClick = {
-                                if (name.isBlank()) {
-                                    errorMessage = "Enter a graph name"
-                                    return@SaveButton
-                                }
-
-                                if (graphViewModel == null) {
-                                    errorMessage = "No graph to save"
-                                    return@SaveButton
-                                }
 
                                 isLoading = true
                                 errorMessage = ""
@@ -157,20 +127,30 @@ fun SaveAsDialog(
                                             "SQLite" -> {
                                                 try {
                                                     val sanitizedName = name.replace(Regex("[^a-zA-Z0-9_-]"), "_")
-                                                    val dbFolder = if (selectedFolder != null ) selectedFolder else "src/main/kotlin/org/graphApp/data/SQLite/StorageSQLite"
-                                                    val dbFileName = "$dbFolder/$sanitizedName.db"
-                                                    val sqliteConnection = SQLiteExposed(dbFileName)
+                                                    val dbFolder = selectedFile?.absolutePath
+                                                    val dbFileName = selectedFile
+                                                    if (dbFileName == null || !dbFileName.exists()) {
+                                                        errorMessage = "Database file not found"
+                                                        return@launch
+                                                    }
 
-                                                    val graphViewModel = graphViewModel as GraphViewModel<Any, Any>
 
+                                                    if (!dbFileName.exists()) {
+                                                        errorMessage = "Database file not found: $dbFileName"
+                                                        return@launch
+                                                    }
+
+                                                    val sqliteConnection = SQLiteExposed(dbFileName.absolutePath)
                                                     val sqliteLogic = SQLiteMainLogic<Any, Any>(sqliteConnection)
-                                                    val success = sqliteLogic.saveToSQLiteDataBase(graphViewModel, sanitizedName)
 
-                                                    if (success) {
-                                                        onSaveSuccess(sanitizedName, selectedOption)
+                                                    val loadedGraphViewModel = sqliteLogic.readFromSQLiteDataBase<Any, Any>(sanitizedName)
+
+                                                    if (loadedGraphViewModel != null) {
+                                                        onLoadSuccess(loadedGraphViewModel, sanitizedName, selectedOption)
                                                         onDismissRequest()
+                                                        println("загрузился")
                                                     } else {
-                                                        errorMessage = "Failed to save graph to SQLite database"
+                                                        errorMessage = "Failed to load graph from SQLite database"
                                                     }
                                                 } catch (sqliteException: Exception) {
                                                     errorMessage = "SQLite error: ${sqliteException.localizedMessage ?: "Database connection failed"}"
@@ -178,21 +158,21 @@ fun SaveAsDialog(
                                                 }
                                             }
                                             "JSON" -> {
-                                                errorMessage = "todo"
+                                                errorMessage = "JSON loading not implemented yet"
                                             }
                                             "Neo4j" -> {
-                                                errorMessage = "todo"
+                                                errorMessage = "Neo4j loading not implemented yet"
                                             }
                                         }
                                     } catch (e: Exception) {
-                                        errorMessage = "Error saving graph: ${e.localizedMessage ?: "Unknown error"}"
+                                        errorMessage = "Error loading graph: ${e.localizedMessage ?: "Unknown error"}"
                                         println("General Exception: ${e.printStackTrace()}")
                                     } finally {
                                         isLoading = false
                                     }
                                 }
                             },
-                            text = resources.save
+                            text = resources.load
                         )
                     }
                 }
@@ -201,11 +181,9 @@ fun SaveAsDialog(
     }
 }
 
-fun chooseFolder(): File? {
-    val chooser = JFileChooser()
-    chooser.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
-    chooser.dialogTitle = "Choose a folder for saving"
-    val result = chooser.showOpenDialog(null)
-    return if (result == JFileChooser.APPROVE_OPTION) chooser.selectedFile else null
-
+fun chooseDbFile(): File? {
+    val fileChooser = JFileChooser()
+    fileChooser.fileFilter = FileNameExtensionFilter("SQLite DB files", "db")
+    val result = fileChooser.showOpenDialog(null)
+    return if (result == JFileChooser.APPROVE_OPTION) fileChooser.selectedFile else null
 }

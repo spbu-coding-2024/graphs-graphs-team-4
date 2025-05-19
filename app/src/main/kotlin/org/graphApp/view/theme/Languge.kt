@@ -68,7 +68,8 @@ data class TextResources(
     val chooseFormat : String,
     val addFolder : String,
     val showWeights : String,
-    val showVertexLabels : String
+    val showVertexLabels : String,
+    val load : String
 )
 
 val englishResources = TextResources(
@@ -133,6 +134,8 @@ val englishResources = TextResources(
     addFolder = "Add Folder",
     showWeights = "Edge weights",
     showVertexLabels = "Vertex labels",
+
+    load = "Load"
 )
 
 val russianResources = TextResources(
@@ -197,6 +200,8 @@ val russianResources = TextResources(
     addFolder = "Добавьте папку",
     showWeights = "Веса ребер",
     showVertexLabels = "Лейблы вершин",
+
+    load = "Открыть"
 
 )
 
