@@ -1,4 +1,4 @@
-package org.graphApp.model.graph.analysis
+package  org.graphApp.model.graph.algorithms
 
 import org.graphApp.model.graph.*
 import org.jetbrains.research.ictl.louvain.Link
@@ -15,7 +15,7 @@ data class ClusterEdge(
 }
 
 class FindCommunities<V,E>(
-    private val structure: Graph<V,E>
+    private val graph: Graph<V,E>
 ) {
     private val resolutionDepth = 3
 
@@ -32,9 +32,9 @@ class FindCommunities<V,E>(
     }
 
     fun findCommunities(): Map<Int, List<Long>>? {
-        if (structure !is WeightedGraph<*, *> && structure !is DirectedWeightedGraph<*, *>) return null
+        if (graph !is WeightedGraph<*, *> && graph !is DirectedWeightedGraph<*, *>) return null
 
-        val linkSet = structure.edges.map {
+        val linkSet = graph.edges.map {
             ClusterEdge(
                 origin = it.vertices.first.id.toInt(),
                 destination = it.vertices.second.id.toInt(),
@@ -42,7 +42,7 @@ class FindCommunities<V,E>(
             )
         }
 
-        val allVertices = structure.vertices
+        val allVertices = graph.vertices
         val detectedGroups = getPartition(linkSet, resolutionDepth).toMutableMap()
 
         var unusedLabel = (detectedGroups.values.maxOrNull() ?: -1) + 1
