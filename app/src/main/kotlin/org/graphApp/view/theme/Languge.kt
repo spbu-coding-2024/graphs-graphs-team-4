@@ -1,5 +1,6 @@
 package org.graphApp.model
 
+import androidx.annotation.RequiresFeature
 import androidx.compose.runtime.compositionLocalOf
 
 enum class AppLanguage {
@@ -81,6 +82,12 @@ data class TextResources(
     val clickOnVertex : String,
     val additional : String,
     val newGraphFile: String,
+    val aboutGravViz : String,
+    val version : String,
+    val aLightweight : String,
+    val keyFeatures : String,
+    val createAndEdit : String,
+
 
 
 
@@ -178,7 +185,16 @@ val englishResources = TextResources(
     additional = "Additional:",
     newGraphFile = """
                                 1) New Graph: File → New Graph
-                            """
+                            """,
+    aboutGravViz = "About GraphViz",
+    version = "Version 1.0",
+    aLightweight = "A lightweight tool for graph visualization and analysis",
+    keyFeatures = "Key features:",
+    createAndEdit = """
+                                        - Create and edit graphs
+                                        - 10+ built-in algorithms
+                                        - Export to JSON/SQLite/Neo4j
+                        """
 )
 
 val russianResources = TextResources(
@@ -273,8 +289,16 @@ val russianResources = TextResources(
     additional = "Дополнительный:",
     newGraphFile = """
                                 1) Новый график: Файл → Новый график
-                            """
-
+                            """,
+    aboutGravViz = "Про GraphViz",
+    version = "Версия 1.0",
+    aLightweight = "Легкий инструмент для визуализации и анализа графиков",
+    keyFeatures = "Ключевые фичи",
+    createAndEdit = """
+                                - Создание и редактирование графиков
+                                - 10+ встроенных алгоритмов
+                                - Экспорт в JSON/SQLite/Neo4j
+    """
 )
 val chineseResources = TextResources(
     fileMenu = "文件",
@@ -368,7 +392,16 @@ val chineseResources = TextResources(
     additional = "附加说明:",
     newGraphFile = """
                                 1) 新建图表: 文件 → 新建图表
-                            """
+                            """,
+    aboutGravViz = "关于 GraphViz",
+    version = "版本 1.0",
+    aLightweight = "轻量级图可视化与分析工具",
+    keyFeatures = "主要功能",
+    createAndEdit = """
+                                - 创建和编辑图结构
+                                - 10+ 内置算法
+                                - 导出为 JSON/SQLite/Neo4j
+    """
 )
 
 fun getResources(language: AppLanguage): TextResources {
