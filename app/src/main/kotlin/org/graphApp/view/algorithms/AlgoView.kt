@@ -62,7 +62,7 @@ class AlgorithmsView<V, E>(
                     val vertexId = vertex.id
                     viewModel.vertices.find { it.vertexID == vertexId }?.let { vertexViewModel ->
                         vertexViewModel.color = communityColor
-                        delay(500)
+                        delay(300L)
                     }
                 }
             }
@@ -97,7 +97,7 @@ class AlgorithmsView<V, E>(
                     vertexID.first.color = mstColor
                     vertexID.second.color = mstColor
                 }
-                delay(500)
+                delay(300L)
             }
         }
     }
@@ -135,7 +135,7 @@ class AlgorithmsView<V, E>(
             vertexPath?.forEach { vertexId ->
                 viewModel.vertices.find { it.vertexID == vertexId }?.let { vertexVM ->
                     vertexVM.color = cycleColor
-                    delay(500L)
+                    delay(300L)
                 }
             }
 
@@ -146,7 +146,7 @@ class AlgorithmsView<V, E>(
                 val edgeVM = findEdgeByVertices(fromId, toId)
                 edgeVM?.let {
                     it.color = cycleColor
-                    delay(500L)
+                    delay(300L)
                 }
             }
         }
@@ -171,7 +171,7 @@ class AlgorithmsView<V, E>(
 
             val fordBellman = FordBellman(graph = viewModel.graph)
 
-            val result = fordBellman.fordBellman(startVertex, endVertex)
+            val result = fordBellman.fordBellman(startVertex.id, endVertex.id)
 
             if (result == null) {
                 return@launch
@@ -189,8 +189,8 @@ class AlgorithmsView<V, E>(
             }
 
             edgePath.forEach { edge ->
-                val fromId = if (edge.vertices != null) edge.vertices.first.id else -1L
-                val toId = if (edge.vertices != null) edge.vertices.second.id else -1L
+                val fromId = edge.vertices.first.id
+                val toId = edge.vertices.second.id
 
                 val edgeVM = findEdgeByVertices(fromId, toId)
                 edgeVM?.let {
@@ -225,7 +225,7 @@ class AlgorithmsView<V, E>(
                     }
                 }
 
-                delay(500)
+                delay(300L)
             }
 
             communities.entries.forEach { (communityId, vertexIds) ->
@@ -244,16 +244,22 @@ class AlgorithmsView<V, E>(
         }
     }
     private fun findVertexByLabel(
-        idOrLabel: String
+        id: String
     ): Vertex<V>? {
-        val id = idOrLabel.toLongOrNull()
 
-        return if (id != null) {
-            viewModel.graph.vertices.find { it.id == id }
+        val vertex = viewModel.graph.vertices.find {
+            it.element.toString() == id
+        }
+
+        if (vertex != null) {
+            return vertex
+        }
+
+        val newId = id.toLongOrNull()
+        return if (newId != null) {
+            viewModel.graph.vertices.find { it.id == newId }
         } else {
-            viewModel.graph.vertices.find {
-                it.element.toString().equals(idOrLabel, ignoreCase = true)
-            }
+            null
         }
     }
 

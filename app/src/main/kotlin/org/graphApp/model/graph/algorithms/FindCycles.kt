@@ -37,7 +37,7 @@ class FindCycles<V,E>(
         visited[current] = true
 
         for (edge in _edges) {
-            if (edge.incident(current)) continue
+            if (!edge.incident(current)) continue
 
             val neighbor = if (edge.vertices.first.id == current) edge.vertices.second.id else edge.vertices.first.id
 
@@ -81,6 +81,9 @@ class FindCycles<V,E>(
     ) : Pair<MutableList<Long>?, List<Edge<E, V>>>? {
         init()
         val vertexPath = dfsDirected(startVertex.id)
+        if (vertexPath == null) {
+            return null
+        }
         val edgePath = reconstructEdges(vertexPath)
         return Pair(vertexPath, edgePath)
     }
@@ -92,11 +95,9 @@ class FindCycles<V,E>(
         stack.add(current)
 
         for (edge in _edges) {
-            if (!((edge.vertices.first.id == current) || (edge.vertices.second.id == current))) {
-                continue
-            }
+            if (edge.vertices.first.id != current) continue
 
-            val neighbor = if (edge.vertices.first.id == current) edge.vertices.second.id else edge.vertices.first.id
+            val neighbor = edge.vertices.second.id
 
             if (visited[neighbor] != true) {
                 parent[neighbor] = current
@@ -136,7 +137,7 @@ class FindCycles<V,E>(
     private fun findEdge(from : Long, to : Long) : Edge<E,V>? {
         return _edges.find { edge ->
             if (edge is DirectedEdge<*, *>) {
-                edge.from.id == from && edge.to.id == to
+                edge.from.id == from && edge.to.id == to|| edge.from.id == to && edge.to.id == from
             } else {
                 (edge.vertices.first.id == from && edge.vertices.second.id == to) ||
                         (edge.vertices.second.id == from && edge.vertices.first.id == to)
