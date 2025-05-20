@@ -19,11 +19,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import org.graphApp.model.LocalTextResources
 import org.graphApp.view.components.CloseButton
 
-// переписать текст
 @Composable
 fun QuickGuideDialog(onDismissRequest: () -> Unit) {
+    val resources = LocalTextResources.current
+
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
             shape = RoundedCornerShape(10.dp),
@@ -180,7 +182,7 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    CloseButton(onClick = onDismissRequest, text = "Close")
+                    CloseButton(onClick = onDismissRequest, text = resources.close)
                 }
             }
         }

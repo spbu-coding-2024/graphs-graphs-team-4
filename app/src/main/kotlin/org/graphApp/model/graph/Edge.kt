@@ -1,4 +1,3 @@
-// edge.kt
 package org.graphApp.model.graph
 
 interface Edge<E, V> {

@@ -61,8 +61,8 @@ class GraphsLayout<V, E> : RepresentationStrategy<V, E> {
 
         originalGraph.vertices.forEach { vertex ->
             val node = graph.getNode(vertex.vertexID.toString())
-            val x = ((width / 2 + node.x() * 3))
-            val y = ((height / 2 + node.y() * 3))
+            val x = ((width / 2 + node.x() * 30))
+            val y = ((height / 2 + node.y() * 30))
             vertex.x = x.dp
             vertex.y = y.dp
         }

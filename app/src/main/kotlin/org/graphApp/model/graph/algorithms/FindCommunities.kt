@@ -22,7 +22,7 @@ class FindCommunities<V,E>(
     private fun extractWeight(edge: Edge<E, V>): Double {
         return if (edge is WeightedEdge<*, *>) {
             try {
-                (edge as WeightedEdge<E, V>).weight.toString().toDouble()
+                edge.weight.toDouble()
             } catch (e: Exception) {
                 1.0
             }

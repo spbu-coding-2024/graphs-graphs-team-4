@@ -25,7 +25,7 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
     var showAlgorithmsPanel by remember { mutableStateOf(false) }
     var showNewGraphPanel by remember { mutableStateOf(false) }
     var startCliked by remember { mutableStateOf(false)}
-    var currentLanguage by remember { mutableStateOf(AppLanguage.ENGLISH) }
+    var currentLanguage by remember { mutableStateOf(AppLanguage.CHINESE) }
     val resources = getResources(currentLanguage)
     println("${viewModel.graphViewModel.vertices.size}")
     val algoVM = AlgorithmsView(viewModel = viewModel.graphViewModel)

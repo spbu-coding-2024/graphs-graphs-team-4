@@ -479,9 +479,6 @@ private fun <E> ViewMenu(
 
             if (showViewDialog) {
                 ViewDialog(
-                    currentLanguage = currentLanguage,
-                    onLanguageSelect = onLanguageChange,
-                    mainVm = mainVm,
                     selectedTheme = if (mainThemeDark) resources.themeLight else resources.themeDark,
                     onThemeChange = { newTheme ->
                         onToggleTheme()
@@ -613,7 +610,8 @@ fun SelectLanguage(
 ) {
     val radioOptions = listOf(
         Pair(AppLanguage.ENGLISH, resources.english),
-        Pair(AppLanguage.RUSSIAN, resources.russian)
+        Pair(AppLanguage.RUSSIAN, resources.russian),
+        Pair(AppLanguage.CHINESE, resources.chinese)
     )
 
     Column(modifier = modifier.selectableGroup()) {

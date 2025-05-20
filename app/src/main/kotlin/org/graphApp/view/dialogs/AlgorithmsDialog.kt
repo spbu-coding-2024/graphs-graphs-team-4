@@ -22,11 +22,8 @@ import androidx.compose.ui.unit.sp
 import org.graphApp.view.algorithms.AlgorithmsView
 import org.graphApp.view.algorithms.GraphsLayout
 import org.graphApp.view.components.*
-
-import org.graphApp.view.theme.GraphTheme
 import org.graphApp.viewmodel.MainScreenViewModel
 import org.graphApp.viewmodel.graph.GraphViewModel
-import kotlin.math.exp
 
 
 @Composable
@@ -49,8 +46,7 @@ fun <V, E> AlgorithmsDialog(
         var startVertex by remember { mutableStateOf("") }
         var finishVertex by remember { mutableStateOf("") }
         var startVertexCycle by remember { mutableStateOf("") }
-        var checked1 by remember { mutableStateOf(false) }
-        var checked2 by remember { mutableStateOf(false) }
+
         Column(
             modifier = Modifier
                 .padding(16.dp)
@@ -96,12 +92,46 @@ fun <V, E> AlgorithmsDialog(
                     color = MaterialTheme.colors.onPrimary
                 )
             )
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                var checked1 by remember { mutableStateOf(false) }
-                var checked2 by remember { mutableStateOf(false) }
+            var selectedOption1 by remember {mutableStateOf("") }
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                listOf(
+                    resources.findCommunities,
+                    resources.layout
+                ).forEach { option ->
+                    LabeledRadioButton(
+                        text = option,
+                        selected = selectedOption1 == option
+                    ) {
+                        selectedOption1 = option
+                    }
+                }
+            }
 
-                LabeledCheckbox(resources.layout, checked1) { checked1 = it }
-//                LabeledCheckbox(resources.findCommunities, checked2) { checked2 = it }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                startAlgorithmButton(onClick = {
+                    onDismissRequest()
+                    when (selectedOption1) {
+
+                        resources.findCommunities -> {
+                            algoVM.findCommunities()
+                        }
+                        resources.layout -> {
+                            algoLayout.place(1000.0,900.0, viewModel.graphViewModel as GraphViewModel<V, E>)
+                        }
+                    }
+
+                }, text = resources.startAlgo)
+                resetButton(
+                    onClick = {
+                        algoVM.resetAllColorsToDefaults()
+                    },
+                    text = resources.reset
+                )
             }
 
             Text(
@@ -110,25 +140,26 @@ fun <V, E> AlgorithmsDialog(
                     fontWeight = FontWeight.Bold, color = MaterialTheme.colors.onPrimary
                 )
             )
-            var selectedOption by remember { mutableStateOf("") }
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            var selectedOption2 by remember { mutableStateOf("") }
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
                 listOf(
                     resources.stronglyConnected,
                     resources.minimalTree,
                     resources.findCycles,
                     resources.fordBellman,
-                    resources.findCommunities
                 ).forEach { option ->
                     LabeledRadioButton(
                         text = option,
-                        selected = selectedOption == option
+                        selected = selectedOption2 == option
                     ) {
-                        selectedOption = option
+                        selectedOption2 = option
                     }
                 }
             }
             AnimatedVisibility(
-                visible = selectedOption == resources.findCycles,
+                visible = selectedOption2 == resources.findCycles,
                 enter = fadeIn() + expandVertically(),
                 exit = fadeOut() + shrinkVertically()
             ) {
@@ -172,7 +203,7 @@ fun <V, E> AlgorithmsDialog(
                 }
             }
             AnimatedVisibility(
-                visible = selectedOption == resources.fordBellman,
+                visible = selectedOption2 == resources.fordBellman,
                 enter = fadeIn() + expandVertically(),
                 exit = fadeOut() + shrinkVertically()
             ) {
@@ -241,7 +272,7 @@ fun <V, E> AlgorithmsDialog(
             ) {
                 startAlgorithmButton(onClick = {
                     onDismissRequest()
-                    when (selectedOption) {
+                    when (selectedOption2) {
                         resources.stronglyConnected -> algoVM.findStrongCommunities()
                         resources.minimalTree -> algoVM.minimalSpanningTree()
                         resources.fordBellman -> {
@@ -250,13 +281,12 @@ fun <V, E> AlgorithmsDialog(
                         resources.findCycles -> {
                            algoVM.findCycles(startVertexCycle)
                         }
-                        resources.findCommunities -> {
-                            algoVM.findCommunities()
-                        }
-                    }
-
-                    if(checked1) {
-                        algoLayout.place(1000.0,900.0, viewModel.graphViewModel as GraphViewModel<V, E>)
+//                        resources.findCommunities -> {
+//                            algoVM.findCommunities()
+//                        }
+//                        resources.layout -> {
+//                            algoLayout.place(1000.0,900.0, viewModel.graphViewModel as GraphViewModel<V, E>)
+//                        }
                     }
 
                 }, text = resources.startAlgo)
@@ -268,30 +298,6 @@ fun <V, E> AlgorithmsDialog(
                 )
             }
         }
-    }
-}
-
-@Composable
-fun LabeledCheckbox(
-    text: String,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
-) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Checkbox(
-            checked = checked,
-            onCheckedChange = onCheckedChange,
-            colors = CheckboxDefaults.colors(
-                checkedColor = MaterialTheme.colors.primaryVariant,
-                uncheckedColor = MaterialTheme.colors.onPrimary
-            )
-        )
-        Text(
-            text = text,
-            fontSize = 15.sp,
-            color = MaterialTheme.colors.onPrimary,
-            fontWeight = FontWeight.Light
-        )
     }
 }
 
