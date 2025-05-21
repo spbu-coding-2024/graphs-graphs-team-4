@@ -1,10 +1,10 @@
-package data.SQLiteMainLogic
+package  org.graphApp.data.SQLite
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.dp
 import org.graphApp.viewmodel.graph.*
 import org.graphApp.model.graph.*
-
+import org.graphApp.data.SQLite.SQLiteExposed
 
 class SQLiteMainLogic<V, E>(val connection: SQLiteExposed) {
 
@@ -29,7 +29,6 @@ class SQLiteMainLogic<V, E>(val connection: SQLiteExposed) {
             true
         } catch (e: Exception) {
             println("Exception while saving graph: ${e.message}")
-            e.printStackTrace()
             false
         }
     }
@@ -101,7 +100,6 @@ class SQLiteMainLogic<V, E>(val connection: SQLiteExposed) {
             return viewModel
         } catch (e : Exception) {
             println("Exception with reading graph: ${e.message}")
-            e.printStackTrace()
             return null
         }
     }

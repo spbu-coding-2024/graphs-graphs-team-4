@@ -13,8 +13,7 @@ import androidx.compose.ui.unit.sp
 import org.graphApp.model.LocalTextResources
 import org.graphApp.view.components.*
 import org.graphApp.viewmodel.graph.GraphViewModel
-import data.SQLiteMainLogic.SQLiteExposed
-import data.SQLiteMainLogic.SQLiteMainLogic
+import org.graphApp.data.SQLite.*
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.swing.JFileChooser
@@ -174,7 +173,7 @@ fun SaveAsDialog(
                                                     }
                                                 } catch (sqliteException: Exception) {
                                                     errorMessage = "SQLite error: ${sqliteException.localizedMessage ?: "Database connection failed"}"
-                                                    println("SQLite Exception details: ${sqliteException.printStackTrace()}")
+                                                    println("SQLite Exception details: ${sqliteException}")
                                                 }
                                             }
                                             "JSON" -> {
@@ -186,7 +185,7 @@ fun SaveAsDialog(
                                         }
                                     } catch (e: Exception) {
                                         errorMessage = "Error saving graph: ${e.localizedMessage ?: "Unknown error"}"
-                                        println("General Exception: ${e.printStackTrace()}")
+                                        println("General Exception: ${e}")
                                     } finally {
                                         isLoading = false
                                     }

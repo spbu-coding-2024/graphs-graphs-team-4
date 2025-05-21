@@ -1,8 +1,8 @@
-package data.SQLiteMainLogic
+package  org.graphApp.data.SQLite
 
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.ReferenceOption
-
+import org.graphApp.data.SQLite.*
 object Graphs : IntIdTable() {
     val graphName = varchar("graph_name", 255).uniqueIndex()
     val isDirected = bool("directed")

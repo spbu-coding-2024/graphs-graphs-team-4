@@ -13,8 +13,7 @@ import androidx.compose.ui.unit.sp
 import org.graphApp.model.LocalTextResources
 import org.graphApp.view.components.*
 import org.graphApp.viewmodel.graph.GraphViewModel
-import data.SQLiteMainLogic.SQLiteExposed
-import data.SQLiteMainLogic.SQLiteMainLogic
+import org.graphApp.data.SQLite.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -156,7 +155,7 @@ fun OpenDialog(
                                                     }
                                                 } catch (sqliteException: Exception) {
                                                     errorMessage = "SQLite error: ${sqliteException.localizedMessage ?: "Database connection failed"}"
-                                                    println("SQLite Exception details: ${sqliteException.printStackTrace()}")
+                                                    println("SQLite Exception details: ${sqliteException}")
                                                 }
                                             }
                                             "JSON" -> {
@@ -168,7 +167,7 @@ fun OpenDialog(
                                         }
                                     } catch (e: Exception) {
                                         errorMessage = "Error loading graph: ${e.localizedMessage ?: "Unknown error"}"
-                                        println("General Exception: ${e.printStackTrace()}")
+                                        println("General Exception: ${e}")
                                     } finally {
                                         isLoading = false
                                     }
