@@ -1,6 +1,5 @@
 package org.graphApp.view.dialogs
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,10 +10,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import org.graphApp.model.AppLanguage
 import org.graphApp.model.LocalTextResources
-import org.graphApp.model.getResources
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,9 +18,6 @@ import org.graphApp.viewmodel.MainScreenViewModel
 
 @Composable
 fun<E> NewGraphPanel(
-    onLanguageChange: (AppLanguage) -> Unit,
-    currentLanguage: AppLanguage,
-    modifier: Modifier = Modifier,
     onClose: () -> Unit,
     vm: MainScreenViewModel<E>
 ) {
@@ -107,6 +100,10 @@ fun<E> NewGraphPanel(
                                 onClose()
                                 vm.createNewGraph(vm.isWeightedGraph, vm.isDirectedGraph)
                             },
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = MaterialTheme.colors.primaryVariant,
+                                contentColor = MaterialTheme.colors.onPrimary
+                                )
                         ) {
                             Text(resources.createGraph, color = MaterialTheme.colors.onSecondary)
 

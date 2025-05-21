@@ -2,6 +2,7 @@ package org.graphApp.model
 
 import androidx.annotation.RequiresFeature
 import androidx.compose.runtime.compositionLocalOf
+import org.graphApp.model.graph.WeightedEdge
 
 enum class AppLanguage {
     ENGLISH,
@@ -87,9 +88,15 @@ data class TextResources(
     val aLightweight : String,
     val keyFeatures : String,
     val createAndEdit : String,
+    val vertexLabels : String,
+    val edgeWeights : String,
 
-
-
+    val enterEdgeWeight : String,
+    val confirm : String,
+    val add : String,
+    val enterVertexLabel : String,
+    val vertexLabel : String,
+    val weight : String
 
 )
 
@@ -194,7 +201,15 @@ val englishResources = TextResources(
                                         - Create and edit graphs
                                         - 10+ built-in algorithms
                                         - Export to JSON/SQLite/Neo4j
-                        """
+                        """,
+    vertexLabels = "Vertex Labels",
+    edgeWeights = "Edge weights",
+    enterEdgeWeight = "Enter edge weight",
+    confirm = "Confirm",
+    add = "Add",
+    enterVertexLabel = "Enter vertex label",
+    vertexLabel = "Vertex label",
+    weight = "Weight"
 )
 
 val russianResources = TextResources(
@@ -298,7 +313,15 @@ val russianResources = TextResources(
                                 - Создание и редактирование графиков
                                 - 10+ встроенных алгоритмов
                                 - Экспорт в JSON/SQLite/Neo4j
-    """
+    """,
+    vertexLabels = "Названия вершин",
+    edgeWeights = "Веса ребер",
+    enterEdgeWeight = "Введите вес ребра",
+    confirm = "Подтвердить",
+    add = "Добавить",
+    enterVertexLabel = "Добавить название вершины",
+    vertexLabel = "Название вершины",
+    weight = "Вес"
 )
 val chineseResources = TextResources(
     fileMenu = "文件",
@@ -401,7 +424,15 @@ val chineseResources = TextResources(
                                 - 创建和编辑图结构
                                 - 10+ 内置算法
                                 - 导出为 JSON/SQLite/Neo4j
-    """
+    """,
+    vertexLabels = "顶点标签",
+    edgeWeights = "边权重",
+    enterEdgeWeight = "输入边权重",
+    confirm = "确认",
+    add = "添加",
+    enterVertexLabel = "输入顶点标签",
+    vertexLabel = "顶点标签",
+    weight = "戈伊达"
 )
 
 fun getResources(language: AppLanguage): TextResources {

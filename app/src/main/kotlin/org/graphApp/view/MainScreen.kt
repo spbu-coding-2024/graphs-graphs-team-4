@@ -69,11 +69,6 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
 
                                 AnimatedVisibility(visible = showNewGraphPanel) {
                                     NewGraphPanel(
-                                        onLanguageChange = { lang ->
-                                            currentLanguage = lang
-                                        },
-                                        currentLanguage = currentLanguage,
-                                        modifier = Modifier.fillMaxWidth(),
                                         onClose = { showNewGraphPanel = false },
                                         vm = viewModel
                                     )
@@ -102,11 +97,6 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                         .zIndex(1f)
                 ) {
                     NewGraphPanel(
-                        onLanguageChange = { lang ->
-                            currentLanguage = lang
-                        },
-                        currentLanguage = currentLanguage,
-                        modifier = Modifier.width(350.dp),
                         onClose = { showNewGraphPanel = false },
                         vm = viewModel
                     )

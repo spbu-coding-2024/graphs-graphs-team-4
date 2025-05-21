@@ -13,7 +13,6 @@ import androidx.compose.ui.unit.sp
 import org.graphApp.model.LocalTextResources
 import org.graphApp.view.components.*
 
-const val START_ZOOM_POSITION = 250
 
 @Composable
 fun ViewDialog(

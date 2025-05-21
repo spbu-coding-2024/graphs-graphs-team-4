@@ -447,8 +447,8 @@ private fun <E> ViewMenu(
                         )
 
                         Text(
-                            "Edge weights",
-                            fontWeight = FontWeight.Medium,
+                            resources.edgeWeights,
+                            fontWeight = FontWeight.ExtraLight
                         )
                     }
                 }
@@ -470,7 +470,7 @@ private fun <E> ViewMenu(
                     )
 
                     Text(
-                        text = "Vertex labels",
+                        text = resources.vertexLabels,
                         color = MaterialTheme.colors.onSurface,
                         fontWeight = FontWeight.ExtraLight
                     )
