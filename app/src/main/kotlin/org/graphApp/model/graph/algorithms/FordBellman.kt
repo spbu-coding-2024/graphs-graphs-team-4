@@ -22,10 +22,10 @@ class FordBellman<V, E>(
     }
 
     fun fordBellman(
-        from: Vertex<V>,
-        to: Vertex<V>?
+        from: Long,
+        to: Long?
     ): Pair<MutableList<Long>?, List<Edge<E,V>>>? {
-        init(from.id)
+        init(from)
 
         val n = _vertices.size
 
@@ -42,12 +42,12 @@ class FordBellman<V, E>(
 
         detectNegativeCycles()
 
-        if (to != null && (hasNegativeCycle[to.id] == true || d[to.id] == Double.POSITIVE_INFINITY)) {
+        if (to != null && (hasNegativeCycle[to] == true || d[to] == Double.POSITIVE_INFINITY)) {
             return null
         }
 
         return if (to != null) {
-            val vertexPath = pathReconstruct(from.id, to.id, parent) ?: return null
+            val vertexPath = pathReconstruct(from, to, parent) ?: return null
             val edgePath = reconstructEdges(vertexPath)
             Pair(vertexPath, edgePath)
         } else {
@@ -115,7 +115,7 @@ class FordBellman<V, E>(
             is WeightedEdge<*, *> -> {
                 try {
 
-                    (edge as WeightedEdge<E, V>).weight.toDouble()
+                    edge.weight.toDouble()
                 } catch (e: NumberFormatException) {
                     1.0
                 }

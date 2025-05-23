@@ -25,7 +25,7 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
     var showAlgorithmsPanel by remember { mutableStateOf(false) }
     var showNewGraphPanel by remember { mutableStateOf(false) }
     var startCliked by remember { mutableStateOf(false)}
-    var currentLanguage by remember { mutableStateOf(AppLanguage.ENGLISH) }
+    var currentLanguage by remember { mutableStateOf(AppLanguage.CHINESE) }
     val resources = getResources(currentLanguage)
     println("${viewModel.graphViewModel.vertices.size}")
     val algoVM = AlgorithmsView(viewModel = viewModel.graphViewModel)
@@ -69,11 +69,6 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
 
                                 AnimatedVisibility(visible = showNewGraphPanel) {
                                     NewGraphPanel(
-                                        onLanguageChange = { lang ->
-                                            currentLanguage = lang
-                                        },
-                                        currentLanguage = currentLanguage,
-                                        modifier = Modifier.fillMaxWidth(),
                                         onClose = { showNewGraphPanel = false },
                                         vm = viewModel
                                     )
@@ -102,11 +97,6 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                         .zIndex(1f)
                 ) {
                     NewGraphPanel(
-                        onLanguageChange = { lang ->
-                            currentLanguage = lang
-                        },
-                        currentLanguage = currentLanguage,
-                        modifier = Modifier.width(350.dp),
                         onClose = { showNewGraphPanel = false },
                         vm = viewModel
                     )

@@ -1,8 +1,6 @@
 package org.graphApp.view.dialogs
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -10,26 +8,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import org.graphApp.model.AppLanguage
 import org.graphApp.model.LocalTextResources
 import org.graphApp.view.components.*
-import org.graphApp.viewmodel.MainScreenViewModel
-import kotlin.math.roundToInt
 
-const val START_ZOOM_POSITION = 250
 
 @Composable
-fun <E> ViewDialog(
-    currentLanguage: AppLanguage,
-    onLanguageSelect: (AppLanguage) -> Unit,
-    mainVm: MainScreenViewModel<E>,
+fun ViewDialog(
     selectedTheme: String,
     onThemeChange: (String) -> Unit,
     onDismissRequest: () -> Unit

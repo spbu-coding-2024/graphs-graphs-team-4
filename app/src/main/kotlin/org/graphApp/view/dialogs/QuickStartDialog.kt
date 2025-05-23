@@ -19,11 +19,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import org.graphApp.model.LocalTextResources
 import org.graphApp.view.components.CloseButton
 
-// переписать текст
 @Composable
 fun QuickGuideDialog(onDismissRequest: () -> Unit) {
+    val resources = LocalTextResources.current
+
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
             shape = RoundedCornerShape(10.dp),
@@ -39,7 +41,7 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
                     .verticalScroll(rememberScrollState())
             ) {
                 Text(
-                    text = "Graph Creation Guide",
+                    text = resources.guide,
                     color = MaterialTheme.colors.onBackground,
                     style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold)
                 )
@@ -48,7 +50,7 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
                     horizontalAlignment = Alignment.Start,
                 ) {
                     Text(
-                        text = "Create Vertex:",
+                        text = resources.createVertex,
                         color = MaterialTheme.colors.onBackground,
                         style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold)
                     )
@@ -58,11 +60,7 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
                     horizontalAlignment = Alignment.Start
                 ) {
                     Text(
-                        text =
-                            """  
-                                1) Right-click on empty area
-                                2) Enter vertex value in the pop-up window
-                        """
+                        text = resources.rightClick1
                                 .trimIndent(),
                         color = MaterialTheme.colors.onBackground
                     )
@@ -75,7 +73,7 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
                     horizontalAlignment = Alignment.Start
                 ) {
                     Text(
-                        text = "Create Edge:",
+                        text = resources.createEdge,
                         color = MaterialTheme.colors.onBackground,
                         style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold)
                     )
@@ -86,12 +84,7 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
                 ) {
                     Text(
                         text =
-                            """
-                                1) Right-click first vertex (source)
-                                2) Right-click second vertex (target):
-                                        - Directed graph: edge from 1st → 2nd vertex
-                                        - Undirected graph: bidirectional edge 
-                        """
+                           resources.rightClick2
                                 .trimIndent(),
                         color = MaterialTheme.colors.onBackground
                     )
@@ -104,7 +97,7 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
                     horizontalAlignment = Alignment.Start
                 ) {
                     Text(
-                        text = "Edit Elements:",
+                        text = resources.editElements,
                         color = MaterialTheme.colors.onBackground,
                         style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold)
                     )
@@ -115,10 +108,7 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
                 ) {
                     Text(
                         text =
-                            """
-                                1) Double-click vertex ID or edge weight
-                                2) Enter new value
-                                """
+                            resources.doubleClick
                                 .trimIndent(),
                         color = MaterialTheme.colors.onBackground
                     )
@@ -131,7 +121,7 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
                     horizontalAlignment = Alignment.Start
                 ) {
                     Text(
-                        text = "Delete Elements:",
+                        text = resources.deleteElements,
                         color = MaterialTheme.colors.onBackground,
                         style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold)
                     )
@@ -142,10 +132,7 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
                 ) {
                     Text(
                         text =
-                            """
-                                1) Click on vertex/edge to select
-                                2) Press Delete key
-                            """
+                            resources.clickOnVertex
                                 .trimIndent(),
                         color = MaterialTheme.colors.onBackground
                     )
@@ -158,7 +145,7 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
                     horizontalAlignment = Alignment.Start
                 ) {
                     Text(
-                        text = "Additional:",
+                        text = resources.additional,
                         color = MaterialTheme.colors.onBackground,
                         style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold)
                     )
@@ -169,9 +156,7 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
                 ) {
                     Text(
                         text =
-                            """
-                                1) New Graph: File → New Graph
-                            """
+                            resources.newGraphFile
                                 .trimIndent(),
                         color = MaterialTheme.colors.onBackground
                     )
@@ -180,7 +165,7 @@ fun QuickGuideDialog(onDismissRequest: () -> Unit) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    CloseButton(onClick = onDismissRequest, text = "Close")
+                    CloseButton(onClick = onDismissRequest, text = resources.close)
                 }
             }
         }

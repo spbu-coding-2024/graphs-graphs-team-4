@@ -15,6 +15,8 @@ import org.graphApp.view.components.*
 import org.graphApp.viewmodel.graph.GraphViewModel
 import data.SQLiteMainLogic.SQLiteExposed
 import data.SQLiteMainLogic.SQLiteMainLogic
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.swing.JFileChooser
@@ -32,7 +34,7 @@ fun OpenDialog(
     var name by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
-    val coroutineScope = rememberCoroutineScope()
+
     var selectedFile by remember { mutableStateOf<File?>(null) }
 
     Dialog(onDismissRequest = onDismissRequest) {
@@ -121,7 +123,7 @@ fun OpenDialog(
                                 isLoading = true
                                 errorMessage = ""
 
-                                coroutineScope.launch {
+                                CoroutineScope(Dispatchers.Default).launch {
                                     try {
                                         when (selectedOption) {
                                             "SQLite" -> {

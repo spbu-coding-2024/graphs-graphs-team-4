@@ -24,6 +24,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import org.graphApp.viewmodel.MainScreenViewModel
 import androidx.compose.ui.unit.*
+import org.graphApp.model.LocalTextResources
 import kotlin.math.sign
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -31,6 +32,7 @@ import kotlin.math.sign
 fun <E> RightClickPopupOnEmptyArea(
     viewModel: MainScreenViewModel<E>,
 ) {
+    val resources = LocalTextResources.current
     var showPopup by remember { mutableStateOf(false) }
     var popupX by remember { mutableStateOf(0f) }
     var popupY by remember { mutableStateOf(0f) }
@@ -49,88 +51,95 @@ fun <E> RightClickPopupOnEmptyArea(
                 eventHandledByChild = false
             }
     ) {
-    if (showPopup) {
-        val offsetX = popupX - (280.dp.value / 2).toInt()
-        val offsetY = popupY - (200.dp.value / 2).toInt()
-        Popup(
-            alignment = Alignment.TopStart,
-            offset = IntOffset(offsetX.toInt(), offsetY.toInt()),
-            onDismissRequest = { showPopup = false },
-            properties = PopupProperties(focusable = true)
-        ) {
-            val animatedProgress = remember { Animatable(0f) }
-
-            LaunchedEffect(key1 = true) {
-                animatedProgress.animateTo(
-                    targetValue = 1f,
-                    animationSpec = tween(500, easing = EaseOutQuint)
-                )
-            }
-
-            val scale = animatedProgress.value
-            Card(
-                modifier = Modifier
-                    .width(280.dp)
-                    .height(200.dp)
-                    .padding(16.dp)
-                    .graphicsLayer {
-                        scaleX = scale
-                        scaleY = scale
-                    },
-                elevation = 8.dp,
-                shape = RoundedCornerShape(12.dp)
+        if (showPopup) {
+            val offsetX = popupX - (280.dp.value / 2).toInt()
+            val offsetY = popupY - (200.dp.value / 2).toInt()
+            Popup(
+                alignment = Alignment.TopStart,
+                offset = IntOffset(offsetX.toInt(), offsetY.toInt()),
+                onDismissRequest = { showPopup = false },
+                properties = PopupProperties(focusable = true)
             ) {
-                Column(
+                val animatedProgress = remember { Animatable(0f) }
+
+                LaunchedEffect(key1 = true) {
+                    animatedProgress.animateTo(
+                        targetValue = 1f,
+                        animationSpec = tween(500, easing = EaseOutQuint)
+                    )
+                }
+
+                val scale = animatedProgress.value
+                Card(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(8.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .width(280.dp)
+                        .height(200.dp)
+                        .padding(16.dp)
+                        .graphicsLayer {
+                            scaleX = scale
+                            scaleY = scale
+                        },
+                    elevation = 8.dp,
+                    shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text(
-                        "Enter vertex label",
-                        style = MaterialTheme.typography.subtitle1,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(8.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = resources.enterVertexLabel,
+                            style = MaterialTheme.typography.subtitle1,
+                            fontWeight = FontWeight.Bold
+                        )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
 
-                    OutlinedTextField(
-                        value = vertexLabel,
-                        onValueChange = { vertexLabel = it },
-                        label = { Text("Vertex label") },
-                        modifier = Modifier.fillMaxWidth().height(70.dp),
-                        singleLine = true
-                    )
+                        OutlinedTextField(
+                            value = vertexLabel,
+                            onValueChange = { vertexLabel = it },
+                            label = { Text(text = resources.vertexLabel) },
+                            modifier = Modifier.fillMaxWidth().height(70.dp),
+                            singleLine = true
+                        )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
 
-                    val density = LocalDensity.current
+                        val density = LocalDensity.current
 
-                    Button(onClick = {
-                        if (vertexLabel.isNotEmpty()) {
-                            val adjustedX = (popupX - viewModel.offset.x) / viewModel.scale
-                            val adjustedY = (popupY - viewModel.offset.y) / viewModel.scale
-                            val xDp = with(density) { adjustedX.toDp() - 20.dp }
-                            val yDp = with(density) { adjustedY.toDp() - 20.dp }
+                        Button(
+                            onClick = {
+                                if (vertexLabel.isNotEmpty()) {
+                                    val adjustedX = (popupX - viewModel.offset.x) / viewModel.scale
+                                    val adjustedY = (popupY - viewModel.offset.y) / viewModel.scale
+                                    val xDp = with(density) { adjustedX.toDp() - 20.dp }
+                                    val yDp = with(density) { adjustedY.toDp() - 20.dp }
 
-                            viewModel.graphViewModel.addVertex(
-                                vertexLabel,
-                                xDp,
-                                yDp
+                                    viewModel.graphViewModel.addVertex(
+                                        vertexLabel,
+                                        xDp,
+                                        yDp
+                                    )
+                                    vertexLabel = ""
+                                    showPopup = false
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = MaterialTheme.colors.primaryVariant,
+                                contentColor = MaterialTheme.colors.onPrimary
                             )
-                            vertexLabel = ""
-                            showPopup = false
+                        ) {
+                            Text(text = resources.add)
                         }
-                    }) {
-                        Text("ADD")
                     }
                 }
             }
         }
     }
 }
-}
+
 @Composable
 fun EdgeWeightPopup(
     isVisible: Boolean,
@@ -138,6 +147,7 @@ fun EdgeWeightPopup(
     onDismiss: () -> Unit,
     onConfirm: (String) -> Unit
 ) {
+    val resources = LocalTextResources.current
     if (isVisible) {
         var weight by remember { mutableStateOf("") }
         val density = LocalDensity.current
@@ -183,7 +193,7 @@ fun EdgeWeightPopup(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        "Enter edge weight",
+                        text = resources.enterEdgeWeight,
                         style = MaterialTheme.typography.subtitle1,
                         fontWeight = FontWeight.Bold
                     )
@@ -193,7 +203,7 @@ fun EdgeWeightPopup(
                     OutlinedTextField(
                         value = weight,
                         onValueChange = { weight = it },
-                        label = { Text("Weight") },
+                        label = { Text(text = resources.weight) },
                         modifier = Modifier.fillMaxWidth().height(70.dp),
                         singleLine = true
                     )
@@ -205,14 +215,14 @@ fun EdgeWeightPopup(
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
                         Button(onClick = onDismiss) {
-                            Text("CANCEL")
+                            Text(text = resources.cancel)
                         }
 
                         Button(onClick = {
                             onConfirm(weight)
                             onDismiss()
                         }) {
-                            Text("CONFIRM")
+                            Text(text = resources.confirm)
                         }
                     }
                 }
@@ -222,23 +232,22 @@ fun EdgeWeightPopup(
 }
 
 
-
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun <E>GraphView(
+fun <E> GraphView(
     viewModel: GraphViewModel<String, E>,
     mainScreenViewModel: MainScreenViewModel<E>
 ) {
-    val state = rememberTransformableState {
-            zoomChange, offsetChange, rotationChange ->
+    val state = rememberTransformableState { zoomChange, offsetChange, rotationChange ->
         mainScreenViewModel.scale *= zoomChange
         mainScreenViewModel.rotation += rotationChange
         mainScreenViewModel.offset += offsetChange
     }
 
-    BoxWithConstraints(modifier = Modifier
-        .fillMaxSize()
-        .clipToBounds()
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxSize()
+            .clipToBounds()
     ) {
         Box(
             modifier = Modifier
@@ -248,7 +257,7 @@ fun <E>GraphView(
                     val change = it.changes.first()
                     val delta = -change.scrollDelta.y.toInt().sign
                     mainScreenViewModel.scale(delta)
-                   // println("Scroll")
+                    // println("Scroll")
                 }
                 .transformable(state = state)
         ) {
@@ -261,15 +270,16 @@ fun <E>GraphView(
                 onDismiss = { viewModel.dismissEdgeWeight() },
                 onConfirm = { weight -> viewModel.confirmEdgeWeight(weight) }
             )
-            Box(modifier = Modifier
-                .graphicsLayer {
-                    scaleX = mainScreenViewModel.scale
-                    scaleY = mainScreenViewModel.scale
-                    rotationZ = mainScreenViewModel.rotation
-                    translationX = mainScreenViewModel.offset.x
-                    translationY = mainScreenViewModel.offset.y
-                    transformOrigin = TransformOrigin(0.5f, 0.5f)
-                })
+            Box(
+                modifier = Modifier
+                    .graphicsLayer {
+                        scaleX = mainScreenViewModel.scale
+                        scaleY = mainScreenViewModel.scale
+                        rotationZ = mainScreenViewModel.rotation
+                        translationX = mainScreenViewModel.offset.x
+                        translationY = mainScreenViewModel.offset.y
+                        transformOrigin = TransformOrigin(0.5f, 0.5f)
+                    })
             {
                 println(viewModel.edges.size)
 
@@ -279,7 +289,7 @@ fun <E>GraphView(
                 println(viewModel.vertices.size)
                 viewModel.vertices.forEach { v ->
 
-                    VertexView(v, Modifier, onVertexClick = { vertex -> viewModel.onVertexSelected(vertex)})
+                    VertexView(v, Modifier, onVertexClick = { vertex -> viewModel.onVertexSelected(vertex) })
                 }
             }
         }

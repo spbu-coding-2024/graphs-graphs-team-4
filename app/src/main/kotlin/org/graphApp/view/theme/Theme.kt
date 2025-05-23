@@ -7,7 +7,6 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-// нужно еще будет реализовать переключение темы, а еще цвета подобрать
 val DarkColorScheme = darkColors(
     primary = TopAppBarColor,
     primaryVariant = Color(0xFFFF69DA),
