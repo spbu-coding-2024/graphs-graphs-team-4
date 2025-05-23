@@ -321,7 +321,8 @@ private fun <E> FileMenu(
     if (showSaveAsDialog) {
         SaveAsDialog(
             graphViewModel = mainVm.graphViewModel as GraphViewModel<Any, Any>,
-            onDismissRequest = { showSaveAsDialog = false }
+            onDismissRequest = { showSaveAsDialog = false },
+            mainViewModel = mainVm as MainScreenViewModel<Any>
         )
     }
     if (showOpenAsDialog) {

@@ -16,6 +16,9 @@ import org.graphApp.viewmodel.graph.GraphViewModel
 import data.SQLiteMainLogic.SQLiteExposed
 import data.SQLiteMainLogic.SQLiteMainLogic
 import kotlinx.coroutines.launch
+import org.graphApp.data.Neo4j.Neo4jDataBase
+import org.graphApp.viewmodel.MainScreenViewModel
+import org.neo4j.driver.exceptions.Neo4jException
 import java.io.File
 import javax.swing.JFileChooser
 
@@ -23,19 +26,23 @@ import javax.swing.JFileChooser
 @Composable
 fun SaveAsDialog(
     graphViewModel: GraphViewModel<Any, Any>?,
+    mainViewModel: MainScreenViewModel<Any>,
     onDismissRequest: () -> Unit,
     onSaveSuccess: (String, String) -> Unit = { _, _ -> },
     onSaveError: (String) -> Unit = { }
+
 ) {
     val resources = LocalTextResources.current
-    var selectedOption by remember { mutableStateOf("SQLite")}
+    var selectedOption by remember { mutableStateOf("SQLite") }
     val options = listOf("JSON", "Neo4j", "SQLite")
     var name by remember { mutableStateOf("") }
+    var uri by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
-    var folderChoose by remember { mutableStateOf("~/")}
-    val coroutineScope = rememberCoroutineScope()
-    var selectedFolder by remember {mutableStateOf<File?>(null) }
+    var folderChoose by remember { mutableStateOf("~/") }
+    var selectedFolder by remember { mutableStateOf<File?>(null) }
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
             shape = RoundedCornerShape(10.dp),
@@ -53,16 +60,22 @@ fun SaveAsDialog(
                         name = it
                         errorMessage = ""
                     },
-                    placeholder = { Text(
-                        resources.enterGraphName,
-                        color = MaterialTheme.colors.onPrimary,
-                        fontSize = 13.sp) },
+                    placeholder = {
+                        Text(
+                            resources.enterGraphName,
+                            color = MaterialTheme.colors.onPrimary,
+                            fontSize = 13.sp
+                        )
+                    },
                     singleLine = true,
                     enabled = !isLoading,
                     isError = errorMessage.isNotEmpty(),
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
-                    textStyle = MaterialTheme.typography.body2.copy(fontSize = 14.sp, color = MaterialTheme.colors.onBackground),
+                    textStyle = MaterialTheme.typography.body2.copy(
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colors.onBackground
+                    ),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         backgroundColor = MaterialTheme.colors.surface
                     )
@@ -101,23 +114,120 @@ fun SaveAsDialog(
                         }
                     }
                 }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start
-                ) {
-                    Spacer(Modifier.width(8.dp))
-                    AddFolderButton(
-                        onClick = {
-                            val folder = chooseFolder()
-                            if (folder != null) {
-                                selectedFolder = folder
+                if (selectedOption != "Neo4j") {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Spacer(Modifier.width(8.dp))
+                        AddFolderButton(
+                            onClick = {
+                                val folder = chooseFolder()
+                                if (folder != null) {
+                                    selectedFolder = folder
+                                }
                             }
-                        }
+                        )
+                        Text(
+                            text = resources.addFolder,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+
+                }
+                if(selectedOption == "Neo4j") {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        OutlinedTextField(
+                        value = uri,
+                        onValueChange = {
+                            uri = it
+                        },
+                        placeholder = {
+                            Text(
+                                "Uri",
+                                color = MaterialTheme.colors.onPrimary,
+                                fontSize = 13.sp
+                            )
+                        },
+                        singleLine = true,
+                        enabled = !isLoading,
+                        isError = errorMessage.isNotEmpty(),
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp),
+                        textStyle = MaterialTheme.typography.body2.copy(
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colors.onBackground
+                        ),
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            backgroundColor = MaterialTheme.colors.surface
+                        )
                     )
-                    Text(
-                        text = resources.addFolder,
-                        fontWeight = FontWeight.Medium
-                    )
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        OutlinedTextField(
+                            value = username,
+                            onValueChange = {
+                                username = it
+                            },
+                            placeholder = {
+                                Text(
+                                    "Username",
+                                    color = MaterialTheme.colors.onPrimary,
+                                    fontSize = 13.sp
+                                )
+                            },
+                            singleLine = true,
+                            enabled = !isLoading,
+                            isError = errorMessage.isNotEmpty(),
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(8.dp),
+                            textStyle = MaterialTheme.typography.body2.copy(
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colors.onBackground
+                            ),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                backgroundColor = MaterialTheme.colors.surface
+                            )
+                        )
+                    }
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        OutlinedTextField(
+                            value = password,
+                            onValueChange = {
+                                password = it
+                            },
+                            placeholder = {
+                                Text(
+                                    "Password",
+                                    color = MaterialTheme.colors.onPrimary,
+                                    fontSize = 13.sp
+                                )
+                            },
+                            singleLine = true,
+                            enabled = !isLoading,
+                            isError = errorMessage.isNotEmpty(),
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(8.dp),
+                            textStyle = MaterialTheme.typography.body2.copy(
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colors.onBackground
+                            ),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                backgroundColor = MaterialTheme.colors.surface
+                            )
+                        )
+
+                    }
                 }
 
                 Row(
@@ -151,45 +261,63 @@ fun SaveAsDialog(
                                 isLoading = true
                                 errorMessage = ""
 
-                                coroutineScope.launch {
-                                    try {
-                                        when (selectedOption) {
-                                            "SQLite" -> {
-                                                try {
-                                                    val sanitizedName = name.replace(Regex("[^a-zA-Z0-9_-]"), "_")
-                                                    val dbFolder = if (selectedFolder != null ) selectedFolder else "src/main/kotlin/org/graphApp/data/SQLite/StorageSQLite"
-                                                    val dbFileName = "$dbFolder/$sanitizedName.db"
-                                                    val sqliteConnection = SQLiteExposed(dbFileName)
+                                try {
+                                    when (selectedOption) {
+                                        "SQLite" -> {
+                                            try {
+                                                val sanitizedName = name.replace(Regex("[^a-zA-Z0-9_-]"), "_")
+                                                val dbFolder =
+                                                    if (selectedFolder != null) selectedFolder else "src/main/kotlin/org/graphApp/data/SQLite/StorageSQLite"
+                                                val dbFileName = "$dbFolder/$sanitizedName.db"
+                                                val sqliteConnection = SQLiteExposed(dbFileName)
 
-                                                    val graphViewModel = graphViewModel as GraphViewModel<Any, Any>
+                                                val graphViewModel = graphViewModel as GraphViewModel<Any, Any>
 
-                                                    val sqliteLogic = SQLiteMainLogic<Any, Any>(sqliteConnection)
-                                                    val success = sqliteLogic.saveToSQLiteDataBase(graphViewModel, sanitizedName)
+                                                val sqliteLogic = SQLiteMainLogic<Any, Any>(sqliteConnection)
+                                                val success =
+                                                    sqliteLogic.saveToSQLiteDataBase(graphViewModel, sanitizedName)
 
-                                                    if (success) {
-                                                        onSaveSuccess(sanitizedName, selectedOption)
-                                                        onDismissRequest()
-                                                    } else {
-                                                        errorMessage = "Failed to save graph to SQLite database"
-                                                    }
-                                                } catch (sqliteException: Exception) {
-                                                    errorMessage = "SQLite error: ${sqliteException.localizedMessage ?: "Database connection failed"}"
-                                                    println("SQLite Exception details: ${sqliteException.printStackTrace()}")
+                                                if (success) {
+                                                    onSaveSuccess(sanitizedName, selectedOption)
+                                                    onDismissRequest()
+                                                } else {
+                                                    errorMessage = "Failed to save graph to SQLite database"
                                                 }
-                                            }
-                                            "JSON" -> {
-                                                errorMessage = "todo"
-                                            }
-                                            "Neo4j" -> {
-                                                errorMessage = "todo"
+                                            } catch (sqliteException: Exception) {
+                                                errorMessage =
+                                                    "SQLite error: ${sqliteException.localizedMessage ?: "Database connection failed"}"
+                                                println("SQLite Exception details: ${sqliteException.printStackTrace()}")
                                             }
                                         }
-                                    } catch (e: Exception) {
-                                        errorMessage = "Error saving graph: ${e.localizedMessage ?: "Unknown error"}"
-                                        println("General Exception: ${e.printStackTrace()}")
-                                    } finally {
-                                        isLoading = false
+
+                                        "JSON" -> {
+                                            errorMessage = "todo"
+                                        }
+
+                                        "Neo4j" -> {
+                                            try {
+                                                val neo4jStorer = Neo4jDataBase(
+                                                    graphViewModel = graphViewModel,
+                                                    mainViewModel = mainViewModel,
+                                                    uri = uri,
+                                                    username = username,
+                                                    password = password
+                                                )
+                                                neo4jStorer.storeGraph()
+                                            } catch (neo4jException: Exception) {
+                                                errorMessage = "todo"
+                                            }
+
+
+
+
+                                        }
                                     }
+                                } catch (e: Exception) {
+                                    errorMessage = "Error saving graph: ${e.localizedMessage ?: "Unknown error"}"
+                                    println("General Exception: ${e.printStackTrace()}")
+                                } finally {
+                                    isLoading = false
                                 }
                             },
                             text = resources.save
