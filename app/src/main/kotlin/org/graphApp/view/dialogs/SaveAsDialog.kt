@@ -15,8 +15,12 @@ import org.graphApp.view.components.*
 import org.graphApp.viewmodel.graph.GraphViewModel
 import data.SQLiteMainLogic.SQLiteExposed
 import data.SQLiteMainLogic.SQLiteMainLogic
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.graphApp.data.Neo4j.Neo4jDataBase
+import org.graphApp.main
 import org.graphApp.viewmodel.MainScreenViewModel
 import org.neo4j.driver.exceptions.Neo4jException
 import java.io.File
@@ -24,9 +28,9 @@ import javax.swing.JFileChooser
 
 
 @Composable
-fun SaveAsDialog(
+fun<E> SaveAsDialog(
     graphViewModel: GraphViewModel<Any, Any>?,
-    mainViewModel: MainScreenViewModel<Any>,
+    mainViewModel: MainScreenViewModel<E>,
     onDismissRequest: () -> Unit,
     onSaveSuccess: (String, String) -> Unit = { _, _ -> },
     onSaveError: (String) -> Unit = { }
@@ -135,36 +139,36 @@ fun SaveAsDialog(
                     }
 
                 }
-                if(selectedOption == "Neo4j") {
+                if (selectedOption == "Neo4j") {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Start
                     ) {
                         OutlinedTextField(
-                        value = uri,
-                        onValueChange = {
-                            uri = it
-                        },
-                        placeholder = {
-                            Text(
-                                "Uri",
-                                color = MaterialTheme.colors.onPrimary,
-                                fontSize = 13.sp
+                            value = uri,
+                            onValueChange = {
+                                uri = it
+                            },
+                            placeholder = {
+                                Text(
+                                    "Uri",
+                                    color = MaterialTheme.colors.onPrimary,
+                                    fontSize = 13.sp
+                                )
+                            },
+                            singleLine = true,
+                            enabled = !isLoading,
+                            isError = errorMessage.isNotEmpty(),
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(8.dp),
+                            textStyle = MaterialTheme.typography.body2.copy(
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colors.onBackground
+                            ),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                backgroundColor = MaterialTheme.colors.surface
                             )
-                        },
-                        singleLine = true,
-                        enabled = !isLoading,
-                        isError = errorMessage.isNotEmpty(),
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(8.dp),
-                        textStyle = MaterialTheme.typography.body2.copy(
-                            fontSize = 14.sp,
-                            color = MaterialTheme.colors.onBackground
-                        ),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            backgroundColor = MaterialTheme.colors.surface
                         )
-                    )
                     }
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -258,6 +262,16 @@ fun SaveAsDialog(
                                     return@SaveButton
                                 }
 
+                                if(username.isBlank()) {
+                                    errorMessage = "Enter a username"
+                                    return@SaveButton
+                                }
+
+                                if(password.isBlank()) {
+                                    errorMessage = "Enter a password"
+                                    return@SaveButton
+                                }
+
                                 isLoading = true
                                 errorMessage = ""
 
@@ -291,34 +305,34 @@ fun SaveAsDialog(
                                         }
 
                                         "JSON" -> {
-                                            errorMessage = "todo"
+                                            errorMessage = "Not implemented yet"
                                         }
 
                                         "Neo4j" -> {
-                                            try {
-                                                val neo4jStorer = Neo4jDataBase(
-                                                    graphViewModel = graphViewModel,
-                                                    mainViewModel = mainViewModel,
-                                                    uri = uri,
-                                                    username = username,
-                                                    password = password
-                                                )
-                                                neo4jStorer.storeGraph()
-                                            } catch (neo4jException: Exception) {
-                                                errorMessage = "todo"
+                                            CoroutineScope(Dispatchers.IO).launch {
+                                                try {
+                                                    val neo4jStorer = Neo4jDataBase(
+                                                        mainViewModel = mainViewModel,
+                                                        graphViewModel = mainViewModel.graphViewModel,
+                                                        uri = uri,
+                                                        username = username,
+                                                        password = password
+                                                    )
+                                                    neo4jStorer.storeGraph()
+                                                } catch (neo4jException: Exception) {
+                                                    errorMessage = neo4jException.localizedMessage ?: "Unknown error"
+                                                }
+
                                             }
-
-
-
-
+                                            }
                                         }
+                                    } catch (e: Exception) {
+                                        errorMessage = "Error saving graph: ${e.localizedMessage ?: "Unknown error"}"
+                                        println("General Exception: ${e.printStackTrace()}")
+                                    } finally {
+                                        isLoading = false
                                     }
-                                } catch (e: Exception) {
-                                    errorMessage = "Error saving graph: ${e.localizedMessage ?: "Unknown error"}"
-                                    println("General Exception: ${e.printStackTrace()}")
-                                } finally {
-                                    isLoading = false
-                                }
+                                onDismissRequest()
                             },
                             text = resources.save
                         )

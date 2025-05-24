@@ -327,7 +327,8 @@ private fun <E> FileMenu(
     }
     if (showOpenAsDialog) {
         OpenDialog(
-            onDismissRequest = { showOpenAsDialog =  false}
+            onDismissRequest = { showOpenAsDialog =  false},
+            mainViewModel = mainVm as MainScreenViewModel<Any>
         )
     }
 }

@@ -3,15 +3,9 @@ package org.graphApp.data.Neo4j
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
-import org.graphApp.model.graph.DirectedEdge
-import org.graphApp.model.graph.Edge
-import org.graphApp.model.graph.Vertex
-import org.graphApp.model.graph.WeightedDirectedEdge
-import org.graphApp.model.graph.WeightedEdge
+import kotlinx.coroutines.withContext
 import org.graphApp.viewmodel.MainScreenViewModel
 import org.graphApp.viewmodel.graph.EdgeViewModel
 import org.graphApp.viewmodel.graph.GraphViewModel
@@ -29,6 +23,8 @@ class Neo4jDataBase<V, E>(
     username: String,
     password: String,
 ) {
+
+
 
 
     private val driver =
@@ -51,7 +47,7 @@ class Neo4jDataBase<V, E>(
         )
         session.executeWrite { tx ->
             tx.run(
-                "CREATE (node: Vertex {id: \$id, element: \$element})", params
+                "CREATE (:Vertex {id: \$id, element: \$element})", params
             )
 
         }
@@ -67,7 +63,7 @@ class Neo4jDataBase<V, E>(
             )
             session.executeWrite { tx ->
                 tx.run(
-                    "MATCH (from: Vertex {id: \$fromID}), (to: Vertex {id: \$toID})" +
+                    "MATCH (from:Vertex {id: \$fromID}), (to:Vertex {id: \$toID})" +
                             " CREATE (from)-[:CONNECTED_TO {weight: \$weight, type: \$type}]->(to)",
                     paramsWeightedDirectedEdge
                 )
@@ -82,7 +78,7 @@ class Neo4jDataBase<V, E>(
             )
             session.executeWrite { tx ->
                 tx.run(
-                    "MATCH (from: Vertex {id: \$fromID}), (to: Vertex {id: \$toID})" +
+                    "MATCH (from:Vertex {id: \$fromID}), (to:Vertex {id: \$toID})" +
                             " CREATE (from)-[:CONNECTED_TO {type: \$type}]->(to)", directedEdge
                 )
             }
@@ -97,8 +93,8 @@ class Neo4jDataBase<V, E>(
             )
             session.executeWrite { tx ->
                 tx.run(
-                    "MATCH (Vertex1: Vertex {id: \$V1}), (Vertex2: Vertex {id: \$V2})" +
-                            " CREATE (Vertex1)-[:CONNECTED_TO {weight: \$weight, type: \$type}]-(Vertex2)",
+                    "MATCH (Vertex1:Vertex {id: \$V1}), (Vertex2:Vertex {id: \$V2})" +
+                            " CREATE (Vertex1)-[:CONNECTED_TO {weight: \$weight, type: \$type}]->(Vertex2)",
                     paramsWeightedEdge
                 )
             }
@@ -112,30 +108,23 @@ class Neo4jDataBase<V, E>(
             )
             session.executeWrite { tx ->
                 tx.run(
-                    "MATCH(V1: Vertex {id: \$Vertex1ID}), (V2: Vertex {id: \$Vertex2ID})" +
-                            " CREATE (V1)-[:CONNECTED_TO {type: \$type}]-(V2)", paramsEdge
+                    "MATCH (V1:Vertex {id: \$Vertex1ID}), (V2:Vertex {id: \$Vertex2ID})" +
+                            " CREATE (V1)-[:CONNECTED_TO {type: \$type}]->(V2)", paramsEdge
                 )
             }
         }
     }
 
     suspend fun storeGraph() = coroutineScope {
-        val vertices = graphViewModel.vertices
-        val edges = graphViewModel.edges
-        val storeVertices = async(Dispatchers.IO) {
-            vertices.forEach { vertex ->
-                storeVertex(vertex)
-            }
+        // 1) вершины
+        withContext(Dispatchers.IO) {
+            graphViewModel.vertices.forEach(::storeVertex)
         }
 
-        val storeEdges = async(Dispatchers.IO) {
-            edges.forEach { edge ->
-                storeEdge(edge)
-            }
+        // 2) рёбра
+        withContext(Dispatchers.IO) {
+            graphViewModel.edges.forEach(::storeEdge)
         }
-
-        storeEdges.await()
-        storeVertices.await()
 
         close()
     }
@@ -144,10 +133,13 @@ class Neo4jDataBase<V, E>(
     private fun uploadVertex() {
         session.executeRead { tx ->
             val unloadVertices = tx.run(
-                "MATCH (node:Vertex) RETURN node.id as id, node.element as element"
+                "MATCH (node:Vertex) RETURN node.element AS element"
             )
             unloadVertices.forEach { vertex ->
                 val element = vertex["element"].asObject()
+                if (element == null) {
+                    throw IllegalStateException("Vertex element not found")
+                }
                 graphViewModel.addVertex(element as V, 0.dp, 0.dp)
             }
         }

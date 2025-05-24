@@ -18,6 +18,9 @@ import data.SQLiteMainLogic.SQLiteMainLogic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.graphApp.data.Neo4j.Neo4jDataBase
+import org.graphApp.main
+import org.graphApp.viewmodel.MainScreenViewModel
 import java.io.File
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
@@ -27,6 +30,7 @@ import javax.swing.filechooser.FileNameExtensionFilter
 fun OpenDialog(
     onDismissRequest: () -> Unit,
     onLoadSuccess: (GraphViewModel<Any, Any>, String, String) -> Unit = { _, _, _ -> },
+    mainViewModel: MainScreenViewModel<Any>
 ) {
     val resources = LocalTextResources.current
     var selectedOption by remember { mutableStateOf("SQLite")}
@@ -263,7 +267,18 @@ fun OpenDialog(
                                                 errorMessage = "JSON loading not implemented yet"
                                             }
                                             "Neo4j" -> {
-                                                errorMessage = "Neo4j loading not implemented yet"
+                                               try {
+                                                   val neo4jLoader = Neo4jDataBase(
+                                                       mainViewModel = mainViewModel,
+                                                       graphViewModel = mainViewModel.graphViewModel,
+                                                       uri = uri,
+                                                       username = username,
+                                                       password = password
+                                                   )
+                                                   neo4jLoader.uploadGraph()
+                                               } catch (error: Exception) {
+                                                   errorMessage = error.localizedMessage ?: "Unknown error"
+                                               }
                                             }
                                         }
                                     } catch (e: Exception) {
