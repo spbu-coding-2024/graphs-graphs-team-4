@@ -230,7 +230,7 @@ class Neo4jDataBase<V, E>(
         }
     }
 
-    suspend fun uploadGraph() = CoroutineScope(Dispatchers.IO).launch {
+    fun uploadGraph() = CoroutineScope(Dispatchers.IO).launch {
         graphViewModel.clear()
 
         uploadVertex()
