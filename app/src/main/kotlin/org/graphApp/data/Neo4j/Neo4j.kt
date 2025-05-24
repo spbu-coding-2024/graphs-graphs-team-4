@@ -116,16 +116,12 @@ class Neo4jDataBase<V, E>(
     }
 
     suspend fun storeGraph() = coroutineScope {
-        // 1) вершины
         withContext(Dispatchers.IO) {
             graphViewModel.vertices.forEach(::storeVertex)
         }
-
-        // 2) рёбра
         withContext(Dispatchers.IO) {
             graphViewModel.edges.forEach(::storeEdge)
         }
-
         close()
     }
 
