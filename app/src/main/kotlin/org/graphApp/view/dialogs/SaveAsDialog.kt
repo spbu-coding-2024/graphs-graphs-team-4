@@ -262,15 +262,19 @@ fun<E> SaveAsDialog(
                                     return@SaveButton
                                 }
 
-                                if(username.isBlank()) {
-                                    errorMessage = "Enter a username"
-                                    return@SaveButton
+
+                                if(selectedOption == "Neo4j") {
+                                    if (username.isBlank()) {
+                                        errorMessage = "Enter a username"
+                                        return@SaveButton
+                                    }
+
+                                    if (password.isBlank()) {
+                                        errorMessage = "Enter a password"
+                                        return@SaveButton
+                                    }
                                 }
 
-                                if(password.isBlank()) {
-                                    errorMessage = "Enter a password"
-                                    return@SaveButton
-                                }
 
                                 isLoading = true
                                 errorMessage = ""
@@ -311,6 +315,7 @@ fun<E> SaveAsDialog(
                                         "Neo4j" -> {
                                             CoroutineScope(Dispatchers.IO).launch {
                                                 try {
+
                                                     val neo4jStorer = Neo4jDataBase(
                                                         mainViewModel = mainViewModel,
                                                         graphViewModel = mainViewModel.graphViewModel,
