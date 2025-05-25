@@ -11,7 +11,7 @@ import org.graphApp.model.graph.*
 class EdgeViewModel<E, V>(
     val u: VertexViewModel<V>,
     val v: VertexViewModel<V>,
-    private var edge: Edge<E, V>,
+    var edge: Edge<E, V>,
     private val _weightVisible: State<Boolean>,
     private val _directVisible: State<Boolean>
 ) {

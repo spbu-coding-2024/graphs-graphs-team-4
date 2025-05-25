@@ -326,7 +326,10 @@ private fun <E> FileMenu(
     }
     if (showOpenAsDialog) {
         OpenDialog(
-            onDismissRequest = { showOpenAsDialog =  false}
+            onDismissRequest = { showOpenAsDialog = false },
+            onLoadSuccess = { loadedGraphViewModel, name, type ->
+                mainVm.loadGraphFromDatabase(loadedGraphViewModel, name)
+            }
         )
     }
 }
