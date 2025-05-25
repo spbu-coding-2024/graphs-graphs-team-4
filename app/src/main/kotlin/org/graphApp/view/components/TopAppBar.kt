@@ -22,6 +22,7 @@ import org.graphApp.view.dialogs.SaveAsDialog
 import org.graphApp.view.dialogs.ViewDialog
 import org.graphApp.viewmodel.MainScreenViewModel
 import org.graphApp.viewmodel.graph.GraphViewModel
+import org.graphApp.viewmodel.*
 
 @Composable
 fun <E> TopBarMenu(
@@ -326,7 +327,11 @@ private fun <E> FileMenu(
     }
     if (showOpenAsDialog) {
         OpenDialog(
-            onDismissRequest = { showOpenAsDialog =  false}
+            graphViewModel = mainVm.graphViewModel,
+            onDismissRequest = { showOpenAsDialog = false },
+            onLoadSuccess = { loadedGraphViewModel, name, type ->
+                mainVm.loadGraphFromDatabase(loadedGraphViewModel, name)
+            }
         )
     }
 }

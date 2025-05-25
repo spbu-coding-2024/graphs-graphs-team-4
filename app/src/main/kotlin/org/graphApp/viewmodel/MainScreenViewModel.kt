@@ -4,11 +4,17 @@ import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.runtime.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import org.graphApp.currentGraph
 import org.graphApp.model.graph.DirectGraph
 import org.graphApp.model.graph.DirectWeightedGraph
+import org.graphApp.model.graph.DirectedWeightedGraph
+import org.graphApp.model.graph.Edge
 import org.graphApp.model.graph.Graph
 import org.graphApp.model.graph.UndirectedGraph
 import org.graphApp.model.graph.UndirectedWeightedGraph
+import org.graphApp.model.graph.WeightedEdge
 import org.graphApp.model.graph.WeightedGraph
 import org.graphApp.view.algorithms.AlgorithmsView
 import org.graphApp.viewmodel.graph.GraphViewModel
@@ -65,7 +71,64 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
         showEdgesWeights = _showEdgesWeights,
         isWeightedGraph = _isWeightedGraphState,
         isDirectedGraph = _isDirectedGraphState,
-    ))
+        )
+    )
+
+    @Suppress("UNCHECKED_CAST")
+    fun loadGraphFromDatabase(newGraphViewModel : GraphViewModel<*,*>, graphName : String) {
+        try {
+            graphViewModel.clear()
+
+            val loadedGraph = newGraphViewModel.graph
+
+            isWeightedGraph = loadedGraph is WeightedGraph<*, *> || loadedGraph is DirectedWeightedGraph<*, *>
+            isDirectedGraph = loadedGraph is DirectGraph<*,*> || loadedGraph is DirectedWeightedGraph<*,*>
+
+            graphViewModel = GraphViewModel(
+                graph = loadedGraph as Graph<String, E>,
+                showVerticesLabels = _showVertexLabels,  
+                showEdgesWeights = _showEdgesWeights,    
+                isWeightedGraph = _isWeightedGraphState,
+                isDirectedGraph = _isDirectedGraphState  
+            )
+
+            restoreVisualization(newGraphViewModel)
+
+
+        } catch(e : Exception) {
+            println("Error loading graph : ${e.message}")
+            e.printStackTrace()
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun restoreVisualization(loadedViewModel: GraphViewModel<*,*>) {
+        val vertexMap = mutableMapOf<Long, Long>()
+
+        loadedViewModel.vertices.forEach { oldVertexVM ->
+            val newVertexVM = graphViewModel.addVertex(
+                label = oldVertexVM.vertex.element as String,
+                x = oldVertexVM.x,  
+                y = oldVertexVM.y   
+            )
+            vertexMap[oldVertexVM.vertexID] = newVertexVM.vertexID
+        }
+
+        loadedViewModel.edges.forEach { oldEdgeVM ->
+            val fromVertexId = vertexMap[oldEdgeVM.u.vertexID]
+            val toVertexId = vertexMap[oldEdgeVM.v.vertexID]
+
+            if (fromVertexId != null && toVertexId != null) {
+                graphViewModel.addEdge(
+                    fromVertedID = fromVertexId,
+                    toVertexID = toVertexId,
+                    edgeValue = oldEdgeVM.edge.element as E,
+                    weight = oldEdgeVM.weight
+                )
+            }
+        }
+    }
+
 
     fun createNewGraph(isWeighted: Boolean, isDirected: Boolean) {
 
