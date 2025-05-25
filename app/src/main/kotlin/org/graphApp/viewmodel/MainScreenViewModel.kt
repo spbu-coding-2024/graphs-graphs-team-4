@@ -1,6 +1,5 @@
 package org.graphApp.viewmodel
 
-import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.runtime.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -8,9 +7,14 @@ import androidx.compose.ui.unit.dp
 import org.graphApp.model.graph.DirectGraph
 import org.graphApp.model.graph.DirectWeightedGraph
 import org.graphApp.model.graph.DirectedWeightedGraph
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import org.graphApp.currentGraph
+import org.graphApp.model.graph.Edge
 import org.graphApp.model.graph.Graph
 import org.graphApp.model.graph.UndirectedGraph
 import org.graphApp.model.graph.UndirectedWeightedGraph
+import org.graphApp.model.graph.WeightedEdge
 import org.graphApp.model.graph.WeightedGraph
 import org.graphApp.view.algorithms.AlgorithmsView
 import org.graphApp.viewmodel.graph.GraphViewModel
@@ -68,7 +72,8 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
         showEdgesWeights = _showEdgesWeights,
         isWeightedGraph = _isWeightedGraphState,
         isDirectedGraph = _isDirectedGraphState,
-    ))
+        )
+    )
     @Suppress("UNCHECKED_CAST")
     fun generateLargeGraph(vertexCount: Int = 1000, edgeCount: Int = 1000) {
         createNewGraph(isWeightedGraph, isDirectedGraph)
@@ -99,6 +104,7 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
             }
         }
     }
+
     @Suppress("UNCHECKED_CAST")
     fun loadGraphFromDatabase(newGraphViewModel : GraphViewModel<*,*>, graphName : String) {
         try {
