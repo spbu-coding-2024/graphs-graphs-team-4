@@ -16,6 +16,7 @@ import org.graphApp.view.algorithms.AlgorithmsView
 import org.graphApp.viewmodel.graph.GraphViewModel
 import sun.awt.X11.XUtilConstants.ZoomState
 import kotlin.math.exp
+import kotlin.random.Random
 
 
 class MainScreenViewModel<E>(graph: Graph<String, E>) {
@@ -87,7 +88,7 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
             val from = vertices.random()
             val to = vertices.random()
             if (from != to) {
-                val weight = if (isWeightedGraph) (1..10000).random() else null
+                val weight = if (isWeightedGraph) Random.nextDouble(0.0, 10000.0) else null
                 val _weight : String = weight.toString()
                 graphViewModel.addEdge(
                     fromVertedID = from,
