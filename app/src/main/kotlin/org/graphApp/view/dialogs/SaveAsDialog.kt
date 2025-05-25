@@ -316,7 +316,8 @@ fun<E> SaveAsDialog(
                                                         graphViewModel = mainViewModel.graphViewModel,
                                                         uri = uri,
                                                         username = username,
-                                                        password = password
+                                                        password = password,
+                                                        graphName = name
                                                     )
                                                     neo4jStorer.storeGraph()
                                                 } catch (neo4jException: Exception) {

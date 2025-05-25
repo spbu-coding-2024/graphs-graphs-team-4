@@ -19,14 +19,16 @@ const val STUB = 0
 class Neo4jDataBase<V, E>(
     val graphViewModel: GraphViewModel<V, E>,
     val mainViewModel: MainScreenViewModel<E>,
+    graphName: String,
     uri: String,
     username: String,
     password: String,
 ) {
 
-
-
-
+    val currentGraphName = graphName
+    val gName = mapOf(
+        "graphname" to currentGraphName
+    )
     private val driver =
         GraphDatabase.driver(uri.ifBlank { "bolt://localhost:7687" }, AuthTokens.basic(username, password))
     private val session = driver.session()
@@ -43,11 +45,12 @@ class Neo4jDataBase<V, E>(
     private fun storeVertex(vertex: VertexViewModel<V>) {
         val params = mapOf(
             "id" to vertex.vertexID,
-            "element" to vertex.vertex.element
+            "element" to vertex.vertex.element,
+            "graphname" to currentGraphName
         )
         session.executeWrite { tx ->
             tx.run(
-                "CREATE (:Vertex {id: \$id, element: \$element})", params
+                "CREATE (:Vertex {id: \$id, element: \$element, graphname: \$graphname})", params
             )
 
         }
@@ -59,11 +62,12 @@ class Neo4jDataBase<V, E>(
                 "fromID" to edge.u.vertexID,
                 "toID" to edge.v.vertexID,
                 "weight" to edge.weight,
-                "type" to EdgeTypeNeo4j.DIRECTED_WEIGHTED.typeString
+                "type" to EdgeTypeNeo4j.DIRECTED_WEIGHTED.typeString,
+                "graphname" to currentGraphName
             )
             session.executeWrite { tx ->
                 tx.run(
-                    "MATCH (from:Vertex {id: \$fromID}), (to:Vertex {id: \$toID})" +
+                    "MATCH (from:Vertex {id: \$fromID, graphname: \$graphname}), (to:Vertex {id: \$toID, graphname: \$graphname})" +
                             " CREATE (from)-[:CONNECTED_TO {weight: \$weight, type: \$type}]->(to)",
                     paramsWeightedDirectedEdge
                 )
@@ -74,11 +78,12 @@ class Neo4jDataBase<V, E>(
             val directedEdge = mapOf(
                 "fromID" to edge.u.vertexID,
                 "toID" to edge.v.vertexID,
-                "type" to EdgeTypeNeo4j.DIRECTED.typeString
+                "type" to EdgeTypeNeo4j.DIRECTED.typeString,
+                "graphname" to currentGraphName
             )
             session.executeWrite { tx ->
                 tx.run(
-                    "MATCH (from:Vertex {id: \$fromID}), (to:Vertex {id: \$toID})" +
+                    "MATCH (from:Vertex {id: \$fromID, graphname: \$graphname}), (to:Vertex {id: \$toID, graphname: \$graphname})" +
                             " CREATE (from)-[:CONNECTED_TO {type: \$type}]->(to)", directedEdge
                 )
             }
@@ -89,11 +94,12 @@ class Neo4jDataBase<V, E>(
                 "V1" to edge.u.vertexID,
                 "V2" to edge.v.vertexID,
                 "weight" to edge.weight,
-                "type" to EdgeTypeNeo4j.WEIGHTED.typeString
+                "type" to EdgeTypeNeo4j.WEIGHTED.typeString,
+                "graphname" to currentGraphName
             )
             session.executeWrite { tx ->
                 tx.run(
-                    "MATCH (Vertex1:Vertex {id: \$V1}), (Vertex2:Vertex {id: \$V2})" +
+                    "MATCH (Vertex1:Vertex {id: \$V1, graphname: \$graphname}), (Vertex2:Vertex {id: \$V2, graphname: \$graphname})" +
                             " CREATE (Vertex1)-[:CONNECTED_TO {weight: \$weight, type: \$type}]->(Vertex2)",
                     paramsWeightedEdge
                 )
@@ -104,11 +110,12 @@ class Neo4jDataBase<V, E>(
             val paramsEdge = mapOf(
                 "Vertex1ID" to edge.u.vertexID,
                 "Vertex2ID" to edge.v.vertexID,
-                "type" to EdgeTypeNeo4j.UNDIRECTED.typeString
+                "type" to EdgeTypeNeo4j.UNDIRECTED.typeString,
+                "graphname" to currentGraphName
             )
             session.executeWrite { tx ->
                 tx.run(
-                    "MATCH (V1:Vertex {id: \$Vertex1ID}), (V2:Vertex {id: \$Vertex2ID})" +
+                    "MATCH (V1:Vertex {id: \$Vertex1ID, graphname: \$graphname}), (V2:Vertex {id: \$Vertex2ID, graphname: \$graphname})" +
                             " CREATE (V1)-[:CONNECTED_TO {type: \$type}]->(V2)", paramsEdge
                 )
             }
@@ -129,7 +136,7 @@ class Neo4jDataBase<V, E>(
     private fun uploadVertex() {
         session.executeRead { tx ->
             val unloadVertices = tx.run(
-                "MATCH (node:Vertex) RETURN node.element AS element"
+                "MATCH (node:Vertex {graphname: \$graphname}) RETURN node.element AS element, node.graphname AS graphname", gName
             )
             unloadVertices.forEach { vertex ->
                 val element = vertex["element"].asObject()
@@ -144,7 +151,7 @@ class Neo4jDataBase<V, E>(
     private fun uploadEdge() {
         session.executeRead { tx ->
             val unloadEdges = tx.run(
-                "MATCH (a)-[edge:CONNECTED_TO]-(b)" + "RETURN edge.type AS type"
+                "MATCH (a:Vertex {graphname: \$graphname})-[edge:CONNECTED_TO]-(b:Vertex {graphname: \$graphname})" + "RETURN edge.type AS type", gName
             )
             val mapForCorrectTypeEdge: MutableMap<String, Int> = mutableMapOf()
             unloadEdges.forEach { edge ->
@@ -160,7 +167,8 @@ class Neo4jDataBase<V, E>(
                         mainViewModel.isWeightedGraph = true
                         mainViewModel.isDirectedGraph = true
                         val unloadAllEdges = tx.run(
-                            "MATCH (a:Vertex)-[edge:CONNECTED_TO]->(b:Vertex)" + " RETURN edge.type AS type, edge.weight AS weight, a.id AS idFrom, b.id AS idTo",
+                            "MATCH (a:Vertex {graphname: \$graphname})-[edge:CONNECTED_TO]->(b:Vertex {graphname: \$graphname})" +
+                                    " RETURN edge.type AS type, edge.weight AS weight, a.id AS idFrom, b.id AS idTo", gName
                         )
                         unloadAllEdges.forEach { edge ->
                             val IDFrom = edge["idFrom"].asLong()
@@ -174,7 +182,8 @@ class Neo4jDataBase<V, E>(
                         mainViewModel.isWeightedGraph = true
                         mainViewModel.isDirectedGraph = false
                         val unloadAllEdges = tx.run(
-                            "MATCH (a:Vertex)-[edge:CONNECTED_TO]-(b:Vertex)" + " RETURN edge.type AS type, edge.weight AS weight, a.id AS idFrom, b.id AS idTo",
+                            "MATCH (a:Vertex {graphname: \$graphname})-[edge:CONNECTED_TO]-(b:Vertex {graphname: \$graphname})" +
+                                    " RETURN edge.type AS type, edge.weight AS weight, a.id AS idFrom, b.id AS idTo", gName
                         )
                         unloadAllEdges.forEach { edge ->
                             val IDFrom = edge["idFrom"].asLong()
@@ -188,7 +197,8 @@ class Neo4jDataBase<V, E>(
                         mainViewModel.isWeightedGraph = false
                         mainViewModel.isDirectedGraph = true
                         val unloadAllEdges = tx.run(
-                            "MATCH (a:Vertex)-[edge:CONNECTED_TO]->(b:Vertex)" + " RETURN edge.type AS type, a.id AS idFrom, b.id AS idTo",
+                            "MATCH (a:Vertex {graphname: \$graphname})-[edge:CONNECTED_TO]->(b:Vertex {graphname: \$graphname})" +
+                                    " RETURN edge.type AS type, a.id AS idFrom, b.id AS idTo", gName
                         )
                         unloadAllEdges.forEach { edge ->
                             val IDFrom = edge["idFrom"].asLong()
@@ -201,7 +211,8 @@ class Neo4jDataBase<V, E>(
                         mainViewModel.isWeightedGraph = false
                         mainViewModel.isDirectedGraph = false
                         val unloadAllEdges = tx.run(
-                            "MATCH (a:Vertex)-[edge:CONNECTED_TO]-(b:Vertex)" + " RETURN edge.type AS type, a.id AS idFrom, b.id AS idTo",
+                            "MATCH (a:Vertex {graphname: \$graphname})-[edge:CONNECTED_TO]-(b:Vertex {graphname: \$graphname})" +
+                                    " RETURN edge.type AS type, a.id AS idFrom, b.id AS idTo", gName
                         )
                         unloadAllEdges.forEach { edge ->
                             val IDFrom = edge["idFrom"].asLong()

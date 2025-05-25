@@ -10,6 +10,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import data.SQLiteMainLogic.Graphs
+import data.SQLiteMainLogic.Graphs.graphName
 import org.graphApp.model.LocalTextResources
 import org.graphApp.view.components.*
 import org.graphApp.viewmodel.graph.GraphViewModel
@@ -33,7 +35,7 @@ fun OpenDialog(
     mainViewModel: MainScreenViewModel<Any>
 ) {
     val resources = LocalTextResources.current
-    var selectedOption by remember { mutableStateOf("SQLite")}
+    var selectedOption by remember { mutableStateOf("SQLite") }
     val options = listOf("JSON", "Neo4j", "SQLite")
     var name by remember { mutableStateOf("") }
     var uri by remember { mutableStateOf("") }
@@ -41,7 +43,7 @@ fun OpenDialog(
     var username by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
-
+    var graphName by remember { mutableStateOf("") }
     var selectedFile by remember { mutableStateOf<File?>(null) }
 
     Dialog(onDismissRequest = onDismissRequest) {
@@ -109,7 +111,7 @@ fun OpenDialog(
                     }
 
                 }
-                if(selectedOption == "Neo4j") {
+                if (selectedOption == "Neo4j") {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Start
@@ -202,6 +204,37 @@ fun OpenDialog(
                         )
 
                     }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        OutlinedTextField(
+                            value = graphName,
+                            onValueChange = {
+                                graphName = it
+                            },
+                            placeholder = {
+                                Text(
+                                    "GraphName",
+                                    color = MaterialTheme.colors.onPrimary,
+                                    fontSize = 13.sp
+                                )
+                            },
+                            singleLine = true,
+                            enabled = !isLoading,
+                            isError = errorMessage.isNotEmpty(),
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(8.dp),
+                            textStyle = MaterialTheme.typography.body2.copy(
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colors.onBackground
+                            ),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                backgroundColor = MaterialTheme.colors.surface
+                            )
+                        )
+
+                    }
                 }
 
 
@@ -249,36 +282,45 @@ fun OpenDialog(
                                                     val sqliteConnection = SQLiteExposed(dbFileName.absolutePath)
                                                     val sqliteLogic = SQLiteMainLogic<Any, Any>(sqliteConnection)
 
-                                                    val loadedGraphViewModel = sqliteLogic.readFromSQLiteDataBase<Any, Any>(sanitizedName)
+                                                    val loadedGraphViewModel =
+                                                        sqliteLogic.readFromSQLiteDataBase<Any, Any>(sanitizedName)
 
                                                     if (loadedGraphViewModel != null) {
-                                                        onLoadSuccess(loadedGraphViewModel, sanitizedName, selectedOption)
+                                                        onLoadSuccess(
+                                                            loadedGraphViewModel,
+                                                            sanitizedName,
+                                                            selectedOption
+                                                        )
                                                         onDismissRequest()
                                                         println("загрузился")
                                                     } else {
                                                         errorMessage = "Failed to load graph from SQLite database"
                                                     }
                                                 } catch (sqliteException: Exception) {
-                                                    errorMessage = "SQLite error: ${sqliteException.localizedMessage ?: "Database connection failed"}"
+                                                    errorMessage =
+                                                        "SQLite error: ${sqliteException.localizedMessage ?: "Database connection failed"}"
                                                     println("SQLite Exception details: ${sqliteException.printStackTrace()}")
                                                 }
                                             }
+
                                             "JSON" -> {
                                                 errorMessage = "JSON loading not implemented yet"
                                             }
+
                                             "Neo4j" -> {
-                                               try {
-                                                   val neo4jLoader = Neo4jDataBase(
-                                                       mainViewModel = mainViewModel,
-                                                       graphViewModel = mainViewModel.graphViewModel,
-                                                       uri = uri,
-                                                       username = username,
-                                                       password = password
-                                                   )
-                                                   neo4jLoader.uploadGraph()
-                                               } catch (error: Exception) {
-                                                   errorMessage = error.localizedMessage ?: "Unknown error"
-                                               }
+                                                try {
+                                                    val neo4jLoader = Neo4jDataBase(
+                                                        mainViewModel = mainViewModel,
+                                                        graphViewModel = mainViewModel.graphViewModel,
+                                                        uri = uri,
+                                                        username = username,
+                                                        password = password,
+                                                        graphName = graphName
+                                                    )
+                                                    neo4jLoader.uploadGraph()
+                                                } catch (error: Exception) {
+                                                    errorMessage = error.localizedMessage ?: "Unknown error"
+                                                }
                                             }
                                         }
                                     } catch (e: Exception) {

@@ -1,5 +1,6 @@
 package org.graphApp.view.graph
 
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
@@ -7,6 +8,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,8 +18,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.input.key.*
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
@@ -30,6 +37,7 @@ fun <V> VertexView(
     viewModel: VertexViewModel<V>,
     modifier: Modifier = Modifier,
     onVertexClick: (VertexViewModel<V>) -> Unit = {},
+    onVertexClickDeletion: (VertexViewModel<V>) -> Unit = {}
 ) {
     var textWidth by remember { mutableStateOf(0) }
     val measurer = rememberTextMeasurer()
@@ -38,9 +46,18 @@ fun <V> VertexView(
         textWidth = layout.size.width
     }
 
-    val radiusDp      = viewModel.radius
+    val radiusDp = viewModel.radius
     val selectedColor = MaterialTheme.colors.primaryVariant
-    viewModel
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+    LaunchedEffect(viewModel.selected) {
+        if (viewModel.selected) {
+            focusRequester.requestFocus()
+        }
+    }
+    DisposableEffect(Unit) {
+        onDispose {}
+    }
     Box(
         modifier = modifier
             .size(radiusDp * 2, radiusDp * 2)
@@ -78,6 +95,8 @@ fun <V> VertexView(
                     radius = size.minDimension / 2
                 )
             }
+            .focusRequester(focusRequester)
+            .focusable()
             .pointerInput(viewModel) {
                 detectDragGestures { change, dragAmount ->
                     change.consume()
@@ -90,20 +109,30 @@ fun <V> VertexView(
                         onVertexClick(viewModel)
                     }
                 )
+            }
+            .onKeyEvent { event ->
+                println("Pressed key ${event.key}")
+                if (event.key == Key.Delete && event.type == KeyEventType.KeyDown && viewModel.selected) {
+                    onVertexClickDeletion(viewModel)
+                    true
+                } else {
+                    false
+                }
             },
         contentAlignment = Alignment.Center
     ) {
 
 
     }
-    Box(modifier = Modifier
-        .offset {
-            IntOffset(
-                x = viewModel.x.roundToPx() - textWidth / 2,
-                y = viewModel.y.roundToPx() - 30
-            )
-        }
-        .wrapContentSize(align = Alignment.TopCenter),
+    Box(
+        modifier = Modifier
+            .offset {
+                IntOffset(
+                    x = viewModel.x.roundToPx() - textWidth / 2,
+                    y = viewModel.y.roundToPx() - 30
+                )
+            }
+            .wrapContentSize(align = Alignment.TopCenter),
         contentAlignment = Alignment.Center
     ) {
         if (viewModel.labelVisible) {

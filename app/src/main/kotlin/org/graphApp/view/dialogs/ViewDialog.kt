@@ -1,11 +1,14 @@
 package org.graphApp.view.dialogs
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.text.font.FontWeight
@@ -77,16 +80,21 @@ fun ViewDialog(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Row(
-                            verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center,
-                        ) {
+                            modifier = Modifier.clip(RoundedCornerShape(30.dp))
+                                .selectable(
+                                    role = Role.RadioButton,
+                                    selected = text == selectedTheme,
+                                    onClick = { if (text != selectedTheme) onThemeChange(text) }
+                                )
+                                .padding(horizontal = 30.dp, vertical = 12.dp)
+                                .wrapContentSize(),
+                            verticalAlignment = Alignment.CenterVertically,
+
+                            ) {
                             RadioButton(
                                 selected = text == selectedTheme,
-                                onClick = {
-                                    if (text != selectedTheme) {
-                                        onThemeChange(text)
-                                    }
-                                },
+                                onClick = null,
                                 colors = RadioButtonDefaults.colors(
                                     selectedColor = MaterialTheme.colors.primaryVariant,
                                     unselectedColor = MaterialTheme.colors.onPrimary
@@ -98,25 +106,28 @@ fun ViewDialog(
                                 color = MaterialTheme.colors.onSecondary,
                                 fontWeight = FontWeight.Light,
                                 fontSize = 16.sp,
-                                modifier = Modifier.padding(start = 8.dp)
+                                modifier = Modifier.padding(start = 20.dp)
                             )
                         }
                     }
                 }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
+                    horizontalArrangement = Arrangement.SpaceBetween,
 
-                    Column (
+                    ) {
+
+                    Column(
                         horizontalAlignment = Alignment.Start,
                         modifier = Modifier.fillMaxWidth(0.5f)
 
-                    ){
+                    ) {
                         CloseButton(onClick = onDismissRequest, text = resources.cancel)
                     }
-                    Column (horizontalAlignment = Alignment.End,
-                        modifier = Modifier.fillMaxWidth()) {
+                    Column(
+                        horizontalAlignment = Alignment.End,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
                         OkButton(onClick = {
                             onDismissRequest()
                         }, text = resources.ok)
