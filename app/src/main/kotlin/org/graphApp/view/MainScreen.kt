@@ -25,6 +25,7 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
     var showAlgorithmsPanel by remember { mutableStateOf(false) }
     var showNewGraphPanel by remember { mutableStateOf(false) }
     var startCliked by remember { mutableStateOf(false)}
+    val currentGraphViewModel by remember { derivedStateOf { viewModel.graphViewModel } }
     var currentLanguage by remember { mutableStateOf(AppLanguage.CHINESE) }
     val resources = getResources(currentLanguage)
     println("${viewModel.graphViewModel.vertices.size}")
@@ -56,15 +57,14 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                             ) {
                                 AnimatedVisibility(visible = showAlgorithmsPanel) {
                                     AlgorithmsDialog(
-
                                         algoVM = algoVM,
                                         onClose = { showAlgorithmsPanel = false },
-                                        onDismissRequest = { startCliked = false },
+                                        onDismissRequest = { false },
                                         viewModel = viewModel
                                     )
                                 }
                                 AnimatedVisibility(visible = showAlgorithmsPanel && showNewGraphPanel) {
-                                    Spacer(modifier = Modifier.height(16.dp))
+                                    Spacer(modifier = Modifier.height(height = 16.dp))
                                 }
 
                                 AnimatedVisibility(visible = showNewGraphPanel) {
@@ -78,11 +78,11 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .background(MaterialTheme.colors.background)
+                                .background(color = MaterialTheme.colors.background)
                         ) {
                             GraphView(
-                                viewModel.graphViewModel,
-                                viewModel,
+                                currentGraphViewModel,
+                                mainScreenViewModel = viewModel,
                             )
                         }
 

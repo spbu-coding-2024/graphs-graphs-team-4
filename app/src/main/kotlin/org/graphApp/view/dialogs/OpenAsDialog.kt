@@ -25,6 +25,7 @@ import javax.swing.filechooser.FileNameExtensionFilter
 
 @Composable
 fun OpenDialog(
+    graphViewModel: GraphViewModel<*,*>,
     onDismissRequest: () -> Unit,
     onLoadSuccess: (GraphViewModel<Any, Any>, String, String) -> Unit = { _, _, _ -> },
 ) {
