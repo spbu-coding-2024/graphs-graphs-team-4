@@ -4,6 +4,7 @@ import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.runtime.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import org.graphApp.model.graph.DirectGraph
 import org.graphApp.model.graph.DirectWeightedGraph
 import org.graphApp.model.graph.DirectedWeightedGraph
@@ -67,7 +68,36 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
         isWeightedGraph = _isWeightedGraphState,
         isDirectedGraph = _isDirectedGraphState,
     ))
+    @Suppress("UNCHECKED_CAST")
+    fun generateLargeGraph(vertexCount: Int = 1000, edgeCount: Int = 1000) {
+        createNewGraph(isWeightedGraph, isDirectedGraph)
 
+        val vertices = mutableListOf<Long>()
+
+        for (i in 0 until vertexCount) {
+            val vertex = graphViewModel.addVertex(
+                label = "V$i",
+                x = ((i % 50)* 20f).dp,
+                y = ((i / 50) * 20f).dp
+            )
+            vertices.add(vertex.vertexID)
+        }
+
+        repeat(edgeCount) {
+            val from = vertices.random()
+            val to = vertices.random()
+            if (from != to) {
+                val weight = if (isWeightedGraph) (1..10000).random() else null
+                val _weight : String = weight.toString()
+                graphViewModel.addEdge(
+                    fromVertedID = from,
+                    toVertexID = to,
+                    edgeValue = "" as E,
+                    weight = _weight
+                )
+            }
+        }
+    }
     @Suppress("UNCHECKED_CAST")
     fun loadGraphFromDatabase(newGraphViewModel : GraphViewModel<*,*>, graphName : String) {
         try {
