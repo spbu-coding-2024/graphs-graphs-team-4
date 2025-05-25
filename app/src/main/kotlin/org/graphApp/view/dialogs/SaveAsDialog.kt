@@ -19,6 +19,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.graphApp.data.Neo4j.Neo4jDataBase
 import org.graphApp.main
 import org.graphApp.viewmodel.MainScreenViewModel
@@ -28,7 +29,7 @@ import javax.swing.JFileChooser
 
 
 @Composable
-fun<E> SaveAsDialog(
+fun <E> SaveAsDialog(
     graphViewModel: GraphViewModel<Any, Any>?,
     mainViewModel: MainScreenViewModel<E>,
     onDismissRequest: () -> Unit,
@@ -53,6 +54,7 @@ fun<E> SaveAsDialog(
             color = MaterialTheme.colors.surface,
             elevation = 8.dp
         ) {
+
             Column(
                 verticalArrangement = Arrangement.spacedBy(5.dp),
                 horizontalAlignment = Alignment.Start,
@@ -174,6 +176,7 @@ fun<E> SaveAsDialog(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Start
                     ) {
+
                         OutlinedTextField(
                             value = username,
                             onValueChange = {
@@ -205,6 +208,7 @@ fun<E> SaveAsDialog(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Start
                     ) {
+
                         OutlinedTextField(
                             value = password,
                             onValueChange = {
@@ -238,6 +242,7 @@ fun<E> SaveAsDialog(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Start
                 ) {
+
                     CloseButton(
                         onClick = onDismissRequest,
                         text = resources.cancel
@@ -263,7 +268,7 @@ fun<E> SaveAsDialog(
                                 }
 
 
-                                if(selectedOption == "Neo4j") {
+                                if (selectedOption == "Neo4j") {
                                     if (username.isBlank()) {
                                         errorMessage = "Enter a username"
                                         return@SaveButton
@@ -278,42 +283,41 @@ fun<E> SaveAsDialog(
 
                                 isLoading = true
                                 errorMessage = ""
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    try {
+                                        when (selectedOption) {
+                                            "SQLite" -> {
+                                                try {
+                                                    val sanitizedName = name.replace(Regex("[^a-zA-Z0-9_-]"), "_")
+                                                    val dbFolder =
+                                                        if (selectedFolder != null) selectedFolder else "src/main/kotlin/org/graphApp/data/SQLite/StorageSQLite"
+                                                    val dbFileName = "$dbFolder/$sanitizedName.db"
+                                                    val sqliteConnection = SQLiteExposed(dbFileName)
 
-                                try {
-                                    when (selectedOption) {
-                                        "SQLite" -> {
-                                            try {
-                                                val sanitizedName = name.replace(Regex("[^a-zA-Z0-9_-]"), "_")
-                                                val dbFolder =
-                                                    if (selectedFolder != null) selectedFolder else "src/main/kotlin/org/graphApp/data/SQLite/StorageSQLite"
-                                                val dbFileName = "$dbFolder/$sanitizedName.db"
-                                                val sqliteConnection = SQLiteExposed(dbFileName)
+                                                    val graphViewModel = graphViewModel as GraphViewModel<Any, Any>
 
-                                                val graphViewModel = graphViewModel as GraphViewModel<Any, Any>
+                                                    val sqliteLogic = SQLiteMainLogic<Any, Any>(sqliteConnection)
+                                                    val success =
+                                                        sqliteLogic.saveToSQLiteDataBase(graphViewModel, sanitizedName)
 
-                                                val sqliteLogic = SQLiteMainLogic<Any, Any>(sqliteConnection)
-                                                val success =
-                                                    sqliteLogic.saveToSQLiteDataBase(graphViewModel, sanitizedName)
-
-                                                if (success) {
-                                                    onSaveSuccess(sanitizedName, selectedOption)
-                                                    onDismissRequest()
-                                                } else {
-                                                    errorMessage = "Failed to save graph to SQLite database"
+                                                    if (success) {
+                                                        onSaveSuccess(sanitizedName, selectedOption)
+                                                        onDismissRequest()
+                                                    } else {
+                                                        errorMessage = "Failed to save graph to SQLite database"
+                                                    }
+                                                } catch (sqliteException: Exception) {
+                                                    errorMessage =
+                                                        "SQLite error: ${sqliteException.localizedMessage ?: "Database connection failed"}"
+                                                    println("SQLite Exception details: ${sqliteException.printStackTrace()}")
                                                 }
-                                            } catch (sqliteException: Exception) {
-                                                errorMessage =
-                                                    "SQLite error: ${sqliteException.localizedMessage ?: "Database connection failed"}"
-                                                println("SQLite Exception details: ${sqliteException.printStackTrace()}")
                                             }
-                                        }
 
-                                        "JSON" -> {
-                                            errorMessage = "Not implemented yet"
-                                        }
+                                            "JSON" -> {
+                                                errorMessage = "Not implemented yet"
+                                            }
 
-                                        "Neo4j" -> {
-                                            CoroutineScope(Dispatchers.IO).launch {
+                                            "Neo4j" -> {
                                                 try {
 
                                                     val neo4jStorer = Neo4jDataBase(
@@ -325,22 +329,32 @@ fun<E> SaveAsDialog(
                                                         graphName = name
                                                     )
                                                     neo4jStorer.storeGraph()
+                                                    onDismissRequest()
                                                 } catch (neo4jException: Exception) {
+                                                    println("DASYHGDAHGSGDJUYAGSDYUAGSDUYGAUYSDGASD")
                                                     errorMessage = neo4jException.localizedMessage ?: "Unknown error"
                                                 }
-
-                                            }
                                             }
                                         }
                                     } catch (e: Exception) {
+                                        println("DASYHGDAHGSGDJUYAGSDYUAGSDUYGAUYSDGASD")
                                         errorMessage = "Error saving graph: ${e.localizedMessage ?: "Unknown error"}"
                                         println("General Exception: ${e.printStackTrace()}")
                                     } finally {
                                         isLoading = false
                                     }
-                                onDismissRequest()
+                                }
+
                             },
+
                             text = resources.save
+                        )
+
+                    }
+                    if (errorMessage.isNotEmpty()) {
+                        ErrorPopup(
+                            message = errorMessage,
+                            onDismiss = { errorMessage = "" }
                         )
                     }
                 }
