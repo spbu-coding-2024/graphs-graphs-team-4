@@ -100,6 +100,7 @@ class GraphViewModel<V, E>(
                 weight ?: "0"
             )
 
+
             else -> graph.addEdge(from.vertex.element, to.vertex.element, edgeValue)
         }
 
