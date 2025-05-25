@@ -1,6 +1,5 @@
 package org.graphApp.viewmodel
 
-import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.runtime.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -86,10 +85,10 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
 
             graphViewModel = GraphViewModel(
                 graph = loadedGraph as Graph<String, E>,
-                showVerticesLabels = _showVertexLabels,  
-                showEdgesWeights = _showEdgesWeights,    
+                showVerticesLabels = _showVertexLabels,
+                showEdgesWeights = _showEdgesWeights,
                 isWeightedGraph = _isWeightedGraphState,
-                isDirectedGraph = _isDirectedGraphState  
+                isDirectedGraph = _isDirectedGraphState
             )
 
             restoreVisualization(newGraphViewModel)
@@ -108,8 +107,8 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
         loadedViewModel.vertices.forEach { oldVertexVM ->
             val newVertexVM = graphViewModel.addVertex(
                 label = oldVertexVM.vertex.element as String,
-                x = oldVertexVM.x,  
-                y = oldVertexVM.y   
+                x = oldVertexVM.x,
+                y = oldVertexVM.y
             )
             vertexMap[oldVertexVM.vertexID] = newVertexVM.vertexID
         }

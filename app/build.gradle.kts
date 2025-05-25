@@ -28,7 +28,6 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
     implementation("org.gephi", "gephi-toolkit", "0.10.1", classifier = "all")
     implementation("com.github.JetBrains-Research:louvain:main-SNAPSHOT")
-
 }
 
 java { toolchain { languageVersion.set(JavaLanguageVersion.of(21)) } }

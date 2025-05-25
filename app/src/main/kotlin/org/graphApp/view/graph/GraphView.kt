@@ -14,6 +14,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.*
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
@@ -244,6 +245,8 @@ fun <E> GraphView(
         mainScreenViewModel.offset += offsetChange
     }
 
+
+
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
@@ -257,7 +260,7 @@ fun <E> GraphView(
                     val change = it.changes.first()
                     val delta = -change.scrollDelta.y.toInt().sign
                     mainScreenViewModel.scale(delta)
-                    // println("Scroll")
+
                 }
                 .transformable(state = state)
         ) {
@@ -281,15 +284,18 @@ fun <E> GraphView(
                         transformOrigin = TransformOrigin(0.5f, 0.5f)
                     })
             {
-                println(viewModel.edges.size)
-
                 viewModel.edges.forEach { e ->
                     EdgeView(e, Modifier)
                 }
-                println(viewModel.vertices.size)
                 viewModel.vertices.forEach { v ->
 
-                    VertexView(v, Modifier, onVertexClick = { vertex -> viewModel.onVertexSelected(vertex) })
+                    VertexView(
+                        v, Modifier, onVertexClick = { vertex ->
+                            viewModel.onVertexSelected(vertex)
+                        },
+                        onVertexClickDeletion = { vertex ->
+                            viewModel.removeVertex(vertex)
+                        })
                 }
             }
         }

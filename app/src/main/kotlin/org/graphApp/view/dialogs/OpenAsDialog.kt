@@ -10,6 +10,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import data.SQLiteMainLogic.Graphs
+import data.SQLiteMainLogic.Graphs.graphName
 import org.graphApp.model.LocalTextResources
 import org.graphApp.view.components.*
 import org.graphApp.viewmodel.graph.GraphViewModel
@@ -18,6 +20,9 @@ import data.SQLiteMainLogic.SQLiteMainLogic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.graphApp.data.Neo4j.Neo4jDataBase
+import org.graphApp.main
+import org.graphApp.viewmodel.MainScreenViewModel
 import java.io.File
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
@@ -28,14 +33,18 @@ fun OpenDialog(
     graphViewModel: GraphViewModel<*,*>,
     onDismissRequest: () -> Unit,
     onLoadSuccess: (GraphViewModel<Any, Any>, String, String) -> Unit = { _, _, _ -> },
+    mainViewModel: MainScreenViewModel<Any>
 ) {
     val resources = LocalTextResources.current
-    var selectedOption by remember { mutableStateOf("SQLite")}
+    var selectedOption by remember { mutableStateOf("SQLite") }
     val options = listOf("JSON", "Neo4j", "SQLite")
     var name by remember { mutableStateOf("") }
+    var uri by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
-
+    var graphName by remember { mutableStateOf("") }
     var selectedFile by remember { mutableStateOf<File?>(null) }
 
     Dialog(onDismissRequest = onDismissRequest) {
@@ -82,25 +91,153 @@ fun OpenDialog(
                         }
                     }
                 }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start
-                ) {
-                    Spacer(Modifier.width(8.dp))
-                    AddFolderButton(
-                        onClick = {
-                            val file = chooseDbFile()
-                            if (file != null) {
-                                selectedFile = file
-                                name = file.nameWithoutExtension
+                if (selectedOption != "Neo4j") {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Spacer(Modifier.width(8.dp))
+                        AddFolderButton(
+                            onClick = {
+                                val folder = chooseFolder()
+                                if (folder != null) {
+                                    selectedFile = folder
+                                }
                             }
-                        }
-                    )
-                    Text(
-                        text = "Choose a file",
-                        fontWeight = FontWeight.Medium
-                    )
+                        )
+                        Text(
+                            text = resources.addFolder,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+
                 }
+                if (selectedOption == "Neo4j") {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        OutlinedTextField(
+                            value = uri,
+                            onValueChange = {
+                                uri = it
+                            },
+                            placeholder = {
+                                Text(
+                                    "Uri",
+                                    color = MaterialTheme.colors.onPrimary,
+                                    fontSize = 13.sp
+                                )
+                            },
+                            singleLine = true,
+                            enabled = !isLoading,
+                            isError = errorMessage.isNotEmpty(),
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(8.dp),
+                            textStyle = MaterialTheme.typography.body2.copy(
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colors.onBackground
+                            ),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                backgroundColor = MaterialTheme.colors.surface
+                            )
+                        )
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        OutlinedTextField(
+                            value = username,
+                            onValueChange = {
+                                username = it
+                            },
+                            placeholder = {
+                                Text(
+                                    "Username",
+                                    color = MaterialTheme.colors.onPrimary,
+                                    fontSize = 13.sp
+                                )
+                            },
+                            singleLine = true,
+                            enabled = !isLoading,
+                            isError = errorMessage.isNotEmpty(),
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(8.dp),
+                            textStyle = MaterialTheme.typography.body2.copy(
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colors.onBackground
+                            ),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                backgroundColor = MaterialTheme.colors.surface
+                            )
+                        )
+                    }
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        OutlinedTextField(
+                            value = password,
+                            onValueChange = {
+                                password = it
+                            },
+                            placeholder = {
+                                Text(
+                                    "Password",
+                                    color = MaterialTheme.colors.onPrimary,
+                                    fontSize = 13.sp
+                                )
+                            },
+                            singleLine = true,
+                            enabled = !isLoading,
+                            isError = errorMessage.isNotEmpty(),
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(8.dp),
+                            textStyle = MaterialTheme.typography.body2.copy(
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colors.onBackground
+                            ),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                backgroundColor = MaterialTheme.colors.surface
+                            )
+                        )
+
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        OutlinedTextField(
+                            value = graphName,
+                            onValueChange = {
+                                graphName = it
+                            },
+                            placeholder = {
+                                Text(
+                                    "GraphName",
+                                    color = MaterialTheme.colors.onPrimary,
+                                    fontSize = 13.sp
+                                )
+                            },
+                            singleLine = true,
+                            enabled = !isLoading,
+                            isError = errorMessage.isNotEmpty(),
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(8.dp),
+                            textStyle = MaterialTheme.typography.body2.copy(
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colors.onBackground
+                            ),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                backgroundColor = MaterialTheme.colors.surface
+                            )
+                        )
+
+                    }
+                }
+
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -146,25 +283,45 @@ fun OpenDialog(
                                                     val sqliteConnection = SQLiteExposed(dbFileName.absolutePath)
                                                     val sqliteLogic = SQLiteMainLogic<Any, Any>(sqliteConnection)
 
-                                                    val loadedGraphViewModel = sqliteLogic.readFromSQLiteDataBase<Any, Any>(sanitizedName)
+                                                    val loadedGraphViewModel =
+                                                        sqliteLogic.readFromSQLiteDataBase<Any, Any>(sanitizedName)
 
                                                     if (loadedGraphViewModel != null) {
-                                                        onLoadSuccess(loadedGraphViewModel, sanitizedName, selectedOption)
+                                                        onLoadSuccess(
+                                                            loadedGraphViewModel,
+                                                            sanitizedName,
+                                                            selectedOption
+                                                        )
                                                         onDismissRequest()
                                                         println("загрузился")
                                                     } else {
                                                         errorMessage = "Failed to load graph from SQLite database"
                                                     }
                                                 } catch (sqliteException: Exception) {
-                                                    errorMessage = "SQLite error: ${sqliteException.localizedMessage ?: "Database connection failed"}"
+                                                    errorMessage =
+                                                        "SQLite error: ${sqliteException.localizedMessage ?: "Database connection failed"}"
                                                     println("SQLite Exception details: ${sqliteException.printStackTrace()}")
                                                 }
                                             }
+
                                             "JSON" -> {
                                                 errorMessage = "JSON loading not implemented yet"
                                             }
+
                                             "Neo4j" -> {
-                                                errorMessage = "Neo4j loading not implemented yet"
+                                                try {
+                                                    val neo4jLoader = Neo4jDataBase(
+                                                        mainViewModel = mainViewModel,
+                                                        graphViewModel = mainViewModel.graphViewModel,
+                                                        uri = uri,
+                                                        username = username,
+                                                        password = password,
+                                                        graphName = graphName
+                                                    )
+                                                    neo4jLoader.uploadGraph()
+                                                } catch (error: Exception) {
+                                                    errorMessage = error.localizedMessage ?: "Unknown error"
+                                                }
                                             }
                                         }
                                     } catch (e: Exception) {

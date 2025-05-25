@@ -322,13 +322,15 @@ private fun <E> FileMenu(
     if (showSaveAsDialog) {
         SaveAsDialog(
             graphViewModel = mainVm.graphViewModel as GraphViewModel<Any, Any>,
-            onDismissRequest = { showSaveAsDialog = false }
+            onDismissRequest = { showSaveAsDialog = false },
+            mainViewModel = mainVm as MainScreenViewModel<Any>
         )
     }
     if (showOpenAsDialog) {
         OpenDialog(
             graphViewModel = mainVm.graphViewModel,
             onDismissRequest = { showOpenAsDialog = false },
+            mainViewModel = mainVm as MainScreenViewModel<Any>,
             onLoadSuccess = { loadedGraphViewModel, name, type ->
                 mainVm.loadGraphFromDatabase(loadedGraphViewModel, name)
             }
