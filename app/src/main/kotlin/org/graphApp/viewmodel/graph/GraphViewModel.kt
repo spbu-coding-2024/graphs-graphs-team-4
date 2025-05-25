@@ -21,8 +21,8 @@ class GraphViewModel<V, E>(
     val vertices: Collection<VertexViewModel<V>>
         get() = _vertices.values
 
-    private val _edges = mutableStateListOf<EdgeViewModel<E,V>>()
-    val edges: Collection<EdgeViewModel<E,V>>
+    private val _edges = mutableStateListOf<EdgeViewModel<E, V>>()
+    val edges: Collection<EdgeViewModel<E, V>>
         get() = _edges
 
     private val _showEdgeWeight = mutableStateOf(false)
@@ -30,11 +30,8 @@ class GraphViewModel<V, E>(
         get() = _showEdgeWeight.value
 
     private val _selectFirstVertex = mutableStateOf<VertexViewModel<V>?>(null)
-    val selectFirstVertex: VertexViewModel<V>?
-        get() = _selectFirstVertex.value
 
-
-    fun addVertex(label: V, x: Dp , y: Dp): VertexViewModel<V> {
+    fun addVertex(label: V, x: Dp, y: Dp): VertexViewModel<V> {
         val vertex = graph.addVertex(label)
         return _vertices.getOrPut(vertex.id) {
             VertexViewModel(
@@ -46,7 +43,10 @@ class GraphViewModel<V, E>(
         }
     }
 
-    fun removeVertex(vertexID: Long) {
+    fun removeVertex(vertex: VertexViewModel<V>) {
+        vertex.selected = false
+        _selectFirstVertex.value = null
+        val vertexID = vertex.vertexID
         val vm = _vertices.remove(vertexID)
         vm?.let { removeVertex ->
             _edges.removeAll { edgevm ->
@@ -55,45 +55,51 @@ class GraphViewModel<V, E>(
         }
     }
 
-
     private val _edgeWeightPosition = mutableStateOf(DpOffset.Zero)
     val edgeWeightPopupPosition: DpOffset
         get() = _edgeWeightPosition.value
 
     private var pendingFromId: Long? = null
-    private var pendingToId:   Long? = null
+    private var pendingToId: Long? = null
 
     private fun showEdgeWeight(from: VertexViewModel<V>, to: VertexViewModel<V>) {
-        val cx: Dp =  ((from.x + to.x) / 2)
+        val cx: Dp = ((from.x + to.x) / 2)
         val cy: Dp = ((from.y + to.y) / 2)
         _edgeWeightPosition.value = DpOffset(cx, cy)
 
         pendingFromId = from.vertexID
-        pendingToId   = to.vertexID
+        pendingToId = to.vertexID
         _showEdgeWeight.value = true
     }
 
     fun dismissEdgeWeight() {
         _showEdgeWeight.value = false
         pendingFromId = null
-        pendingToId   = null
+        pendingToId = null
     }
 
     fun confirmEdgeWeight(weight: String) {
         if (pendingFromId != null && pendingToId != null) {
-            createEdge(pendingFromId!!, pendingToId!!,weight)
+            createEdge(pendingFromId!!, pendingToId!!, weight)
         }
         dismissEdgeWeight()
     }
-    fun addEdge(fromVertedID: Long, toVertexID: Long, edgeValue: E, weight: String? = null): EdgeViewModel<E,V>? {
+
+    fun addEdge(fromVertedID: Long, toVertexID: Long, edgeValue: E, weight: String? = null): EdgeViewModel<E, V>? {
         val from = _vertices[fromVertedID]
         val to = _vertices[toVertexID]
 
         if (from == null || to == null) return null
 
         val edge = when (graph) {
-            is WeightedGraph -> (graph as WeightedGraph<V, E>).addEdge(from.vertex.element, to.vertex.element, edgeValue, weight ?: "0")
-            is DirectedWeightedGraph -> (graph as DirectedWeightedGraph<V, E>).addEdge(from.vertex.element, to.vertex.element, edgeValue, weight ?: "0")
+            is WeightedGraph -> (graph).addEdge(from.vertex.element, to.vertex.element, edgeValue, weight ?: "0")
+            is DirectedWeightedGraph -> (graph).addEdge(
+                from.vertex.element,
+                to.vertex.element,
+                edgeValue,
+                weight ?: "0"
+            )
+
             else -> graph.addEdge(from.vertex.element, to.vertex.element, edgeValue)
         }
 
@@ -120,22 +126,26 @@ class GraphViewModel<V, E>(
                 _selectFirstVertex.value = vertex
                 vertex.selected = true
             }
+
             _selectFirstVertex.value?.vertexID == vertex.vertexID -> {
                 _selectFirstVertex.value?.selected = false
                 _selectFirstVertex.value = null
             }
+
             else -> {
                 val edgeExists = _edges.any {
                     (it.v.vertexID == vertex.vertexID && it.u.vertexID == _selectFirstVertex.value?.vertexID) ||
-                        (it.u.vertexID == vertex.vertexID && it.v.vertexID == _selectFirstVertex.value?.vertexID )
+                            (it.u.vertexID == vertex.vertexID && it.v.vertexID == _selectFirstVertex.value?.vertexID)
                 }
 
                 if (!edgeExists) {
                     if (isWeightedGraph.value) {
                         showEdgeWeight(_selectFirstVertex.value!!, vertex)
                     } else {
-                        createEdge(_selectFirstVertex.value!!.vertexID,
-                            vertex.vertexID, null)
+                        createEdge(
+                            _selectFirstVertex.value!!.vertexID,
+                            vertex.vertexID, null
+                        )
                     }
                 }
                 _selectFirstVertex.value?.selected = false

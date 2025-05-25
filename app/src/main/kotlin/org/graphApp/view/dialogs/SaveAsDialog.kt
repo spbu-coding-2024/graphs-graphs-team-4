@@ -15,27 +15,38 @@ import org.graphApp.view.components.*
 import org.graphApp.viewmodel.graph.GraphViewModel
 import data.SQLiteMainLogic.SQLiteExposed
 import data.SQLiteMainLogic.SQLiteMainLogic
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import org.graphApp.data.Neo4j.Neo4jDataBase
+import org.graphApp.main
+import org.graphApp.viewmodel.MainScreenViewModel
+import org.neo4j.driver.exceptions.Neo4jException
 import java.io.File
 import javax.swing.JFileChooser
 
 
 @Composable
-fun SaveAsDialog(
+fun<E> SaveAsDialog(
     graphViewModel: GraphViewModel<Any, Any>?,
+    mainViewModel: MainScreenViewModel<E>,
     onDismissRequest: () -> Unit,
     onSaveSuccess: (String, String) -> Unit = { _, _ -> },
     onSaveError: (String) -> Unit = { }
+
 ) {
     val resources = LocalTextResources.current
-    var selectedOption by remember { mutableStateOf("SQLite")}
+    var selectedOption by remember { mutableStateOf("SQLite") }
     val options = listOf("JSON", "Neo4j", "SQLite")
     var name by remember { mutableStateOf("") }
+    var uri by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
-    var folderChoose by remember { mutableStateOf("~/")}
-    val coroutineScope = rememberCoroutineScope()
-    var selectedFolder by remember {mutableStateOf<File?>(null) }
+    var folderChoose by remember { mutableStateOf("~/") }
+    var selectedFolder by remember { mutableStateOf<File?>(null) }
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
             shape = RoundedCornerShape(10.dp),
@@ -53,16 +64,22 @@ fun SaveAsDialog(
                         name = it
                         errorMessage = ""
                     },
-                    placeholder = { Text(
-                        resources.enterGraphName,
-                        color = MaterialTheme.colors.onPrimary,
-                        fontSize = 13.sp) },
+                    placeholder = {
+                        Text(
+                            resources.enterGraphName,
+                            color = MaterialTheme.colors.onPrimary,
+                            fontSize = 13.sp
+                        )
+                    },
                     singleLine = true,
                     enabled = !isLoading,
                     isError = errorMessage.isNotEmpty(),
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
-                    textStyle = MaterialTheme.typography.body2.copy(fontSize = 14.sp, color = MaterialTheme.colors.onBackground),
+                    textStyle = MaterialTheme.typography.body2.copy(
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colors.onBackground
+                    ),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         backgroundColor = MaterialTheme.colors.surface
                     )
@@ -101,23 +118,120 @@ fun SaveAsDialog(
                         }
                     }
                 }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start
-                ) {
-                    Spacer(Modifier.width(8.dp))
-                    AddFolderButton(
-                        onClick = {
-                            val folder = chooseFolder()
-                            if (folder != null) {
-                                selectedFolder = folder
+                if (selectedOption != "Neo4j") {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Spacer(Modifier.width(8.dp))
+                        AddFolderButton(
+                            onClick = {
+                                val folder = chooseFolder()
+                                if (folder != null) {
+                                    selectedFolder = folder
+                                }
                             }
-                        }
-                    )
-                    Text(
-                        text = resources.addFolder,
-                        fontWeight = FontWeight.Medium
-                    )
+                        )
+                        Text(
+                            text = resources.addFolder,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+
+                }
+                if (selectedOption == "Neo4j") {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        OutlinedTextField(
+                            value = uri,
+                            onValueChange = {
+                                uri = it
+                            },
+                            placeholder = {
+                                Text(
+                                    "Uri",
+                                    color = MaterialTheme.colors.onPrimary,
+                                    fontSize = 13.sp
+                                )
+                            },
+                            singleLine = true,
+                            enabled = !isLoading,
+                            isError = errorMessage.isNotEmpty(),
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(8.dp),
+                            textStyle = MaterialTheme.typography.body2.copy(
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colors.onBackground
+                            ),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                backgroundColor = MaterialTheme.colors.surface
+                            )
+                        )
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        OutlinedTextField(
+                            value = username,
+                            onValueChange = {
+                                username = it
+                            },
+                            placeholder = {
+                                Text(
+                                    "Username",
+                                    color = MaterialTheme.colors.onPrimary,
+                                    fontSize = 13.sp
+                                )
+                            },
+                            singleLine = true,
+                            enabled = !isLoading,
+                            isError = errorMessage.isNotEmpty(),
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(8.dp),
+                            textStyle = MaterialTheme.typography.body2.copy(
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colors.onBackground
+                            ),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                backgroundColor = MaterialTheme.colors.surface
+                            )
+                        )
+                    }
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        OutlinedTextField(
+                            value = password,
+                            onValueChange = {
+                                password = it
+                            },
+                            placeholder = {
+                                Text(
+                                    "Password",
+                                    color = MaterialTheme.colors.onPrimary,
+                                    fontSize = 13.sp
+                                )
+                            },
+                            singleLine = true,
+                            enabled = !isLoading,
+                            isError = errorMessage.isNotEmpty(),
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(8.dp),
+                            textStyle = MaterialTheme.typography.body2.copy(
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colors.onBackground
+                            ),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                backgroundColor = MaterialTheme.colors.surface
+                            )
+                        )
+
+                    }
                 }
 
                 Row(
@@ -148,40 +262,74 @@ fun SaveAsDialog(
                                     return@SaveButton
                                 }
 
+
+                                if(selectedOption == "Neo4j") {
+                                    if (username.isBlank()) {
+                                        errorMessage = "Enter a username"
+                                        return@SaveButton
+                                    }
+
+                                    if (password.isBlank()) {
+                                        errorMessage = "Enter a password"
+                                        return@SaveButton
+                                    }
+                                }
+
+
                                 isLoading = true
                                 errorMessage = ""
 
-                                coroutineScope.launch {
-                                    try {
-                                        when (selectedOption) {
-                                            "SQLite" -> {
-                                                try {
-                                                    val sanitizedName = name.replace(Regex("[^a-zA-Z0-9_-]"), "_")
-                                                    val dbFolder = if (selectedFolder != null ) selectedFolder else "src/main/kotlin/org/graphApp/data/SQLite/StorageSQLite"
-                                                    val dbFileName = "$dbFolder/$sanitizedName.db"
-                                                    val sqliteConnection = SQLiteExposed(dbFileName)
+                                try {
+                                    when (selectedOption) {
+                                        "SQLite" -> {
+                                            try {
+                                                val sanitizedName = name.replace(Regex("[^a-zA-Z0-9_-]"), "_")
+                                                val dbFolder =
+                                                    if (selectedFolder != null) selectedFolder else "src/main/kotlin/org/graphApp/data/SQLite/StorageSQLite"
+                                                val dbFileName = "$dbFolder/$sanitizedName.db"
+                                                val sqliteConnection = SQLiteExposed(dbFileName)
 
-                                                    val graphViewModel = graphViewModel as GraphViewModel<Any, Any>
+                                                val graphViewModel = graphViewModel as GraphViewModel<Any, Any>
 
-                                                    val sqliteLogic = SQLiteMainLogic<Any, Any>(sqliteConnection)
-                                                    val success = sqliteLogic.saveToSQLiteDataBase(graphViewModel, sanitizedName)
+                                                val sqliteLogic = SQLiteMainLogic<Any, Any>(sqliteConnection)
+                                                val success =
+                                                    sqliteLogic.saveToSQLiteDataBase(graphViewModel, sanitizedName)
 
-                                                    if (success) {
-                                                        onSaveSuccess(sanitizedName, selectedOption)
-                                                        onDismissRequest()
-                                                    } else {
-                                                        errorMessage = "Failed to save graph to SQLite database"
-                                                    }
-                                                } catch (sqliteException: Exception) {
-                                                    errorMessage = "SQLite error: ${sqliteException.localizedMessage ?: "Database connection failed"}"
-                                                    println("SQLite Exception details: ${sqliteException.printStackTrace()}")
+                                                if (success) {
+                                                    onSaveSuccess(sanitizedName, selectedOption)
+                                                    onDismissRequest()
+                                                } else {
+                                                    errorMessage = "Failed to save graph to SQLite database"
                                                 }
+                                            } catch (sqliteException: Exception) {
+                                                errorMessage =
+                                                    "SQLite error: ${sqliteException.localizedMessage ?: "Database connection failed"}"
+                                                println("SQLite Exception details: ${sqliteException.printStackTrace()}")
                                             }
-                                            "JSON" -> {
-                                                errorMessage = "todo"
+                                        }
+
+                                        "JSON" -> {
+                                            errorMessage = "Not implemented yet"
+                                        }
+
+                                        "Neo4j" -> {
+                                            CoroutineScope(Dispatchers.IO).launch {
+                                                try {
+
+                                                    val neo4jStorer = Neo4jDataBase(
+                                                        mainViewModel = mainViewModel,
+                                                        graphViewModel = mainViewModel.graphViewModel,
+                                                        uri = uri,
+                                                        username = username,
+                                                        password = password,
+                                                        graphName = name
+                                                    )
+                                                    neo4jStorer.storeGraph()
+                                                } catch (neo4jException: Exception) {
+                                                    errorMessage = neo4jException.localizedMessage ?: "Unknown error"
+                                                }
+
                                             }
-                                            "Neo4j" -> {
-                                                errorMessage = "todo"
                                             }
                                         }
                                     } catch (e: Exception) {
@@ -190,7 +338,7 @@ fun SaveAsDialog(
                                     } finally {
                                         isLoading = false
                                     }
-                                }
+                                onDismissRequest()
                             },
                             text = resources.save
                         )
