@@ -55,7 +55,6 @@ class GraphViewModel<V, E>(
         }
     }
 
-
     private val _edgeWeightPosition = mutableStateOf(DpOffset.Zero)
     val edgeWeightPopupPosition: DpOffset
         get() = _edgeWeightPosition.value
