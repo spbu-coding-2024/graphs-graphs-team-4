@@ -307,7 +307,10 @@ private fun <E> FileMenu(
                 }
             }
 
-            DropdownMenuItem(onClick = { /* TODO: reset */ }) {
+            DropdownMenuItem(onClick = {
+                mainVm.generateLargeGraph()
+                expanded = false
+            }) {
                 Box(modifier = Modifier.padding(start = 28.dp)) {
                     Text(
                         resources.reset,
@@ -328,6 +331,7 @@ private fun <E> FileMenu(
     }
     if (showOpenAsDialog) {
         OpenDialog(
+
             graphViewModel = mainVm.graphViewModel,
             onDismissRequest = { showOpenAsDialog = false },
             mainViewModel = mainVm as MainScreenViewModel<Any>,

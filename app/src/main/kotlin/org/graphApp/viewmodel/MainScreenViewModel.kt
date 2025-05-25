@@ -3,12 +3,13 @@ package org.graphApp.viewmodel
 import androidx.compose.runtime.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import org.graphApp.currentGraph
 import org.graphApp.model.graph.DirectGraph
 import org.graphApp.model.graph.DirectWeightedGraph
 import org.graphApp.model.graph.DirectedWeightedGraph
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import org.graphApp.currentGraph
 import org.graphApp.model.graph.Edge
 import org.graphApp.model.graph.Graph
 import org.graphApp.model.graph.UndirectedGraph
@@ -19,6 +20,7 @@ import org.graphApp.view.algorithms.AlgorithmsView
 import org.graphApp.viewmodel.graph.GraphViewModel
 import sun.awt.X11.XUtilConstants.ZoomState
 import kotlin.math.exp
+import kotlin.random.Random
 
 
 class MainScreenViewModel<E>(graph: Graph<String, E>) {
@@ -72,6 +74,36 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
         isDirectedGraph = _isDirectedGraphState,
         )
     )
+    @Suppress("UNCHECKED_CAST")
+    fun generateLargeGraph(vertexCount: Int = 1000, edgeCount: Int = 1000) {
+        createNewGraph(isWeightedGraph, isDirectedGraph)
+
+        val vertices = mutableListOf<Long>()
+
+        for (i in 0 until vertexCount) {
+            val vertex = graphViewModel.addVertex(
+                label = "V$i",
+                x = ((i % 50)* 20f).dp,
+                y = ((i / 50) * 20f).dp
+            )
+            vertices.add(vertex.vertexID)
+        }
+
+        repeat(edgeCount) {
+            val from = vertices.random()
+            val to = vertices.random()
+            if (from != to) {
+                val weight = if (isWeightedGraph) Random.nextDouble(0.0, 10000.0) else null
+                val _weight : String = weight.toString()
+                graphViewModel.addEdge(
+                    fromVertedID = from,
+                    toVertexID = to,
+                    edgeValue = "" as E,
+                    weight = _weight
+                )
+            }
+        }
+    }
 
     @Suppress("UNCHECKED_CAST")
     fun loadGraphFromDatabase(newGraphViewModel : GraphViewModel<*,*>, graphName : String) {
@@ -127,7 +159,6 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
             }
         }
     }
-
 
     fun createNewGraph(isWeighted: Boolean, isDirected: Boolean) {
 
