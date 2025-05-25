@@ -58,8 +58,8 @@ fun <E> TopBarMenu(
                     onNewGraph = onShowNewGraph
                 )
                 MenuDivider()
-                EditMenu(resources = resources)
-                MenuDivider()
+//                EditMenu(resources = resources)
+
                 ViewMenu(
                     currentLanguage = currentLanguage,
                     onLanguageChange = onLanguageChange,
@@ -174,7 +174,7 @@ private fun <E> FileMenu(
             }
 
             DropdownMenuItem(
-                onClick = { openExpanded = !openExpanded }
+                onClick = { showOpenAsDialog = !showOpenAsDialog}
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -186,7 +186,7 @@ private fun <E> FileMenu(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        resources.open,
+                        resources.load,
                         color = MaterialTheme.colors.onSurface,
                         fontWeight = FontWeight.ExtraLight
                     )
@@ -274,23 +274,6 @@ private fun <E> FileMenu(
                 }
             }
 
-            DropdownMenuItem(onClick = { /* TODO: Save */ }) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Icon(
-                        imageVector = Save1,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Text(
-                        resources.save,
-                        color = MaterialTheme.colors.onSurface,
-                        fontWeight = FontWeight.ExtraLight
-                    )
-                }
-            }
 
             DropdownMenuItem(
                 onClick = {
@@ -298,7 +281,12 @@ private fun <E> FileMenu(
                     showSaveAsDialog = true
                 }
             ) {
-                Box(modifier = Modifier.padding(start = 28.dp)) {
+                Icon(
+                    imageVector = Save1,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Box(modifier = Modifier.padding(start = 10.dp)) {
                     Text(
                         resources.saveAs,
                         color = MaterialTheme.colors.onSurface,
@@ -484,7 +472,7 @@ private fun <E> ViewMenu(
 
             if (showViewDialog) {
                 ViewDialog(
-                    selectedTheme = if (mainThemeDark) resources.themeLight else resources.themeDark,
+                    selectedTheme = if (mainThemeDark) resources.themeDark else resources.themeLight,
                     onThemeChange = { newTheme ->
                         onToggleTheme()
                     },

@@ -42,57 +42,63 @@ class SQLiteMainLogic<E, V>(val connection: SQLiteExposed) {
 
     @Suppress("UNCHECKED_CAST")
     fun <V,E> readFromSQLiteDataBase(name: String): GraphViewModel<V,E>? {
+        try {
+            val gi = connection.getGraph(name) ?: return null
+            val vertices = connection.getVertices(gi.id)
+            val edges = connection.getEdges(gi.id)
 
-        val gi = connection.getGraph(name) ?: return null
-        val vertices = connection.getVertices(gi.id)
-        val edges = connection.getEdges(gi.id)
+            val graph: Graph<V, E> = when {
+                gi.isDirected && gi.isWeighted -> DirectWeightedGraph()
+                gi.isDirected && !gi.isWeighted -> DirectGraph()
+                !gi.isDirected && gi.isWeighted -> WeightedGraph()
+                else -> UndirectedGraph()
+            }
 
-        val graph: Graph<V, E> = when {
-            gi.isDirected && gi.isWeighted -> DirectWeightedGraph()
-            gi.isDirected && !gi.isWeighted -> DirectGraph()
-            !gi.isDirected && gi.isWeighted -> WeightedGraph()
-            else -> UndirectedGraph()
-        }
+            val showVerticesLabels = mutableStateOf(true)
+            val showEdgeWeights = mutableStateOf(true)
+            val isWeightedGraph = mutableStateOf(gi.isWeighted)
+            val isDirectedGraph = mutableStateOf(gi.isDirected)
 
-        val showVerticesLabels = mutableStateOf(true)
-        val showEdgeWeights = mutableStateOf(true)
-        val isWeightedGraph = mutableStateOf(gi.isWeighted)
-        val isDirectedGraph = mutableStateOf(gi.isDirected)
+            val viewModel = GraphViewModel(
+                graph = graph,
+                showVerticesLabels = showVerticesLabels,
+                showEdgesWeights = showEdgeWeights,
+                isWeightedGraph = isWeightedGraph,
 
-        val viewModel = GraphViewModel(
-            graph = graph,
-            showVerticesLabels = showVerticesLabels,
-            showEdgesWeights = showEdgeWeights,
-            isWeightedGraph = isWeightedGraph,
-            isDirectedGraph = isDirectedGraph
-        )
-
-        val vertexMap = mutableMapOf<Long, VertexViewModel<V>>()
-        vertices.forEach { vertexInfo ->
-            val vertexViewModel = viewModel.addVertex(
-                label = vertexInfo.label as V,
-                x = vertexInfo.x.dp,
-                y = vertexInfo.y.dp
+                isDirectedGraph = isDirectedGraph
             )
 
-            vertexMap[vertexInfo.id] = vertexViewModel
-
-        }
-
-        edges.forEach { edgeInfo ->
-            val fromVertex = vertexMap[edgeInfo.vertexFrom]
-            val toVertex = vertexMap[edgeInfo.vertexTo]
-
-            if (fromVertex != null && toVertex != null) {
-                viewModel.addEdge(
-                    fromVertedID = fromVertex.vertexID,
-                    toVertexID = toVertex.vertexID,
-                    edgeValue = edgeInfo.label as E,
-                    weight = edgeInfo.weight
+            val vertexMap = mutableMapOf<Long, VertexViewModel<V>>()
+            vertices.forEach { vertexInfo ->
+                val vertexViewModel = viewModel.addVertex(
+                    label = vertexInfo.label as V,
+                    x = vertexInfo.x.dp,
+                    y = vertexInfo.y.dp
                 )
-            }
-        }
 
-        return viewModel
+                vertexMap[vertexInfo.id] = vertexViewModel
+
+            }
+
+            edges.forEach { edgeInfo ->
+                val fromVertex = vertexMap[edgeInfo.vertexFrom]
+                val toVertex = vertexMap[edgeInfo.vertexTo]
+
+                if (fromVertex != null && toVertex != null) {
+                    viewModel.addEdge(
+                        fromVertedID = fromVertex.vertexID,
+                        toVertexID = toVertex.vertexID,
+                        edgeValue = edgeInfo.label as E,
+                        weight = edgeInfo.weight
+                    )
+                }
+            }
+
+            return viewModel
+        } catch(e : Exception) {
+            println("Exception while reading graph ${e.message}")
+            e.printStackTrace()
+            return null
+        }
     }
 }

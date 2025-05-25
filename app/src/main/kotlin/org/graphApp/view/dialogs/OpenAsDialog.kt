@@ -15,6 +15,7 @@ import org.graphApp.view.components.*
 import org.graphApp.viewmodel.graph.GraphViewModel
 import data.SQLiteMainLogic.SQLiteExposed
 import data.SQLiteMainLogic.SQLiteMainLogic
+import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -124,13 +125,12 @@ fun OpenDialog(
                                 isLoading = true
                                 errorMessage = ""
 
-                                CoroutineScope(Dispatchers.Default).launch {
+                                CoroutineScope(Dispatchers.Default + CoroutineName("SQLite")).launch {
                                     try {
                                         when (selectedOption) {
                                             "SQLite" -> {
                                                 try {
                                                     val sanitizedName = name.replace(Regex("[^a-zA-Z0-9_-]"), "_")
-                                                    val dbFolder = selectedFile?.absolutePath
                                                     val dbFileName = selectedFile
                                                     if (dbFileName == null || !dbFileName.exists()) {
                                                         errorMessage = "Database file not found"

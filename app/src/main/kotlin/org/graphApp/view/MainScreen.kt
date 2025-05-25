@@ -26,12 +26,12 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
     var showNewGraphPanel by remember { mutableStateOf(false) }
     var startCliked by remember { mutableStateOf(false)}
     val currentGraphViewModel by remember { derivedStateOf { viewModel.graphViewModel } }
-    var currentLanguage by remember { mutableStateOf(AppLanguage.CHINESE) }
+    var currentLanguage by remember { mutableStateOf(AppLanguage.ENGLISH) }
     val resources = getResources(currentLanguage)
     println("${viewModel.graphViewModel.vertices.size}")
     val algoVM = AlgorithmsView(viewModel = viewModel.graphViewModel)
     CompositionLocalProvider(LocalTextResources provides resources) {
-        GraphTheme(darkTheme = mainThemeDark) {
+        GraphTheme(darkTheme = !mainThemeDark) {
             Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background)) {
                 TopBarMenu(
                     onToggleAlgorithms = { showAlgorithmsPanel = !showAlgorithmsPanel },
@@ -89,7 +89,6 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
 
                 }
 
-                // я пытался сделать это align(Alignment.TopEnd)
                 AnimatedVisibility(
                     visible = showNewGraphPanel,
                     modifier = Modifier

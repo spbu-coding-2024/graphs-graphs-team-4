@@ -6,16 +6,12 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
-import org.jetbrains.exposed.sql.deleteAll
-import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.select
 
-
-class  SQLiteExposed(dbName: String) {
+class SQLiteExposed(dbName: String) {
     val dataBaseConnection = Database.connect(
         "jdbc:sqlite:$dbName",
         driver = "org.sqlite.JDBC",
@@ -89,7 +85,7 @@ class  SQLiteExposed(dbName: String) {
         }
     }
 
-    fun addAllEdges(graphID: Int, edges: Collection<EdgeViewModel<*,*>>) {
+    fun addAllEdges(graphID: Int, edges: Collection<EdgeViewModel<*, *>>) {
         transaction(db = dataBaseConnection) {
             edges.forEach { edge ->
                 try {
@@ -104,18 +100,6 @@ class  SQLiteExposed(dbName: String) {
                     throw e
                 }
             }
-        }
-    }
-
-    fun deleteGraph(graphID: Int) {
-        transaction(db = dataBaseConnection) {
-            Graphs.deleteWhere { Graphs.id eq graphID }
-        }
-    }
-
-    fun deleteAll() {
-        transaction(db = dataBaseConnection) {
-            Graphs.deleteAll()
         }
     }
 
@@ -135,7 +119,7 @@ class  SQLiteExposed(dbName: String) {
 
     fun getVertices(graphID: Int): List<VertexInfo> {
         return transaction(db = dataBaseConnection) {
-            Vertices.select { Vertices.graph_id eq graphID}
+            Vertices.select { Vertices.graph_id eq graphID }
                 .map {
                     VertexInfo(
                         id = it[Vertices.vertex_id],
@@ -149,7 +133,7 @@ class  SQLiteExposed(dbName: String) {
 
     fun getEdges(graphID: Int): List<EdgeInfo> {
         return transaction(db = dataBaseConnection) {
-            Edges.select { Edges.graph_id eq graphID}
+            Edges.select { Edges.graph_id eq graphID }
                 .map {
                     EdgeInfo(
                         label = it[Edges.label],
@@ -160,10 +144,8 @@ class  SQLiteExposed(dbName: String) {
                 }
         }
     }
-
-
 }
 
-data class GraphInfo(val id : Int, val isDirected: Boolean, val isWeighted: Boolean, val label : String)
-data class EdgeInfo(val label : String, val vertexFrom : Long, val vertexTo : Long, val weight : String)
-data class VertexInfo(val id : Long, val x : Float, val y : Float, val label : String)
+data class GraphInfo(val id: Int, val isDirected: Boolean, val isWeighted: Boolean, val label: String)
+data class EdgeInfo(val label: String, val vertexFrom: Long, val vertexTo: Long, val weight: String)
+data class VertexInfo(val id: Long, val x: Float, val y: Float, val label: String)

@@ -46,7 +46,7 @@ class AlgorithmsView<V, E>(
     )
 
     fun findStrongCommunities() {
-        CoroutineScope(Dispatchers.Default).launch {
+        CoroutineScope(Dispatchers.Default + CoroutineName("Find Strong Communities")).launch {
             if (!viewModel.isDirectedGraph.value) {
                 return@launch
             }
@@ -70,7 +70,7 @@ class AlgorithmsView<V, E>(
     }
 
     fun minimalSpanningTree() {
-        CoroutineScope(Dispatchers.Default).launch {
+        CoroutineScope(Dispatchers.Default + CoroutineName("Minimal Spanning Tree")).launch {
             var mstFinder: MinimalSpanningTree<V, E> = MinimalSpanningTree(graph = viewModel.graph)
             var resultEdges: List<Edge<E, V>>?
 
@@ -105,7 +105,7 @@ class AlgorithmsView<V, E>(
     fun findCycles(
         startVertexIdOrLabel: String
     ) {
-        CoroutineScope(Dispatchers.Default).launch {
+        CoroutineScope(Dispatchers.Default + CoroutineName("Find Cycles")).launch {
             resetAllColorsToDefaults()
 
             viewModel.edges.forEach { edgeVM ->
@@ -155,7 +155,7 @@ class AlgorithmsView<V, E>(
         startVertexId: String,
         endVertexId: String
     ) {
-        CoroutineScope(Dispatchers.Default).launch {
+        CoroutineScope(Dispatchers.Default + CoroutineName("Ford Bellman")).launch {
             resetAllColorsToDefaults()
 
             viewModel.edges.forEach { edgeVM ->
@@ -201,7 +201,7 @@ class AlgorithmsView<V, E>(
         }
     }
     fun findCommunities() {
-        CoroutineScope(Dispatchers.Default).launch {
+        CoroutineScope(Dispatchers.Default + CoroutineName("Find Communities")).launch {
             resetAllColorsToDefaults()
 
             viewModel.edges.forEach { edgeVM ->
