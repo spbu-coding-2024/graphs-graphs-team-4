@@ -325,4 +325,142 @@ class FordBellmanTest {
         assertNull(result)
     }
 
+    @Test
+    fun `little path undirectedWeighted graph (pos weights)`() {
+
+        val vertex1 = weightedGraph.addVertex("1")
+        val vertex2 = weightedGraph.addVertex("2")
+        val vertex3 = weightedGraph.addVertex("3")
+
+        weightedGraph.addEdge("1", "2", "КАД1", "50")
+        weightedGraph.addEdge("2", "3", "КАД2", "100")
+
+        val fordBellman = FordBellman(graph = weightedGraph)
+        val result = fordBellman.fordBellman(vertex1.id, vertex3.id)
+
+        assertNotNull(result)
+        val (path, edges) = result!!
+        assertEquals(2, edges.size)
+        assertEquals(listOf(vertex1, vertex2, vertex3), path)
+        assertEquals(0.0, fordBellman.d[vertex1.id])
+        assertEquals(50.0, fordBellman.d[vertex2.id])
+        assertEquals(150.0, fordBellman.d[vertex3.id])
+    }
+
+    @Test
+    fun `two path with different length undirectedWeighted graph (pos weights)`() {
+
+        val vertex1 = weightedGraph.addVertex("1")
+        val vertex2 = weightedGraph.addVertex("2")
+        val vertex3 = weightedGraph.addVertex("3")
+        val vertex4 = weightedGraph.addVertex("4")
+        val vertex5 = weightedGraph.addVertex("5")
+        val vertex6 = weightedGraph.addVertex("6")
+
+        weightedGraph.addEdge("1", "3", "ЗСД1", "10")
+        weightedGraph.addEdge("3", "6", "ЗСД2", "20")
+        weightedGraph.addEdge("1", "2", "КАД1", "30")
+        weightedGraph.addEdge("2", "3", "КАД2", "30")
+        weightedGraph.addEdge("3", "4", "КАД3", "40")
+        weightedGraph.addEdge("4", "5", "КАД4", "50")
+        weightedGraph.addEdge("5", "6", "КАД5", "60")
+
+        val fordBellman = FordBellman(graph = weightedGraph)
+        val result = fordBellman.fordBellman(vertex1.id, vertex6.id)
+
+        assertNotNull(result)
+        val (path, edges) = result!!
+        assertEquals(7, edges)
+        assertEquals(0.0, fordBellman.d[vertex1.id])
+        assertEquals(30.0, fordBellman.d[vertex2.id])
+        assertEquals(10.0, fordBellman.d[vertex3.id])
+        assertEquals(50.0, fordBellman.d[vertex4.id])
+        assertEquals(90.0, fordBellman.d[vertex5.id])
+        assertEquals(30.0, fordBellman.d[vertex6.id])
+    }
+
+    @Test
+    fun `test no path in undirectedWeighted graph (pos weights)`() {
+
+        val vertex1 = weightedGraph.addVertex("1")
+        val vertex2 = weightedGraph.addVertex("2")
+        val vertex3 = weightedGraph.addVertex("3")
+
+        weightedGraph.addEdge("1", "2", "Ботаническая", "10")
+
+        val fordBellman = FordBellman(graph = weightedGraph)
+        val result = fordBellman.fordBellman(vertex1.id, vertex3.id)
+
+        assertNull(result)
+    }
+
+    @Test
+    fun `little path undirectedWeighted graph (neg weights)`() {
+
+        val vertex1 = weightedGraph.addVertex("1")
+        val vertex2 = weightedGraph.addVertex("2")
+        val vertex3 = weightedGraph.addVertex("3")
+
+        weightedGraph.addEdge("1", "2", "КАД1", "50")
+        weightedGraph.addEdge("2", "3", "КАД2", "-100")
+
+        val fordBellman = FordBellman(graph = weightedGraph)
+        val result = fordBellman.fordBellman(vertex1.id, vertex3.id)
+
+        assertNotNull(result)
+        val (path, edges) = result!!
+        assertEquals(2, edges.size)
+        assertEquals(listOf(vertex1, vertex2, vertex3), path)
+        assertEquals(0.0, fordBellman.d[vertex1.id])
+        assertEquals(50.0, fordBellman.d[vertex2.id])
+        assertEquals(50.0, fordBellman.d[vertex3.id])
+    }
+
+    @Test
+    fun `two path with different length undirectedWeighted graph (neg weights)`() {
+
+        val vertex1 = weightedGraph.addVertex("1")
+        val vertex2 = weightedGraph.addVertex("2")
+        val vertex3 = weightedGraph.addVertex("3")
+        val vertex4 = weightedGraph.addVertex("4")
+        val vertex5 = weightedGraph.addVertex("5")
+        val vertex6 = weightedGraph.addVertex("6")
+
+        weightedGraph.addEdge("1", "3", "ЗСД1", "-10")
+        weightedGraph.addEdge("3", "6", "ЗСД2", "-20")
+        weightedGraph.addEdge("1", "2", "КАД1", "-30")
+        weightedGraph.addEdge("2", "3", "КАД2", "-30")
+        weightedGraph.addEdge("3", "4", "КАД3", "-40")
+        weightedGraph.addEdge("4", "5", "КАД4", "-50")
+        weightedGraph.addEdge("5", "6", "КАД5", "-60")
+
+        val fordBellman = FordBellman(graph = weightedGraph)
+        val result = fordBellman.fordBellman(vertex1.id, vertex6.id)
+
+        assertNotNull(result)
+        val (path, edges) = result!!
+        assertEquals(7, edges)
+        assertEquals(0.0, fordBellman.d[vertex1.id])
+        assertEquals(-30.0, fordBellman.d[vertex2.id])
+        assertEquals(-60.0, fordBellman.d[vertex3.id])
+        assertEquals(-100.0, fordBellman.d[vertex4.id])
+        assertEquals(-150.0, fordBellman.d[vertex5.id])
+        assertEquals(-210.0, fordBellman.d[vertex6.id])
+    }
+
+    @Test
+    fun `test no path in undirectedWeighted graph (neg weights)`() {
+
+        val vertex1 = weightedGraph.addVertex("1")
+        val vertex2 = weightedGraph.addVertex("2")
+        val vertex3 = weightedGraph.addVertex("3")
+
+        weightedGraph.addEdge("1", "2", "Ботаническая", "-10")
+
+        val fordBellman = FordBellman(graph = weightedGraph)
+        val result = fordBellman.fordBellman(vertex1.id, vertex3.id)
+
+        assertNull(result)
+    }
+
 }
