@@ -7,7 +7,6 @@ class FordBellman<V, E>(
 ) {
     private val _edges = graph.edges
     private val _vertices = graph.vertices
-    private var _used: MutableMap<Long, Boolean> = mutableMapOf()
     val parent = hashMapOf<Long, Long>()
     val d = hashMapOf<Long, Double>()
     val hasNegativeCycle = hashMapOf<Long, Boolean>()
