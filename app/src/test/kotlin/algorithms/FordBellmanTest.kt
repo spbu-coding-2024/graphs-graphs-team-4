@@ -472,4 +472,79 @@ class FordBellmanTest {
         assertEquals(0.0, fordBellman.d[vertex1.id])
     }
 
+    @Test
+    fun `test empty path when source equals target`() {
+
+        val vertexA = directWeightedGraph.addVertex("A")
+        directWeightedGraph.addVertex("B")
+        directWeightedGraph.addEdge("A", "B", "МКАД", "5")
+
+        val fordBellman = FordBellman(directWeightedGraph)
+        val result = fordBellman.fordBellman(vertexA.id, vertexA.id)
+
+        assertNotNull(result)
+        val (path, edges) = result!!
+        assertEquals(listOf(vertexA.id), path)
+        assertEquals(0, edges.size)
+    }
+
+    @Test
+    fun `test invalid weight format`() {
+
+        val vertexA = directWeightedGraph.addVertex("A")
+        val vertexB = directWeightedGraph.addVertex("B")
+        directWeightedGraph.addEdge("A", "B", "СолявойПереулок", "invalidWeight")
+
+        val fordBellman = FordBellman(directWeightedGraph)
+        val result = fordBellman.fordBellman(vertexA.id, vertexB.id)
+
+        assertNotNull(result)
+        assertEquals(1.0, fordBellman.d[vertexB.id])
+    }
+
+    @Test
+    fun `large graph test`() {
+
+        val vertices = mutableListOf<Vertex<String>>()
+
+        for (i in 0 until 1000) {
+            vertices.add(directWeightedGraph.addVertex("$i"))
+        }
+
+        for (i in 0 until 999) {
+            directWeightedGraph.addEdge("$i", "${i + 1}", "edge$i", "${i + 1}")
+        }
+
+        val fordBellman = FordBellman(directWeightedGraph)
+        val start = System.currentTimeMillis()
+        val result = fordBellman.fordBellman(vertices.first().id, vertices.last().id)
+        val end = System.currentTimeMillis()
+
+        assertNotNull(result)
+        val (path, edges) = result!!
+        assertEquals(100, path!!.size)
+        assertEquals(99, edges.size)
+
+        assertTrue(end - start < 10000, "less then 10 sec for 1000 vertices")
+    }
+
+    @Test
+    fun `different compomets connection`() {
+
+        val vertex1 = directGraph.addVertex("1")
+        val vertex2 = directGraph.addVertex("2")
+        val vertex3 = directGraph.addVertex("3")
+        val vertex4 = directGraph.addVertex("4")
+
+        directGraph.addEdge("1", "2", "Чичера1")
+        directGraph.addEdge("3", "4", "Чичера2")
+
+        val fordBellman = FordBellman(graph = directGraph)
+
+        val res1 = fordBellman.fordBellman(vertex1.id, vertex2.id)
+        assertNotNull(res1)
+
+        val res2 = fordBellman.fordBellman(vertex1.id, vertex3.id)
+        assertNull(res2)
+    }
 }
