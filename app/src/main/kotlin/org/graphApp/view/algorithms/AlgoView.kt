@@ -225,7 +225,7 @@ class AlgorithmsView<V, E>(
                     }
                 }
 
-                delay(300L)
+                delay(3L)
             }
 
             communities.entries.forEach { (communityId, vertexIds) ->

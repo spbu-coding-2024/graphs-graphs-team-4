@@ -2,7 +2,6 @@ package org.graphApp.viewmodel
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.graphApp.model.graph.DirectGraph
 import org.graphApp.model.graph.DirectWeightedGraph
@@ -18,12 +17,8 @@ import org.graphApp.currentGraph
 import org.graphApp.model.graph.Edge
 import org.graphApp.model.graph.Graph
 import org.graphApp.model.graph.UndirectedGraph
-import org.graphApp.model.graph.UndirectedWeightedGraph
-import org.graphApp.model.graph.WeightedEdge
 import org.graphApp.model.graph.WeightedGraph
-import org.graphApp.view.algorithms.AlgorithmsView
 import org.graphApp.viewmodel.graph.GraphViewModel
-import sun.awt.X11.XUtilConstants.ZoomState
 import kotlin.math.exp
 import kotlin.random.Random
 
@@ -94,7 +89,7 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
 
 
     @Suppress("UNCHECKED_CAST")
-    fun generateLargeGraph(vertexCount: Int = 1000, edgeCount: Int = 1000) {
+    fun generateLargeGraph(vertexCount: Int = 10000, edgeCount: Int = 20000) {
         createNewGraph(isWeightedGraph, isDirectedGraph)
 
         val vertices = mutableListOf<Long>()
