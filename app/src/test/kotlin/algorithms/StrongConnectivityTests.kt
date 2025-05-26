@@ -1,4 +1,4 @@
-package org.graphApp.AlgorithmsTests
+package algorithms
 
 import org.graphApp.model.graph.DirectGraph
 import org.graphApp.model.graph.Vertex
@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-
 
 internal class StrongConnectivityTests {
 
