@@ -5,16 +5,12 @@ import org.graphApp.model.graph.Graph
 import org.graphApp.model.graph.Vertex
 import org.graphApp.model.graph.WeightedEdge
 
-
-const val NUM = 10e5
-
 class MinimalSpanningTree<V, E>(
     private val graph: Graph<V,E>,
 ) {
     private val _edges = graph.edges
     private val _vertices = graph.vertices
     private var _used: MutableMap<Long, Boolean> = mutableMapOf()
-    private val _component: MutableMap<Long, Int> = mutableMapOf()
     private val _sortedEdges: List<WeightedEdge<E, V>> =
         _edges
             .filterIsInstance<WeightedEdge<E, V>>()
