@@ -9,6 +9,9 @@ import org.graphApp.model.graph.DirectWeightedGraph
 import org.graphApp.model.graph.DirectedWeightedGraph
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.graphApp.currentGraph
 import org.graphApp.model.graph.Edge
 import org.graphApp.model.graph.Graph
@@ -28,14 +31,14 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
 
     var scale by mutableStateOf(1f)
     var rotation by mutableStateOf(0f)
-    var offset by  mutableStateOf(Offset.Zero)
+    var offset by mutableStateOf(Offset.Zero)
 
 
     private var _isWeightedGraphState = mutableStateOf(false)
     var isWeightedGraph: Boolean
         get() = _isWeightedGraphState.value
         set(value) {
-        _isWeightedGraphState.value = value
+            _isWeightedGraphState.value = value
         }
 
 
@@ -66,14 +69,16 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
         scale = (scale * exp(delta * 0.2f)).coerceIn(-0.25f, 5f)
     }
 
-    var graphViewModel by mutableStateOf(GraphViewModel(
-        graph = graph,
-        showVerticesLabels = _showVertexLabels,
-        showEdgesWeights = _showEdgesWeights,
-        isWeightedGraph = _isWeightedGraphState,
-        isDirectedGraph = _isDirectedGraphState,
+    var graphViewModel by mutableStateOf(
+        GraphViewModel(
+            graph = graph,
+            showVerticesLabels = _showVertexLabels,
+            showEdgesWeights = _showEdgesWeights,
+            isWeightedGraph = _isWeightedGraphState,
+            isDirectedGraph = _isDirectedGraphState,
         )
     )
+
     @Suppress("UNCHECKED_CAST")
     fun generateLargeGraph(vertexCount: Int = 1000, edgeCount: Int = 1000) {
         createNewGraph(isWeightedGraph, isDirectedGraph)
@@ -83,7 +88,7 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
         for (i in 0 until vertexCount) {
             val vertex = graphViewModel.addVertex(
                 label = "V$i",
-                x = ((i % 50)* 20f).dp,
+                x = ((i % 50) * 20f).dp,
                 y = ((i / 50) * 20f).dp
             )
             vertices.add(vertex.vertexID)
@@ -94,7 +99,7 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
             val to = vertices.random()
             if (from != to) {
                 val weight = if (isWeightedGraph) Random.nextDouble(0.0, 10000.0) else null
-                val _weight : String = weight.toString()
+                val _weight: String = weight.toString()
                 graphViewModel.addEdge(
                     fromVertedID = from,
                     toVertexID = to,
@@ -106,14 +111,14 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun loadGraphFromDatabase(newGraphViewModel : GraphViewModel<*,*>, graphName : String) {
+    fun loadGraphFromDatabase(newGraphViewModel: GraphViewModel<*, *>, graphName: String) {
         try {
             graphViewModel.clear()
 
             val loadedGraph = newGraphViewModel.graph
 
             isWeightedGraph = loadedGraph is WeightedGraph<*, *> || loadedGraph is DirectedWeightedGraph<*, *>
-            isDirectedGraph = loadedGraph is DirectGraph<*,*> || loadedGraph is DirectedWeightedGraph<*,*>
+            isDirectedGraph = loadedGraph is DirectGraph<*, *> || loadedGraph is DirectedWeightedGraph<*, *>
 
             graphViewModel = GraphViewModel(
                 graph = loadedGraph as Graph<String, E>,
@@ -126,14 +131,14 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
             restoreVisualization(newGraphViewModel)
 
 
-        } catch(e : Exception) {
+        } catch (e: Exception) {
             println("Error loading graph : ${e.message}")
             e.printStackTrace()
         }
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun restoreVisualization(loadedViewModel: GraphViewModel<*,*>) {
+    private fun restoreVisualization(loadedViewModel: GraphViewModel<*, *>) {
         val vertexMap = mutableMapOf<Long, Long>()
 
         loadedViewModel.vertices.forEach { oldVertexVM ->
@@ -191,5 +196,39 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
             isWeightedGraph = _isWeightedGraphState,
             isDirectedGraph = _isDirectedGraphState
         )
+    }
+    fun randomLongExcluding(min: Long, max: Long, exclude: Long): Long {
+        require(max > min) { "Неверный диапазон" }
+        var value: Long
+        do {
+            value = Random.nextLong(min, max + 1)
+        } while (value == exclude)
+        return value
+    }
+
+
+
+    fun createRandomGraph(isWeighted: Boolean) = CoroutineScope(Dispatchers.Default).launch {
+        val randomVertices = Random.nextLong(100L, 4000L)
+        val randomEdges = (4..8).random()
+        for (vertexID in 0..randomVertices) {
+            graphViewModel.addVertex(vertexID.toString(), 0.dp, 0.dp)
+        }
+        for (vertexIDFrom in 0..randomVertices) {
+            val vertexIDTo = randomLongExcluding(0, randomVertices, vertexIDFrom)
+            if (isWeighted) {
+                repeat(randomEdges) {
+                    graphViewModel.addEdge(vertexIDFrom, vertexIDTo, vertexIDFrom.toString() as E)
+                }
+            } else {
+                repeat(randomEdges) {
+                    graphViewModel.addEdge(
+                        vertexIDFrom, vertexIDTo, vertexIDFrom.toString() as E,
+                        Random.nextLong(1L, 100L).toString() as String
+                    )
+                }
+            }
+        }
+
     }
 }

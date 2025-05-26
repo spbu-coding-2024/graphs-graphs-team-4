@@ -62,7 +62,7 @@ class AlgorithmsView<V, E>(
                     val vertexId = vertex.id
                     viewModel.vertices.find { it.vertexID == vertexId }?.let { vertexViewModel ->
                         vertexViewModel.color = communityColor
-                        delay(300L)
+                        delay(30L)
                     }
                 }
             }
@@ -97,7 +97,7 @@ class AlgorithmsView<V, E>(
                     vertexID.first.color = mstColor
                     vertexID.second.color = mstColor
                 }
-                delay(300L)
+                delay(30L)
             }
         }
     }

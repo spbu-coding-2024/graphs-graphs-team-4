@@ -25,6 +25,9 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import org.graphApp.viewmodel.MainScreenViewModel
 import androidx.compose.ui.unit.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.graphApp.model.LocalTextResources
 import kotlin.math.sign
 
@@ -297,6 +300,7 @@ fun <E> GraphView(
                             viewModel.removeVertex(vertex)
                         })
                 }
+
             }
         }
     }

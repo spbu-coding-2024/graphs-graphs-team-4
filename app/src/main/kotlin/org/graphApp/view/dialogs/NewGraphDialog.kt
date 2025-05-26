@@ -14,7 +14,9 @@ import org.graphApp.model.LocalTextResources
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.graphApp.view.algorithms.GraphsLayout
 import org.graphApp.viewmodel.MainScreenViewModel
+import org.graphApp.viewmodel.graph.GraphViewModel
 
 @Composable
 fun<E> NewGraphPanel(
@@ -28,6 +30,7 @@ fun<E> NewGraphPanel(
     ) {
         val scrollState = rememberScrollState()
         val resources = LocalTextResources.current
+        val graphLayout: GraphsLayout<String, E> = GraphsLayout()
         Column(
 
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -106,6 +109,27 @@ fun<E> NewGraphPanel(
                                 )
                         ) {
                             Text(resources.createGraph, color = MaterialTheme.colors.onSecondary)
+
+                        }
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                    ) {
+                        Button(
+                            onClick = {
+                                onClose()
+                                vm.createNewGraph(vm.isWeightedGraph, vm.isDirectedGraph)
+                                vm.createRandomGraph(vm.isWeightedGraph)
+                                graphLayout.place(1000.0,900.0, vm.graphViewModel as GraphViewModel<String, E>)
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = MaterialTheme.colors.primaryVariant,
+                                contentColor = MaterialTheme.colors.onPrimary
+                            )
+                        ) {
+                            Text(resources.randomGraph, color = MaterialTheme.colors.onSecondary)
 
                         }
                     }
