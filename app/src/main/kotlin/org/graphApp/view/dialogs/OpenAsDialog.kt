@@ -91,7 +91,7 @@ fun OpenDialog(
                         }
                     }
                 }
-                if (selectedOption != "Neo4j") {
+                if (selectedOption == "SQLite") {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Start
@@ -109,9 +109,18 @@ fun OpenDialog(
                             text = resources.addFolder,
                             fontWeight = FontWeight.Medium
                         )
-                    }
 
+                        if (selectedFile != null) {
+                            Text(
+                                text = "Selected: ${selectedFile!!.name}",
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colors.onSurface,
+                                modifier = Modifier.padding(start = 8.dp)
+                            )
+                        }
+                    }
                 }
+
                 if (selectedOption == "Neo4j") {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -270,7 +279,9 @@ fun OpenDialog(
                                                         errorMessage = "Please select a valid database file"
                                                         return@launch
                                                     }
-                                                    val sanitizedName = graphName.trim().replace(Regex("[^a-zA-Z0-9_-]"), "_")
+
+                                                    val fileName = selectedFile!!.nameWithoutExtension
+                                                    val sanitizedName = fileName.replace(Regex("[^a-zA-Z0-9_-]"), "_")
 
                                                     println("Loading graph '$sanitizedName' from ${selectedFile!!.absolutePath}")
 
