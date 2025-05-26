@@ -3,12 +3,10 @@ package algorithms
 import org.graphApp.model.graph.DirectGraph
 import org.graphApp.model.graph.Vertex
 import org.graphApp.model.graph.algorithms.FindStrongCommunities
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import kotlin.test.junit5.JUnit5Asserter.assertEquals
 
 
 class StrongConnectivityTests {
