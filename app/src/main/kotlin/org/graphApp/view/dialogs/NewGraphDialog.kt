@@ -14,6 +14,7 @@ import org.graphApp.model.LocalTextResources
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.awaitAll
 import org.graphApp.view.algorithms.GraphsLayout
 import org.graphApp.viewmodel.MainScreenViewModel
 import org.graphApp.viewmodel.graph.GraphViewModel
@@ -121,8 +122,10 @@ fun<E> NewGraphPanel(
                             onClick = {
                                 onClose()
                                 vm.createNewGraph(vm.isWeightedGraph, vm.isDirectedGraph)
-                                vm.createRandomGraph(vm.isWeightedGraph)
-                                graphLayout.place(1000.0,900.0, vm.graphViewModel as GraphViewModel<String, E>)
+                                val waiting = vm.createRandomGraph(vm.isWeightedGraph)
+                                waiting.invokeOnCompletion {
+                                    graphLayout.place(1000.0, 900.0, vm.graphViewModel as GraphViewModel<String, E>)
+                                }
                             },
                             colors = ButtonDefaults.buttonColors(
                                 backgroundColor = MaterialTheme.colors.primaryVariant,

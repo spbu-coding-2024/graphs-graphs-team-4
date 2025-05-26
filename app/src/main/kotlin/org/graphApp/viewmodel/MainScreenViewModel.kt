@@ -11,6 +11,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.graphApp.currentGraph
 import org.graphApp.model.graph.Edge
@@ -78,6 +80,18 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
             isDirectedGraph = _isDirectedGraphState,
         )
     )
+
+    fun scaleAt(delta: Int, cursorPosition: Offset) {
+        val scaleFactor = if (delta > 0) 1.1f else 0.9f
+        val oldScale = scale
+        val newScale = (scale * scaleFactor).coerceIn(0.06f, 7f)
+
+        val offsetToCursor = (cursorPosition - offset) / oldScale
+
+        offset = cursorPosition - offsetToCursor * newScale
+        scale = newScale
+    }
+
 
     @Suppress("UNCHECKED_CAST")
     fun generateLargeGraph(vertexCount: Int = 1000, edgeCount: Int = 1000) {
@@ -197,6 +211,7 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
             isDirectedGraph = _isDirectedGraphState
         )
     }
+
     fun randomLongExcluding(min: Long, max: Long, exclude: Long): Long {
         require(max > min) { "Неверный диапазон" }
         var value: Long
@@ -207,12 +222,12 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
     }
 
 
-
-    fun createRandomGraph(isWeighted: Boolean) = CoroutineScope(Dispatchers.Default).launch {
-        val randomVertices = Random.nextLong(100L, 4000L)
+    fun createRandomGraph(isWeighted: Boolean): Job = CoroutineScope(Dispatchers.Default).launch {
+        val randomVertices = Random.nextLong(50L, 800L)
         val randomEdges = (4..8).random()
         for (vertexID in 0..randomVertices) {
             graphViewModel.addVertex(vertexID.toString(), 0.dp, 0.dp)
+
         }
         for (vertexIDFrom in 0..randomVertices) {
             val vertexIDTo = randomLongExcluding(0, randomVertices, vertexIDFrom)
@@ -228,6 +243,7 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
                     )
                 }
             }
+            delay(100)
         }
 
     }

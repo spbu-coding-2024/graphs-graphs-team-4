@@ -262,8 +262,8 @@ fun <E> GraphView(
                 .onPointerEvent(PointerEventType.Scroll) {
                     val change = it.changes.first()
                     val delta = -change.scrollDelta.y.toInt().sign
-                    mainScreenViewModel.scale(delta)
-
+                    val cursorPosition = change.position
+                    mainScreenViewModel.scaleAt(delta, cursorPosition)
                 }
                 .transformable(state = state)
         ) {
