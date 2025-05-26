@@ -29,10 +29,6 @@ dependencies {
     implementation("org.gephi", "gephi-toolkit", "0.10.1", classifier = "all")
     implementation("com.github.JetBrains-Research:louvain:main-SNAPSHOT")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.7.3")
-    testImplementation("org.junit.platform:junit-platform-suite:1.13.0-M2")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.2")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testRuntimeOnly("org.junit.platform:junit-platform-suite-engine:1.8.2")
 }
 
 java { toolchain { languageVersion.set(JavaLanguageVersion.of(21)) } }
