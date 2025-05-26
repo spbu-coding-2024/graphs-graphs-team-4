@@ -1,4 +1,5 @@
-import org.graphApp.model.graph.DVertex
+package algorithms
+
 import org.graphApp.model.graph.DirectGraph
 import org.graphApp.model.graph.Vertex
 import org.graphApp.model.graph.algorithms.FindStrongCommunities
@@ -28,23 +29,12 @@ class StrongConnectivityTests {
         graph.addEdge("1", "2", 1)
         graph.addEdge("2", "0", 2)
 
-        val expected: List<Vertex<String>> = listOf(
-            DVertex(
-                0L,
-                "0"
-            ),
-            DVertex(
-                1L,
-                "1"
-            ),
-            DVertex(
-                2L,
-                "2"
-            ),
-        )
         finder = FindStrongCommunities(graph)
         val result: List<List<Vertex<String>>> = finder.findStrongCommunitiesInGraph()!!
-        val expectedIds = expected.map { it.id }.sorted()
+        val expectedIds = graph.vertices
+            .filter { it.id in listOf(0L, 1L, 2L) }
+            .map { it.id }
+            .sorted()
         val actualIds = result[0].map { it.id }.sorted()
         for(i in 0..2) {
             Assertions.assertEquals(expectedIds[i], actualIds[i])
