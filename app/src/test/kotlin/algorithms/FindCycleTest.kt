@@ -175,5 +175,67 @@ class FindCycleTest {
         assertNull(vertices)
     }
 
+    @Test
+    @Tag("Empty graph undir")
+    fun `empty graph undir`() {
+        val findCycles = FindCycles(graph = undirectedGraph)
+        assertTrue(undirectedGraph.vertices.isEmpty())
+    }
 
+    @Test
+    @Tag("Empty graph dir")
+    fun `empty graph dir`() {
+        val findCycles = FindCycles(graph = directGraph)
+        assertTrue(directGraph.vertices.isEmpty())
+    }
+
+    @Test
+    @Tag("Disconnected components dir")
+    fun `disconnected components dir`() {
+
+        val vertex1 = directGraph.addVertex("A")
+        directGraph.addVertex("B")
+        directGraph.addEdge("A", "B", "edge1")
+
+        val vertex3 = directGraph.addVertex("C")
+        directGraph.addVertex("D")
+        directGraph.addEdge("C", "D", "edge2")
+        directGraph.addEdge("D", "C", "edge3")
+
+        val findCycles = FindCycles(directGraph)
+
+        val result1 = findCycles.findCycleDirected(vertex1)
+        assertNull(result1)
+
+        val result2 = findCycles.findCycleDirected(vertex3)
+        assertNotNull(result2)
+        val (vertices, edges) = result2!!
+        assertEquals(2, vertices!!.size)
+        assertEquals(2, edges.size)
+    }
+
+    @Test
+    @Tag("Disconnected components undir")
+    fun `disconnected components undir`() {
+
+        val vertex1 = undirectedGraph.addVertex("A")
+        undirectedGraph.addVertex("B")
+        undirectedGraph.addEdge("A", "B", "edge1")
+
+        val vertex3 = undirectedGraph.addVertex("C")
+        undirectedGraph.addVertex("D")
+        undirectedGraph.addEdge("C", "D", "edge2")
+        undirectedGraph.addEdge("D", "C", "edge3")
+
+        val findCycles = FindCycles(undirectedGraph)
+
+        val result1 = findCycles.findCycleDirected(vertex1)
+        assertNull(result1)
+
+        val result2 = findCycles.findCycleDirected(vertex3)
+        assertNotNull(result2)
+        val (vertices, edges) = result2!!
+        assertEquals(2, vertices!!.size)
+        assertEquals(2, edges.size)
+    }
 }
