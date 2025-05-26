@@ -1,5 +1,3 @@
-package algorithms
-
 import org.graphApp.model.graph.DVertex
 import org.graphApp.model.graph.DirectGraph
 import org.graphApp.model.graph.Vertex
@@ -8,7 +6,6 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-
 
 class StrongConnectivityTests {
 
@@ -50,7 +47,7 @@ class StrongConnectivityTests {
         val expectedIds = expected.map { it.id }.sorted()
         val actualIds = result[0].map { it.id }.sorted()
         for(i in 0..2) {
-           Assertions.assertEquals(expectedIds[i], actualIds[i])
+            Assertions.assertEquals(expectedIds[i], actualIds[i])
         }
     }
 
