@@ -91,7 +91,7 @@ fun OpenDialog(
                         }
                     }
                 }
-                if (selectedOption != "Neo4j") {
+                if (selectedOption == "SQLite") {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Start
@@ -99,9 +99,9 @@ fun OpenDialog(
                         Spacer(Modifier.width(8.dp))
                         AddFolderButton(
                             onClick = {
-                                val folder = chooseFolder()
-                                if (folder != null) {
-                                    selectedFile = folder
+                                val _file = chooseDbFile()
+                                if (_file != null) {
+                                    selectedFile = _file
                                 }
                             }
                         )
@@ -109,9 +109,18 @@ fun OpenDialog(
                             text = resources.addFolder,
                             fontWeight = FontWeight.Medium
                         )
-                    }
 
+                        if (selectedFile != null) {
+                            Text(
+                                text = "Selected: ${selectedFile!!.name}",
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colors.onSurface,
+                                modifier = Modifier.padding(start = 8.dp)
+                            )
+                        }
+                    }
                 }
+
                 if (selectedOption == "Neo4j") {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -266,21 +275,17 @@ fun OpenDialog(
                                         when (selectedOption) {
                                             "SQLite" -> {
                                                 try {
-                                                    val sanitizedName = name.replace(Regex("[^a-zA-Z0-9_-]"), "_")
-                                                    val dbFolder = selectedFile?.absolutePath
-                                                    val dbFileName = selectedFile
-                                                    if (dbFileName == null || !dbFileName.exists()) {
-                                                        errorMessage = "Database file not found"
+                                                    if (selectedFile == null || !selectedFile!!.exists()) {
+                                                        errorMessage = "Please select a valid database file"
                                                         return@launch
                                                     }
 
+                                                    val fileName = selectedFile!!.nameWithoutExtension
+                                                    val sanitizedName = fileName.replace(Regex("[^a-zA-Z0-9_-]"), "_")
 
-                                                    if (!dbFileName.exists()) {
-                                                        errorMessage = "Database file not found: $dbFileName"
-                                                        return@launch
-                                                    }
+                                                    println("Loading graph '$sanitizedName' from ${selectedFile!!.absolutePath}")
 
-                                                    val sqliteConnection = SQLiteExposed(dbFileName.absolutePath)
+                                                    val sqliteConnection = SQLiteExposed(selectedFile!!.absolutePath)
                                                     val sqliteLogic = SQLiteMainLogic<Any, Any>(sqliteConnection)
 
                                                     val loadedGraphViewModel =

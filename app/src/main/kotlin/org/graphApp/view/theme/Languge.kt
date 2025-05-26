@@ -97,8 +97,8 @@ data class TextResources(
     val enterVertexLabel : String,
     val vertexLabel : String,
     val weight : String,
-    val generateGraph : String
-
+    val generateGraph : String,
+    val randomGraph: String
 )
 
 val englishResources = TextResources(
@@ -212,7 +212,8 @@ val englishResources = TextResources(
     vertexLabel = "Vertex label",
     weight = "Weight",
 
-    generateGraph = "Generate Graph"
+    generateGraph = "Generate Graph",
+    randomGraph = "Random Graph"
 )
 
 val russianResources = TextResources(
@@ -325,7 +326,8 @@ val russianResources = TextResources(
     enterVertexLabel = "Добавить название вершины",
     vertexLabel = "Название вершины",
     weight = "Вес",
-    generateGraph = "Сгенерировать граф"
+    generateGraph = "Сгенерировать граф",
+    randomGraph = "Рандомный граф"
 )
 val chineseResources = TextResources(
     fileMenu = "文件",
@@ -437,7 +439,8 @@ val chineseResources = TextResources(
     enterVertexLabel = "输入顶点标签",
     vertexLabel = "顶点标签",
     weight = "戈伊达",
-    generateGraph = "戈伊达"
+    generateGraph = "戈伊达",
+    randomGraph = "随机图",
 )
 
 fun getResources(language: AppLanguage): TextResources {
