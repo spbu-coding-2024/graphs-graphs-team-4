@@ -1,15 +1,10 @@
-package test.algorithms
+package algorithms
 
-import androidx.compose.material.contentColorFor
 import org.graphApp.model.graph.*
 import org.graphApp.model.graph.algorithms.FordBellman
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
-import org.junit.jupiter.params.provider.MethodSource
-import kotlin.random.Random
 
 class FordBellmanTest {
 
@@ -18,7 +13,6 @@ class FordBellmanTest {
     private lateinit var weightedGraph: WeightedGraph<String, String>
     private lateinit var directWeightedGraph: DirectWeightedGraph<String, String>
 
-    val fordBellman = FordBellman(graph = directGraph)
 
     @BeforeEach
     fun init() {
@@ -44,7 +38,7 @@ class FordBellmanTest {
         assertNotNull(result)
         val (path, edges) = result!!
         assertEquals(2, edges.size)
-        assertEquals(listOf(vertex1, vertex2, vertex3), path)
+        assertEquals(listOf(vertex1.id, vertex2.id, vertex3.id), path)
         assertEquals(0.0, fordBellman.d[vertex1.id])
         assertEquals(1.0, fordBellman.d[vertex2.id])
         assertEquals(2.0, fordBellman.d[vertex3.id])
@@ -72,8 +66,8 @@ class FordBellmanTest {
         val result = fordBellman.fordBellman(vertex1.id, vertex6.id)
 
         assertNotNull(result)
-        val (path, edges) = result!!
-        assertEquals(7, edges)
+        val (_, edges) = result!!
+        assertEquals(7, edges.size)
         assertEquals(0.0, fordBellman.d[vertex1.id])
         assertEquals(1.0, fordBellman.d[vertex2.id])
         assertEquals(1.0, fordBellman.d[vertex3.id])
@@ -86,7 +80,7 @@ class FordBellmanTest {
     fun `test no path in directed graph`() {
 
         val vertex1 = directGraph.addVertex("1")
-        val vertex2 = directGraph.addVertex("2")
+        directGraph.addVertex("2")
         val vertex3 = directGraph.addVertex("3")
 
         directGraph.addEdge("1", "2", "Ботаническая")
@@ -113,7 +107,7 @@ class FordBellmanTest {
         assertNotNull(result)
         val (path, edges) = result!!
         assertEquals(2, edges.size)
-        assertEquals(listOf(vertex1, vertex2, vertex3), path)
+        assertEquals(listOf(vertex1.id, vertex2.id, vertex3.id), path)
         assertEquals(0.0, fordBellman.d[vertex1.id])
         assertEquals(50.0, fordBellman.d[vertex2.id])
         assertEquals(150.0, fordBellman.d[vertex3.id])
@@ -141,8 +135,8 @@ class FordBellmanTest {
         val result = fordBellman.fordBellman(vertex1.id, vertex6.id)
 
         assertNotNull(result)
-        val (path, edges) = result!!
-        assertEquals(7, edges)
+        val (_, edges) = result!!
+        assertEquals(7, edges.size)
         assertEquals(0.0, fordBellman.d[vertex1.id])
         assertEquals(30.0, fordBellman.d[vertex2.id])
         assertEquals(10.0, fordBellman.d[vertex3.id])
@@ -155,7 +149,7 @@ class FordBellmanTest {
     fun `test no path in directedWeighted graph (pos weights)`() {
 
         val vertex1 = directWeightedGraph.addVertex("1")
-        val vertex2 = directWeightedGraph.addVertex("2")
+        directWeightedGraph.addVertex("2")
         val vertex3 = directWeightedGraph.addVertex("3")
 
         directWeightedGraph.addEdge("1", "2", "Ботаническая", "10")
@@ -182,7 +176,7 @@ class FordBellmanTest {
         assertNotNull(result)
         val (path, edges) = result!!
         assertEquals(2, edges.size)
-        assertEquals(listOf(vertex1, vertex2, vertex3), path)
+        assertEquals(listOf(vertex1.id, vertex2.id, vertex3.id), path)
         assertEquals(0.0, fordBellman.d[vertex1.id])
         assertEquals(50.0, fordBellman.d[vertex2.id])
         assertEquals(50.0, fordBellman.d[vertex3.id])
@@ -210,8 +204,8 @@ class FordBellmanTest {
         val result = fordBellman.fordBellman(vertex1.id, vertex6.id)
 
         assertNotNull(result)
-        val (path, edges) = result!!
-        assertEquals(7, edges)
+        val (_, edges) = result!!
+        assertEquals(7, edges.size)
         assertEquals(0.0, fordBellman.d[vertex1.id])
         assertEquals(-30.0, fordBellman.d[vertex2.id])
         assertEquals(-60.0, fordBellman.d[vertex3.id])
@@ -224,7 +218,7 @@ class FordBellmanTest {
     fun `test no path in directedWeighted graph (neg weights)`() {
 
         val vertex1 = directWeightedGraph.addVertex("1")
-        val vertex2 = directWeightedGraph.addVertex("2")
+        directWeightedGraph.addVertex("2")
         val vertex3 = directWeightedGraph.addVertex("3")
 
         directWeightedGraph.addEdge("1", "2", "Ботаническая", "-10")
@@ -272,7 +266,7 @@ class FordBellmanTest {
         assertNotNull(result)
         val (path, edges) = result!!
         assertEquals(2, edges.size)
-        assertEquals(listOf(vertex1, vertex2, vertex3), path)
+        assertEquals(listOf(vertex1.id, vertex2.id, vertex3.id), path)
         assertEquals(0.0, fordBellman.d[vertex1.id])
         assertEquals(1.0, fordBellman.d[vertex2.id])
         assertEquals(2.0, fordBellman.d[vertex3.id])
@@ -300,8 +294,8 @@ class FordBellmanTest {
         val result = fordBellman.fordBellman(vertex1.id, vertex6.id)
 
         assertNotNull(result)
-        val (path, edges) = result!!
-        assertEquals(7, edges)
+        val (_, edges) = result!!
+        assertEquals(7, edges.size)
         assertEquals(0.0, fordBellman.d[vertex1.id])
         assertEquals(1.0, fordBellman.d[vertex2.id])
         assertEquals(1.0, fordBellman.d[vertex3.id])
@@ -314,7 +308,7 @@ class FordBellmanTest {
     fun `test no path in undirected graph`() {
 
         val vertex1 = undirectedGraph.addVertex("1")
-        val vertex2 = undirectedGraph.addVertex("2")
+        undirectedGraph.addVertex("2")
         val vertex3 = undirectedGraph.addVertex("3")
 
         undirectedGraph.addEdge("1", "2", "Ботаническая")
@@ -341,7 +335,7 @@ class FordBellmanTest {
         assertNotNull(result)
         val (path, edges) = result!!
         assertEquals(2, edges.size)
-        assertEquals(listOf(vertex1, vertex2, vertex3), path)
+        assertEquals(listOf(vertex1.id, vertex2.id, vertex3.id), path)
         assertEquals(0.0, fordBellman.d[vertex1.id])
         assertEquals(50.0, fordBellman.d[vertex2.id])
         assertEquals(150.0, fordBellman.d[vertex3.id])
@@ -369,8 +363,8 @@ class FordBellmanTest {
         val result = fordBellman.fordBellman(vertex1.id, vertex6.id)
 
         assertNotNull(result)
-        val (path, edges) = result!!
-        assertEquals(7, edges)
+        val (_, edges) = result!!
+        assertEquals(7, edges.size)
         assertEquals(0.0, fordBellman.d[vertex1.id])
         assertEquals(30.0, fordBellman.d[vertex2.id])
         assertEquals(10.0, fordBellman.d[vertex3.id])
@@ -383,7 +377,7 @@ class FordBellmanTest {
     fun `test no path in undirectedWeighted graph (pos weights)`() {
 
         val vertex1 = weightedGraph.addVertex("1")
-        val vertex2 = weightedGraph.addVertex("2")
+        weightedGraph.addVertex("2")
         val vertex3 = weightedGraph.addVertex("3")
 
         weightedGraph.addEdge("1", "2", "Ботаническая", "10")
@@ -410,7 +404,7 @@ class FordBellmanTest {
         assertNotNull(result)
         val (path, edges) = result!!
         assertEquals(2, edges.size)
-        assertEquals(listOf(vertex1, vertex2, vertex3), path)
+        assertEquals(listOf(vertex1.id, vertex2.id, vertex3.id), path)
         assertEquals(0.0, fordBellman.d[vertex1.id])
         assertEquals(50.0, fordBellman.d[vertex2.id])
         assertEquals(50.0, fordBellman.d[vertex3.id])
@@ -438,8 +432,8 @@ class FordBellmanTest {
         val result = fordBellman.fordBellman(vertex1.id, vertex6.id)
 
         assertNotNull(result)
-        val (path, edges) = result!!
-        assertEquals(7, edges)
+        val (_, edges) = result!!
+        assertEquals(7, edges.size)
         assertEquals(0.0, fordBellman.d[vertex1.id])
         assertEquals(-30.0, fordBellman.d[vertex2.id])
         assertEquals(-60.0, fordBellman.d[vertex3.id])
@@ -452,7 +446,7 @@ class FordBellmanTest {
     fun `test no path in undirectedWeighted graph (neg weights)`() {
 
         val vertex1 = weightedGraph.addVertex("1")
-        val vertex2 = weightedGraph.addVertex("2")
+        weightedGraph.addVertex("2")
         val vertex3 = weightedGraph.addVertex("3")
 
         weightedGraph.addEdge("1", "2", "Ботаническая", "-10")
@@ -461,6 +455,21 @@ class FordBellmanTest {
         val result = fordBellman.fordBellman(vertex1.id, vertex3.id)
 
         assertNull(result)
+    }
+
+    @Test
+    fun `single vertex`() {
+        val vertex1 = directGraph.addVertex("239")
+
+        val fordBellman = FordBellman(graph = directGraph)
+        val result = fordBellman.fordBellman(vertex1.id, vertex1.id)
+        assertNotNull(result)
+
+        val (path, edges) = result!!
+
+        assertEquals(listOf(vertex1.id), path)
+        assertEquals(0, edges.size)
+        assertEquals(0.0, fordBellman.d[vertex1.id])
     }
 
 }
