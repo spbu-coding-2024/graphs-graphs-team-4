@@ -10,8 +10,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import data.SQLiteMainLogic.Graphs
-import data.SQLiteMainLogic.Graphs.graphName
 import org.graphApp.model.LocalTextResources
 import org.graphApp.view.components.*
 import org.graphApp.viewmodel.graph.GraphViewModel
@@ -21,7 +19,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.graphApp.data.Neo4j.Neo4jDataBase
-import org.graphApp.main
 import org.graphApp.viewmodel.MainScreenViewModel
 import java.io.File
 import javax.swing.JFileChooser

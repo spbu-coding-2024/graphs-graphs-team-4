@@ -62,15 +62,12 @@ class FindCycles<V,E>(
     ): MutableList<Long> {
         val cycle = mutableListOf<Long>()
 
-        cycle.add(current)
         cycle.add(target)
 
         var vertex = current
         while (vertex != target) {
+            cycle.add(vertex)
             vertex = parent[vertex] ?: break
-            if (vertex != target) {
-                cycle.add(0, vertex)
-            }
         }
 
         return cycle
@@ -121,15 +118,14 @@ class FindCycles<V,E>(
     ) : MutableList<Long> {
         val cycle = mutableListOf<Long>()
 
-        cycle.add(current)
+        cycle.add(target)
 
         var vertex = current
         while (vertex != target) {
-            vertex = parent[vertex] ?: break
             cycle.add(0, vertex)
+            vertex = parent[vertex] ?: break
         }
 
-        cycle.add(0, target)
 
         return cycle
     }
