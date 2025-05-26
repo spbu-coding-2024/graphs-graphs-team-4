@@ -173,7 +173,7 @@ class FordBellmanTest {
         val vertex2 = directWeightedGraph.addVertex("2")
         val vertex3 = directWeightedGraph.addVertex("3")
 
-        directWeightedGraph.addEdge("1", "2", "КАД1", "-50")
+        directWeightedGraph.addEdge("1", "2", "КАД1", "50")
         directWeightedGraph.addEdge("2", "3", "КАД2", "-100")
 
         val fordBellman = FordBellman(graph = directWeightedGraph)
@@ -184,8 +184,8 @@ class FordBellmanTest {
         assertEquals(2, edges.size)
         assertEquals(listOf(vertex1, vertex2, vertex3), path)
         assertEquals(0.0, fordBellman.d[vertex1.id])
-        assertEquals(-50.0, fordBellman.d[vertex2.id])
-        assertEquals(-150.0, fordBellman.d[vertex3.id])
+        assertEquals(50.0, fordBellman.d[vertex2.id])
+        assertEquals(50.0, fordBellman.d[vertex3.id])
     }
 
     @Test
@@ -230,6 +230,96 @@ class FordBellmanTest {
         directWeightedGraph.addEdge("1", "2", "Ботаническая", "-10")
 
         val fordBellman = FordBellman(graph = directWeightedGraph)
+        val result = fordBellman.fordBellman(vertex1.id, vertex3.id)
+
+        assertNull(result)
+    }
+
+    @Test
+    fun `test negative cycle weighted dir graph`() {
+        val vertexA = directWeightedGraph.addVertex("A")
+        val vertexB = directWeightedGraph.addVertex("B")
+        val vertexC = directWeightedGraph.addVertex("C")
+        val vertexD = directWeightedGraph.addVertex("D")
+
+        directWeightedGraph.addEdge("A", "B", "Невский", "2")
+        directWeightedGraph.addEdge("B", "C", "Литейный", "3")
+        directWeightedGraph.addEdge("C", "D", "Садовая", "-7")
+        directWeightedGraph.addEdge("D", "B", "Гороховая", "-1")
+
+        val fordBellman = FordBellman(directWeightedGraph)
+        val result = fordBellman.fordBellman(vertexA.id, vertexC.id)
+
+        assertNull(result)
+        assertTrue(fordBellman.hasNegativeCycle[vertexB.id] == true)
+        assertTrue(fordBellman.hasNegativeCycle[vertexC.id] == true)
+        assertTrue(fordBellman.hasNegativeCycle[vertexD.id] == true)
+    }
+
+    @Test
+    fun `little path undirected graph`() {
+
+        val vertex1 = undirectedGraph.addVertex("1")
+        val vertex2 = undirectedGraph.addVertex("2")
+        val vertex3 = undirectedGraph.addVertex("3")
+
+        undirectedGraph.addEdge("1", "2", "КАД1")
+        undirectedGraph.addEdge("2", "3", "КАД2")
+
+        val fordBellman = FordBellman(graph = undirectedGraph)
+        val result = fordBellman.fordBellman(vertex1.id, vertex3.id)
+
+        assertNotNull(result)
+        val (path, edges) = result!!
+        assertEquals(2, edges.size)
+        assertEquals(listOf(vertex1, vertex2, vertex3), path)
+        assertEquals(0.0, fordBellman.d[vertex1.id])
+        assertEquals(1.0, fordBellman.d[vertex2.id])
+        assertEquals(2.0, fordBellman.d[vertex3.id])
+    }
+
+    @Test
+    fun `two path with different length undirected graph`() {
+
+        val vertex1 = undirectedGraph.addVertex("1")
+        val vertex2 = undirectedGraph.addVertex("2")
+        val vertex3 = undirectedGraph.addVertex("3")
+        val vertex4 = undirectedGraph.addVertex("4")
+        val vertex5 = undirectedGraph.addVertex("5")
+        val vertex6 = undirectedGraph.addVertex("6")
+
+        undirectedGraph.addEdge("1", "3", "ЗСД1")
+        undirectedGraph.addEdge("3", "6", "ЗСД2")
+        undirectedGraph.addEdge("1", "2", "КАД1")
+        undirectedGraph.addEdge("2", "3", "КАД2")
+        undirectedGraph.addEdge("3", "4", "КАД3")
+        undirectedGraph.addEdge("4", "5", "КАД4")
+        undirectedGraph.addEdge("5", "6", "КАД5")
+
+        val fordBellman = FordBellman(graph = undirectedGraph)
+        val result = fordBellman.fordBellman(vertex1.id, vertex6.id)
+
+        assertNotNull(result)
+        val (path, edges) = result!!
+        assertEquals(7, edges)
+        assertEquals(0.0, fordBellman.d[vertex1.id])
+        assertEquals(1.0, fordBellman.d[vertex2.id])
+        assertEquals(1.0, fordBellman.d[vertex3.id])
+        assertEquals(2.0, fordBellman.d[vertex4.id])
+        assertEquals(3.0, fordBellman.d[vertex5.id])
+        assertEquals(2.0, fordBellman.d[vertex6.id])
+    }
+
+    @Test
+    fun `test no path in undirected graph`() {
+
+        val vertex1 = undirectedGraph.addVertex("1")
+        val vertex2 = undirectedGraph.addVertex("2")
+        val vertex3 = undirectedGraph.addVertex("3")
+
+        undirectedGraph.addEdge("1", "2", "Ботаническая")
+
+        val fordBellman = FordBellman(graph = undirectedGraph)
         val result = fordBellman.fordBellman(vertex1.id, vertex3.id)
 
         assertNull(result)
