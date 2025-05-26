@@ -28,11 +28,11 @@ internal class StrongConnectivityTests {
         graph.addEdge("0", "1", 0)
         graph.addEdge("1", "2", 1)
         graph.addEdge("2", "0", 2)
-        val result: MutableList<MutableList<Vertex<String>>> = mutableListOf(mutableListOf())
+        val result: MutableList<MutableList<Vertex<String>>>? = mutableListOf(mutableListOf())
         finder = FindStrongCommunities(graph)
         for (vertex in graph.vertices) {
             if (vertex.id == 0L || vertex.id == 1L || vertex.id == 2L) {
-                result[0].add(vertex)
+                result!![0].add(vertex)
             }
         }
         val result2: MutableList<MutableList<Vertex<String>>>? =
