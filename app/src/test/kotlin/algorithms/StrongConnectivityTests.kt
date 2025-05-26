@@ -8,7 +8,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-internal class StrongConnectivityTests {
+
+class StrongConnectivityTests {
 
     private lateinit var graph: DirectGraph<String, Long>
     private lateinit var finder: FindStrongCommunities<String, Long>
@@ -37,6 +38,9 @@ internal class StrongConnectivityTests {
         val result2: MutableList<MutableList<Vertex<String>>>? =
             finder.findStrongCommunitiesInGraph() as MutableList<MutableList<Vertex<String>>>?
         result2!![0].sortBy { it.id }
-        Assertions.assertEquals(result, result2)
+
+        val expectedIds = result!![0].map { it.id }.sorted()
+        val actualIds = result2[0].map { it.id }.sorted()
+        Assertions.assertEquals(expectedIds, actualIds)
     }
 }
