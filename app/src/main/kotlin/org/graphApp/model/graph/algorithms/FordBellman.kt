@@ -56,39 +56,61 @@ class FordBellman<V, E>(
 
 
     private fun detectNegativeCycles() {
-        val tempD = HashMap(d)
 
-        for (i in 0 until _vertices.size) {
-            for (edge in _edges) {
-                val (fromId, toId, weight) = getEdgeInfo(edge)
+        val directedEdges = mutableListOf<Triple<Long, Long, Double>>()
 
-                if (d[fromId] != Double.POSITIVE_INFINITY && d[fromId]!! + weight < d[toId]!!) {
+        for (edge in _edges) {
+            val (fromId, toId, weight) = getEdgeInfo(edge)
+
+            if (edge is DirectedEdge<*, *>) {
+                directedEdges.add(Triple(fromId, toId, weight))
+            } else {
+                directedEdges.add(Triple(fromId, toId, weight))
+                directedEdges.add(Triple(toId, fromId, weight))
+            }
+        }
+
+        for ((fromId, toId, weight) in directedEdges) {
+            if (d[fromId] != Double.POSITIVE_INFINITY) {
+                if (d[fromId]!! + weight < d[toId]!!) {
                     markVertexInNegativeCycle(toId)
-                }
-
-                if (edge !is DirectedEdge<*, *>) {
-                    if (d[toId] != Double.POSITIVE_INFINITY && d[toId]!! + weight < d[fromId]!!) {
-                        markVertexInNegativeCycle(fromId)
-                    }
                 }
             }
         }
     }
 
     private fun markVertexInNegativeCycle(vertexId: Long) {
-        if (hasNegativeCycle[vertexId] == true) return
+        val queue = mutableListOf<Long>()
+        val visited = mutableListOf<Long>()
 
+        queue.add(vertexId)
         hasNegativeCycle[vertexId] = true
 
-        for (edge in _edges) {
-            val (fromId, toId, _) = getEdgeInfo(edge)
-
-            if (toId == vertexId && !hasNegativeCycle[fromId]!!) {
-                markVertexInNegativeCycle(fromId)
+        while (queue.isNotEmpty()) {
+            val current = queue.removeFirst()
+            if (current in visited) {
+                continue
             }
+            visited.add(current)
 
-            if (edge !is DirectedEdge<*, *> && fromId == vertexId && !hasNegativeCycle[toId]!!) {
-                markVertexInNegativeCycle(toId)
+            for (edge in _edges) {
+                val (fromId, toId, _) = getEdgeInfo(edge)
+
+                if (edge is DirectedEdge<*,*>) {
+                    if (fromId == current && hasNegativeCycle[toId] != true) {
+                        hasNegativeCycle[toId] = true
+                        queue.add(toId)
+                    }
+                } else {
+                    if (fromId == current && hasNegativeCycle[toId] != true) {
+                        hasNegativeCycle[toId] = true
+                        queue.add(toId)
+                    }
+                    if (toId == current && hasNegativeCycle[fromId] != true) {
+                        hasNegativeCycle[fromId] = true
+                        queue.add(fromId)
+                    }
+                }
             }
         }
     }
@@ -108,7 +130,6 @@ class FordBellman<V, E>(
 
         return Triple(fromId, toId, weight)
     }
-
     private fun <E, V> getEdgeWeight(edge: Edge<E, V>): Double {
         return when (edge) {
             is WeightedEdge<*, *> -> {
