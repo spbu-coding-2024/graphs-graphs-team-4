@@ -17,7 +17,6 @@ repositories {
 
 dependencies {
     implementation(compose.desktop.currentOs)
-    testImplementation(kotlin("test"))
     implementation("org.neo4j.driver", "neo4j-java-driver", neo4jDriverVersion)
     implementation("org.jetbrains.exposed:exposed-core:0.45.0")
     implementation("org.jetbrains.exposed:exposed-dao:0.45.0")
@@ -26,11 +25,6 @@ dependencies {
     implementation("io.github.microutils", "kotlin-logging-jvm", "2.0.6")
     implementation("org.slf4j", "slf4j-simple", "1.7.29")
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
-    testImplementation("org.junit.platform:junit-platform-suite:1.13.0-M2")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.2")
-    testImplementation(kotlin("test"))
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testRuntimeOnly("org.junit.platform:junit-platform-suite-engine:1.8.2")
     implementation("org.gephi", "gephi-toolkit", "0.10.1", classifier = "all")
     implementation("com.github.JetBrains-Research:louvain:main-SNAPSHOT")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.7.3")
