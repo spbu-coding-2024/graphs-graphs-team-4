@@ -25,6 +25,9 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import org.graphApp.viewmodel.MainScreenViewModel
 import androidx.compose.ui.unit.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.graphApp.model.LocalTextResources
 import kotlin.math.sign
 
@@ -259,8 +262,8 @@ fun <E> GraphView(
                 .onPointerEvent(PointerEventType.Scroll) {
                     val change = it.changes.first()
                     val delta = -change.scrollDelta.y.toInt().sign
-                    mainScreenViewModel.scale(delta)
-
+                    val cursorPosition = change.position
+                    mainScreenViewModel.scaleAt(delta, cursorPosition)
                 }
                 .transformable(state = state)
         ) {
@@ -297,6 +300,7 @@ fun <E> GraphView(
                             viewModel.removeVertex(vertex)
                         })
                 }
+
             }
         }
     }
