@@ -99,9 +99,9 @@ fun OpenDialog(
                         Spacer(Modifier.width(8.dp))
                         AddFolderButton(
                             onClick = {
-                                val folder = chooseFolder()
-                                if (folder != null) {
-                                    selectedFile = folder
+                                val _file = chooseDbFile()
+                                if (_file != null) {
+                                    selectedFile = _file
                                 }
                             }
                         )
@@ -266,21 +266,15 @@ fun OpenDialog(
                                         when (selectedOption) {
                                             "SQLite" -> {
                                                 try {
-                                                    val sanitizedName = name.replace(Regex("[^a-zA-Z0-9_-]"), "_")
-                                                    val dbFolder = selectedFile?.absolutePath
-                                                    val dbFileName = selectedFile
-                                                    if (dbFileName == null || !dbFileName.exists()) {
-                                                        errorMessage = "Database file not found"
+                                                    if (selectedFile == null || !selectedFile!!.exists()) {
+                                                        errorMessage = "Please select a valid database file"
                                                         return@launch
                                                     }
+                                                    val sanitizedName = graphName.trim().replace(Regex("[^a-zA-Z0-9_-]"), "_")
 
+                                                    println("Loading graph '$sanitizedName' from ${selectedFile!!.absolutePath}")
 
-                                                    if (!dbFileName.exists()) {
-                                                        errorMessage = "Database file not found: $dbFileName"
-                                                        return@launch
-                                                    }
-
-                                                    val sqliteConnection = SQLiteExposed(dbFileName.absolutePath)
+                                                    val sqliteConnection = SQLiteExposed(selectedFile!!.absolutePath)
                                                     val sqliteLogic = SQLiteMainLogic<Any, Any>(sqliteConnection)
 
                                                     val loadedGraphViewModel =
