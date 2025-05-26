@@ -1,6 +1,5 @@
 package org.graphApp.AlgorithmsTests
 
-import org.gephi.graph.api.DirectedGraph
 import org.graphApp.model.graph.DirectGraph
 import org.graphApp.model.graph.Vertex
 import org.graphApp.model.graph.algorithms.FindStrongCommunities
