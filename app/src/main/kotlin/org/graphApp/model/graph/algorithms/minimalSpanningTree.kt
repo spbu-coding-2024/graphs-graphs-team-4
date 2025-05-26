@@ -91,17 +91,32 @@ class MinimalSpanningTree<V, E>(
         return res
     }
 
-    private fun dfsForCheckingСonnectivity (v: Vertex<V>, num: Int) {
-        _component[v.id] = num
+    private fun dfsForCheckingСonnectivity(v: Vertex<V>) {
+        _used[v.id] = true
         graph.edges
-            .filter{it.vertices.first.id == v.id || it.vertices.second.id == v.id}
+            .filter { it.vertices.first.id == v.id || it.vertices.second.id == v.id }
             .forEach { edge ->
-                val firstV = edge.vertices.first
-                val secondV = edge.vertices.second
-                if(!_component.containsKey(edge.vertices.first.id)) {
-                    dfsForCheckingСonnectivity(edge.vertices.first, num)
+                val neightboor = if (edge.vertices.first.id == v.id) {
+                    edge.vertices.second
+                } else {
+                    edge.vertices.first
+                }
+                if (_used[neightboor.id] == false) {
+                    dfsForCheckingСonnectivity(neightboor)
                 }
             }
+    }
+
+    fun forCheckingConnectivity() : Int {
+        resetUsedFlags()
+        var components = 0
+        for(vertex in graph.vertices) {
+            if(_used[vertex.id] == false) {
+                dfsForCheckingСonnectivity(vertex)
+                components++
+            }
+        }
+        return components
     }
 
 

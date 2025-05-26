@@ -73,8 +73,8 @@ class AlgorithmsView<V, E>(
         CoroutineScope(Dispatchers.Default).launch {
             var mstFinder: MinimalSpanningTree<V, E> = MinimalSpanningTree(graph = viewModel.graph)
             var resultEdges: List<Edge<E, V>>?
-
-            if (viewModel.isDirectedGraph.value) return@launch
+            val components = mstFinder.forCheckingConnectivity()
+            if (viewModel.isDirectedGraph.value || components > 1) return@launch
             resetAllColorsToDefaults()
             if (viewModel.isWeightedGraph.value) {
 
