@@ -308,7 +308,6 @@ private fun <E> FileMenu(
             }
 
             DropdownMenuItem(onClick = {
-                mainVm.generateLargeGraph()
                 expanded = false
             }) {
                 Box(modifier = Modifier.padding(start = 28.dp)) {

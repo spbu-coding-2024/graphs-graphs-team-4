@@ -56,25 +56,26 @@ class FordBellman<V, E>(
 
 
     private fun detectNegativeCycles() {
-
         val directedEdges = mutableListOf<Triple<Long, Long, Double>>()
+        val undirectedEdges = mutableSetOf<Pair<Long, Long>>()
 
         for (edge in _edges) {
             val (fromId, toId, weight) = getEdgeInfo(edge)
-
             if (edge is DirectedEdge<*, *>) {
                 directedEdges.add(Triple(fromId, toId, weight))
             } else {
-                directedEdges.add(Triple(fromId, toId, weight))
-                directedEdges.add(Triple(toId, fromId, weight))
+                val edgePair = if (fromId < toId) Pair(fromId, toId) else Pair(toId, fromId)
+                if (edgePair !in undirectedEdges) {
+                    undirectedEdges.add(edgePair)
+                    directedEdges.add(Triple(fromId, toId, weight))
+                    directedEdges.add(Triple(toId, fromId, weight))
+                }
             }
         }
 
         for ((fromId, toId, weight) in directedEdges) {
-            if (d[fromId] != Double.POSITIVE_INFINITY) {
-                if (d[fromId]!! + weight < d[toId]!!) {
-                    markVertexInNegativeCycle(toId)
-                }
+            if (d[fromId] != Double.POSITIVE_INFINITY && d[fromId]!! + weight < d[toId]!!) {
+                markVertexInNegativeCycle(toId)
             }
         }
     }
@@ -134,7 +135,6 @@ class FordBellman<V, E>(
         return when (edge) {
             is WeightedEdge<*, *> -> {
                 try {
-
                     edge.weight.toDouble()
                 } catch (e: NumberFormatException) {
                     1.0

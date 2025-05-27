@@ -587,7 +587,6 @@ class FordBellmanTest {
         assertEquals(expectedDistance, fordBellman.d[targetId])
     }
 
-
     companion object {
         @JvmStatic
         fun graphUtilFordBellman(): List<Arguments> {
