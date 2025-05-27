@@ -4,9 +4,8 @@ internal class DirectWeightedGraph<V, E> : DirectedWeightedGraph<V, E> {
     private val _vertices = hashMapOf<Long, Vertex<V>>()
     private val elementToVertex = hashMapOf<V, Vertex<V>>()
     private val _edges = hashMapOf<E, WeightedDirectedEdge<E, V>>()
-    companion object {
-        private var vertexIdCounter: Long = 0
-    }
+
+    private var vertexIdCounter: Long = 0
     override val vertices: Collection<Vertex<V>> get() = _vertices.values
     override val edges: Collection<Edge<E, V>> get() = _edges.values
 
