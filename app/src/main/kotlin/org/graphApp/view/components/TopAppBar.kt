@@ -22,7 +22,6 @@ import org.graphApp.view.dialogs.SaveAsDialog
 import org.graphApp.view.dialogs.ViewDialog
 import org.graphApp.viewmodel.MainScreenViewModel
 import org.graphApp.viewmodel.graph.GraphViewModel
-import org.graphApp.viewmodel.*
 
 @Composable
 fun <E> TopBarMenu(
@@ -57,8 +56,6 @@ fun <E> TopBarMenu(
                     resources = resources,
                     onNewGraph = onShowNewGraph
                 )
-                MenuDivider()
-                EditMenu(resources = resources)
                 MenuDivider()
                 ViewMenu(
                     currentLanguage = currentLanguage,
@@ -199,57 +196,6 @@ private fun <E> FileMenu(
                 }
 
                 DropdownMenuItem(
-                    onClick = {},
-                    enabled = false
-                ) {
-                    Box(
-                        modifier = Modifier.padding(start = 40.dp)
-                    ) {
-                        Text(
-                            resources.recentGraphs,
-                            color = MaterialTheme.colors.onSurface,
-                            fontWeight = FontWeight.ExtraLight
-                        )
-                    }
-                }
-                DropdownMenuItem(
-                    onClick = { /* TODO: open */ }
-                ) {
-                    Box(
-                        modifier = Modifier.padding(start = 55.dp)
-                    ) {
-                        Text(
-                            "ooops-1",
-                            color = MaterialTheme.colors.onSurface,
-                            fontWeight = FontWeight.ExtraLight
-                        )
-                    }
-                }
-                DropdownMenuItem(
-                    onClick = { /* TODO: open */ }
-                ) {
-                    Box(modifier = Modifier.padding(start = 55.dp)) {
-                        Text(
-                            "ooops-2",
-                            color = MaterialTheme.colors.onSurface,
-                            fontWeight = FontWeight.ExtraLight
-                        )
-                    }
-                }
-
-                DropdownMenuItem(onClick = { /* TODO: open */ }) {
-                    Box(
-                        modifier = Modifier.padding(start = 55.dp)
-                    ) {
-                        Text(
-                            "ooops-3",
-                            color = MaterialTheme.colors.onSurface,
-                            fontWeight = FontWeight.ExtraLight
-                        )
-                    }
-                }
-
-                DropdownMenuItem(
                     onClick = { showOpenAsDialog = !showOpenAsDialog}
                 ) {
                     Row(
@@ -274,23 +220,7 @@ private fun <E> FileMenu(
                 }
             }
 
-            DropdownMenuItem(onClick = { /* TODO: Save */ }) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Icon(
-                        imageVector = Save1,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Text(
-                        resources.save,
-                        color = MaterialTheme.colors.onSurface,
-                        fontWeight = FontWeight.ExtraLight
-                    )
-                }
-            }
+
 
             DropdownMenuItem(
                 onClick = {
@@ -298,7 +228,13 @@ private fun <E> FileMenu(
                     showSaveAsDialog = true
                 }
             ) {
-                Box(modifier = Modifier.padding(start = 28.dp)) {
+                Icon(
+                    imageVector = Save1,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Box(modifier = Modifier.padding(start = 10.dp)) {
+
                     Text(
                         resources.saveAs,
                         color = MaterialTheme.colors.onSurface,
@@ -308,7 +244,6 @@ private fun <E> FileMenu(
             }
 
             DropdownMenuItem(onClick = {
-                mainVm.generateLargeGraph()
                 expanded = false
             }) {
                 Box(modifier = Modifier.padding(start = 28.dp)) {
@@ -599,15 +534,6 @@ fun SettingsMenu(
                 Box(modifier = Modifier.padding(start = 40.dp)) { Divider() }
             }
 
-            DropdownMenuItem(onClick = { expanded = false }) {
-                Box(modifier = Modifier.padding(start = 28.dp)) {
-                    Text(
-                        resources.resetDefault,
-                        color = MaterialTheme.colors.onSurface,
-                        fontWeight = FontWeight.ExtraLight
-                    )
-                }
-            }
         }
     }
 }
