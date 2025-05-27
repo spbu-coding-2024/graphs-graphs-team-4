@@ -79,7 +79,7 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
     fun scaleAt(delta: Int, cursorPosition: Offset) {
         val scaleFactor = if (delta > 0) 1.1f else 0.9f
         val oldScale = scale
-        val newScale = (scale * scaleFactor).coerceIn(0.06f, 7f)
+        val newScale = (scale * scaleFactor)
 
         val offsetToCursor = (cursorPosition - offset) / oldScale
 
