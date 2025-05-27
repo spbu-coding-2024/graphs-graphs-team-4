@@ -18,8 +18,8 @@ class FindCycleTest {
 
     @BeforeEach
     fun init() {
-        directGraph = DirectGraph<String, String>()
-        undirectedGraph = UndirectedGraph<String, String>()
+        directGraph = DirectGraph()
+        undirectedGraph = UndirectedGraph()
     }
 
     @Test
