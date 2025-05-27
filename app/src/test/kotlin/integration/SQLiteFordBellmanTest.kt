@@ -11,7 +11,11 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.AfterEach
 import androidx.compose.ui.unit.dp
+import com.mysql.cj.x.protobuf.MysqlxCrud
+import org.graphApp.model.graph.algorithms.FindCycles
+import org.graphApp.view.graph.GraphView
 import org.graphApp.viewmodel.graph.VertexViewModel
+import org.junit.jupiter.api.Tag
 import java.io.File
 
 class SQLiteFordBellmanTest {
@@ -43,6 +47,7 @@ class SQLiteFordBellmanTest {
     }
 
     @Test
+    @Tag("Integration test - save dir weighted graph - FordBellman")
     fun `integration test - save dir weighted graph - FordBellman`() {
         val viewModel = GraphViewModel(
             graph = directWeightedGraph,
@@ -101,4 +106,39 @@ class SQLiteFordBellmanTest {
 
         assertEquals(9900.0, fordBellman.d[endVertex.vertexID]!!, 0.001)
     }
+
+    @Test
+    @Tag("Integration test - save empty graph - FordBellman")
+    fun `integration test - save empty graph - FordBellman`() {
+        val viewModel = GraphViewModel(
+            graph = undirectedGraph,
+            showVerticesLabels = mutableStateOf(false),
+            showEdgesWeights = mutableStateOf(false),
+            isWeightedGraph = mutableStateOf(false),
+            isDirectedGraph = mutableStateOf(false)
+        )
+
+        val vertex1 = viewModel.addVertex("1", 100.dp, 100.dp)
+        val vertex2 = viewModel.addVertex("2", 200.dp, 200.dp)
+        val vertex3 = viewModel.addVertex("3", 300.dp, 300.dp)
+        val vertex4 = viewModel.addVertex("4", 400.dp, 400.dp)
+
+        viewModel.addEdge(vertex1.vertexID, vertex2.vertexID, "rebro1")
+        viewModel.addEdge(vertex3.vertexID, vertex4.vertexID, "rebro2")
+
+        assertTrue(sqLiteMainLogic.saveToSQLiteDataBase(viewModel, "test_empty"))
+        val loadedViewModel = sqLiteMainLogic.readFromSQLiteDataBase<String, String>("test_empty")
+        assertNotNull(loadedViewModel)
+
+        val fordBellman = FordBellman(graph = loadedViewModel!!.graph)
+        val startVertex = loadedViewModel.vertices.find { it.value == "1" }
+        val endVertex = loadedViewModel.vertices.find { it.value == "4" }
+
+        val result = fordBellman.fordBellman(startVertex!!.vertexID, endVertex!!.vertexID)
+        assertNull(result)
+
+    }
+
+
+
 }
