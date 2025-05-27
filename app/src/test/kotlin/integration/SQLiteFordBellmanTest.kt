@@ -11,9 +11,6 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.AfterEach
 import androidx.compose.ui.unit.dp
-import com.mysql.cj.x.protobuf.MysqlxCrud
-import org.graphApp.model.graph.algorithms.FindCycles
-import org.graphApp.view.graph.GraphView
 import org.graphApp.viewmodel.graph.VertexViewModel
 import org.junit.jupiter.api.Tag
 import java.io.File

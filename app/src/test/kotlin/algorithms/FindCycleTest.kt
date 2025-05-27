@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Tag
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
+import java.util.stream.Stream
 
 
 class FindCycleTest {
@@ -237,5 +238,64 @@ class FindCycleTest {
         val (vertices, edges) = result2!!
         assertEquals(2, vertices!!.size)
         assertEquals(2, edges.size)
+    }
+
+    companion object {
+        @JvmStatic
+        fun cycleTestData(): Stream<Arguments> {
+            return Stream.of(
+                Arguments.of(3, "Small triangle"),
+                Arguments.of(4, "Square"),
+                Arguments.of(5, "Pentagon"),
+                Arguments.of(6, "Hexagon")
+            )
+        }
+    }
+    @ParameterizedTest(name = "Directed cycle")
+    @MethodSource("cycleTestData")
+    @Tag("Parameterized directed cycle test")
+    fun `parameterized directed cycle test`(size: Int) {
+        val vertices = mutableListOf<Vertex<String>>()
+
+        for (i in 1..size) {
+            vertices.add(directGraph.addVertex("$i"))
+        }
+
+        for (i in 0 until size - 1) {
+            directGraph.addEdge("${i+1}", "${i+2}", "rebro${i+1}")
+        }
+        directGraph.addEdge("$size", "1", "rebro$size")
+
+        val findCycles = FindCycles(directGraph)
+        val result = findCycles.findCycleDirected(vertices[0])
+
+        assertNotNull(result)
+        val (vertexPath, edges) = result!!
+        assertEquals(size, vertexPath!!.size)
+        assertEquals(size, edges.size)
+    }
+
+    @ParameterizedTest(name = "Undirected cycle")
+    @MethodSource("cycleTestData")
+    @Tag("Parameterized undirected cycle test")
+    fun `parameterized undirected cycle test`(size: Int) {
+        val vertices = mutableListOf<Vertex<String>>()
+
+        for (i in 1..size) {
+            vertices.add(undirectedGraph.addVertex("$i"))
+        }
+
+        for (i in 0 until size - 1) {
+            undirectedGraph.addEdge("${i+1}", "${i+2}", "rebro${i+1}")
+        }
+        undirectedGraph.addEdge("$size", "1", "rebro$size")
+
+        val findCycles = FindCycles(undirectedGraph)
+        val result = findCycles.findCycleUndirected(vertices[0])
+
+        assertNotNull(result)
+        val (vertexPath, edges) = result!!
+        assertEquals(size, vertexPath!!.size)
+        assertEquals(size, edges.size)
     }
 }
