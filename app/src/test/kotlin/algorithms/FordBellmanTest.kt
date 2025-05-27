@@ -20,10 +20,10 @@ class FordBellmanTest {
 
     @BeforeEach
     fun init() {
-        directGraph = DirectGraph<String, String>()
-        undirectedGraph = UndirectedGraph<String, String>()
-        weightedGraph = WeightedGraph<String, String>()
-        directWeightedGraph = DirectWeightedGraph<String, String>()
+        directGraph = DirectGraph()
+        undirectedGraph = UndirectedGraph()
+        weightedGraph = WeightedGraph()
+        directWeightedGraph = DirectWeightedGraph()
     }
 
     @Test
