@@ -1,30 +1,35 @@
-import org.graphApp.model.graph.UndirectedGraph
 import org.graphApp.model.graph.WeightedGraph
 import org.graphApp.model.graph.algorithms.MinimalSpanningTree
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
+
 
 class KraskalSpanningTreeTests {
     private lateinit var minimalSpanningTree: MinimalSpanningTree<String, Long>
     private lateinit var weightedGraph: WeightedGraph<String, Long>
+
     @BeforeEach
     fun setUp() {
         weightedGraph = WeightedGraph()
-        minimalSpanningTree = MinimalSpanningTree(weightedGraph)
     }
+
 
     companion object {
         @JvmStatic
-        fun graphCases() : Stream<Arguments> {
+        fun graphCases(): Stream<Arguments> {
             return Stream.of(
                 Arguments.of(
                     2,
                     listOf(
-                        listOf("0", "1", 0L, 5L)
+                        listOf("0", "1", "0", 5L)
                     ),
                     listOf(
-                        listOf("0", "1", 0L, 5L)
+                        listOf("0", "1", "0", 5L)
                     )
                 ),
                 Arguments.of(
@@ -303,13 +308,45 @@ class KraskalSpanningTreeTests {
                     )
                 )
             )
-
         }
     }
 
+    @ParameterizedTest
+    @MethodSource("graphCases")
+    @DisplayName("Testcases for algorithm Kraskal")
+    fun kraskalSpanningTreeTest(
+        vertices: Long,
+        edges: List<List<Any>>,
+        expectedResult: List<List<Any>>
+    ) {
+        for (vertex in 0..<vertices) {
+            weightedGraph.addVertex(vertex.toString())
+        }
+        for (edge in edges) {
+            weightedGraph.addEdge(
+                edge[0].toString(),
+                edge[1].toString(),
+                edge[2].toString().toLong(),
+                edge[3].toString()
+            )
+        }
+        minimalSpanningTree = MinimalSpanningTree(weightedGraph)
+        val result = minimalSpanningTree.kraskalSpanningTree()
+        val mappedResult: List<List<Any>> = result!!.map { edge ->
+            listOf(
+                edge.vertices.first.id,
+                edge.vertices.second.id,
+                edge.element,
+                edge.weight
+            )
+        }
+        val sortedExpected = expectedResult
+            .map { it.map { e -> e.toString() }.sorted() }
+            .sortedBy { it.joinToString() }
 
-
-
-
-
+        val sortedActual = mappedResult
+            .map { it.map { e -> e.toString() }.sorted() }
+            .sortedBy { it.joinToString() }
+        Assertions.assertEquals(sortedExpected, sortedActual)
+    }
 }
