@@ -23,6 +23,8 @@ import kotlinx.coroutines.withContext
 import org.graphApp.data.Neo4j.Neo4jDataBase
 import org.graphApp.main
 import org.graphApp.viewmodel.MainScreenViewModel
+import org.neo4j.driver.AuthTokens
+import org.neo4j.driver.GraphDatabase
 import org.neo4j.driver.exceptions.Neo4jException
 import java.io.File
 import javax.swing.JFileChooser
@@ -46,13 +48,10 @@ fun <E> SaveAsDialog(
     var username by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
-    var folderChoose by remember { mutableStateOf("~/") }
     var selectedFolder by remember { mutableStateOf<File?>(null) }
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
-            shape = RoundedCornerShape(10.dp),
-            color = MaterialTheme.colors.surface,
-            elevation = 8.dp
+            shape = RoundedCornerShape(10.dp), color = MaterialTheme.colors.surface, elevation = 8.dp
         ) {
 
             Column(
@@ -68,9 +67,7 @@ fun <E> SaveAsDialog(
                     },
                     placeholder = {
                         Text(
-                            resources.enterGraphName,
-                            color = MaterialTheme.colors.onPrimary,
-                            fontSize = 13.sp
+                            resources.enterGraphName, color = MaterialTheme.colors.onPrimary, fontSize = 13.sp
                         )
                     },
                     singleLine = true,
@@ -79,8 +76,7 @@ fun <E> SaveAsDialog(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
                     textStyle = MaterialTheme.typography.body2.copy(
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colors.onBackground
+                        fontSize = 14.sp, color = MaterialTheme.colors.onBackground
                     ),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         backgroundColor = MaterialTheme.colors.surface
@@ -89,9 +85,7 @@ fun <E> SaveAsDialog(
 
                 if (errorMessage.isNotEmpty()) {
                     Text(
-                        text = errorMessage,
-                        color = MaterialTheme.colors.error,
-                        fontSize = 12.sp
+                        text = errorMessage, color = MaterialTheme.colors.error, fontSize = 12.sp
                     )
                 }
 
@@ -100,8 +94,7 @@ fun <E> SaveAsDialog(
                     fontWeight = FontWeight.Medium,
                 )
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(5.dp)
+                    verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)
                 ) {
                     options.forEach { text ->
                         Row(
@@ -122,8 +115,7 @@ fun <E> SaveAsDialog(
                 }
                 if (selectedOption != "Neo4j") {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Start
+                        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start
                     ) {
                         Spacer(Modifier.width(8.dp))
                         AddFolderButton(
@@ -132,19 +124,16 @@ fun <E> SaveAsDialog(
                                 if (folder != null) {
                                     selectedFolder = folder
                                 }
-                            }
-                        )
+                            })
                         Text(
-                            text = resources.addFolder,
-                            fontWeight = FontWeight.Medium
+                            text = resources.addFolder, fontWeight = FontWeight.Medium
                         )
                     }
 
                 }
                 if (selectedOption == "Neo4j") {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Start
+                        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start
                     ) {
                         OutlinedTextField(
                             value = uri,
@@ -153,9 +142,7 @@ fun <E> SaveAsDialog(
                             },
                             placeholder = {
                                 Text(
-                                    "Uri",
-                                    color = MaterialTheme.colors.onPrimary,
-                                    fontSize = 13.sp
+                                    "Uri", color = MaterialTheme.colors.onPrimary, fontSize = 13.sp
                                 )
                             },
                             singleLine = true,
@@ -164,8 +151,7 @@ fun <E> SaveAsDialog(
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(8.dp),
                             textStyle = MaterialTheme.typography.body2.copy(
-                                fontSize = 14.sp,
-                                color = MaterialTheme.colors.onBackground
+                                fontSize = 14.sp, color = MaterialTheme.colors.onBackground
                             ),
                             colors = TextFieldDefaults.outlinedTextFieldColors(
                                 backgroundColor = MaterialTheme.colors.surface
@@ -173,8 +159,7 @@ fun <E> SaveAsDialog(
                         )
                     }
                     Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Start
+                        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start
                     ) {
 
                         OutlinedTextField(
@@ -184,9 +169,7 @@ fun <E> SaveAsDialog(
                             },
                             placeholder = {
                                 Text(
-                                    "Username",
-                                    color = MaterialTheme.colors.onPrimary,
-                                    fontSize = 13.sp
+                                    "Username", color = MaterialTheme.colors.onPrimary, fontSize = 13.sp
                                 )
                             },
                             singleLine = true,
@@ -195,8 +178,7 @@ fun <E> SaveAsDialog(
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(8.dp),
                             textStyle = MaterialTheme.typography.body2.copy(
-                                fontSize = 14.sp,
-                                color = MaterialTheme.colors.onBackground
+                                fontSize = 14.sp, color = MaterialTheme.colors.onBackground
                             ),
                             colors = TextFieldDefaults.outlinedTextFieldColors(
                                 backgroundColor = MaterialTheme.colors.surface
@@ -205,8 +187,7 @@ fun <E> SaveAsDialog(
                     }
 
                     Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Start
+                        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start
                     ) {
 
                         OutlinedTextField(
@@ -216,9 +197,7 @@ fun <E> SaveAsDialog(
                             },
                             placeholder = {
                                 Text(
-                                    "Password",
-                                    color = MaterialTheme.colors.onPrimary,
-                                    fontSize = 13.sp
+                                    "Password", color = MaterialTheme.colors.onPrimary, fontSize = 13.sp
                                 )
                             },
                             singleLine = true,
@@ -227,8 +206,7 @@ fun <E> SaveAsDialog(
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(8.dp),
                             textStyle = MaterialTheme.typography.body2.copy(
-                                fontSize = 14.sp,
-                                color = MaterialTheme.colors.onBackground
+                                fontSize = 14.sp, color = MaterialTheme.colors.onBackground
                             ),
                             colors = TextFieldDefaults.outlinedTextFieldColors(
                                 backgroundColor = MaterialTheme.colors.surface
@@ -239,20 +217,17 @@ fun <E> SaveAsDialog(
                 }
 
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start
+                    modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start
                 ) {
 
                     CloseButton(
-                        onClick = onDismissRequest,
-                        text = resources.cancel
+                        onClick = onDismissRequest, text = resources.cancel
                     )
                     Spacer(modifier = Modifier.weight(1f))
 
                     if (isLoading) {
                         CircularProgressIndicator(
-                            modifier = Modifier.size(24.dp),
-                            strokeWidth = 2.dp
+                            modifier = Modifier.size(24.dp), strokeWidth = 2.dp
                         )
                     } else {
                         SaveButton(
@@ -319,25 +294,24 @@ fun <E> SaveAsDialog(
 
                                             "Neo4j" -> {
                                                 try {
-
+                                                    val driver = GraphDatabase.driver(
+                                                        uri.ifBlank { "bolt://localhost:7687" },
+                                                        AuthTokens.basic(username, password)
+                                                    )
                                                     val neo4jStorer = Neo4jDataBase(
                                                         mainViewModel = mainViewModel,
-                                                        graphViewModel = mainViewModel.graphViewModel,
-                                                        uri = uri,
-                                                        username = username,
-                                                        password = password,
+                                                        graph = mainViewModel.graphViewModel,
+                                                        driver = driver,
                                                         graphName = name
                                                     )
                                                     neo4jStorer.storeGraph()
                                                     onDismissRequest()
                                                 } catch (neo4jException: Exception) {
-                                                    println("DASYHGDAHGSGDJUYAGSDYUAGSDUYGAUYSDGASD")
                                                     errorMessage = neo4jException.localizedMessage ?: "Unknown error"
                                                 }
                                             }
                                         }
                                     } catch (e: Exception) {
-                                        println("DASYHGDAHGSGDJUYAGSDYUAGSDUYGAUYSDGASD")
                                         errorMessage = "Error saving graph: ${e.localizedMessage ?: "Unknown error"}"
                                         println("General Exception: ${e.printStackTrace()}")
                                     } finally {
@@ -353,9 +327,7 @@ fun <E> SaveAsDialog(
                     }
                     if (errorMessage.isNotEmpty()) {
                         ErrorPopup(
-                            message = errorMessage,
-                            onDismiss = { errorMessage = "" }
-                        )
+                            message = errorMessage, onDismiss = { errorMessage = "" })
                     }
                 }
             }

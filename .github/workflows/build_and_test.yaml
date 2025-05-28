@@ -20,13 +20,31 @@ jobs:
 
   Test:
     runs-on: ubuntu-latest
+    services:
+      neo4j:
+        image: neo4j:5
+        ports:
+          - 7474:7474
+          - 7687:7687
+        env:
+          NEO4J_AUTH: neo4j/Sosiska1234554321
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: 'temurin'
-      - name: Running application tests
+      - name: Wait for Neo4j to be ready
+        run: |
+          echo "Waiting for Neo4j..."
+          for i in {1..30}; do
+            if curl -s http://localhost:7474; then
+              echo "Neo4j is up!"
+              break
+            fi
+            sleep 2
+          done
+      - name: Run Tests
         run: ./gradlew test
 
   checking-code-format:
@@ -37,7 +55,6 @@ jobs:
         with:
           java-version: 17
           distribution: 'temurin'
-      - uses: actions/checkout@v4
       - uses: yutailang0119/action-ktlint@v4
         with:
           report-path: build/*.xml
