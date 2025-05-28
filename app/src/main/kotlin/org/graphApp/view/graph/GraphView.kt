@@ -284,7 +284,7 @@ fun <E> GraphView(
                         rotationZ = mainScreenViewModel.rotation
                         translationX = mainScreenViewModel.offset.x
                         translationY = mainScreenViewModel.offset.y
-                        transformOrigin = TransformOrigin(0.5f, 0.5f)
+                        transformOrigin = TransformOrigin(0f, 0f)
                     })
             {
                 viewModel.edges.forEach { e ->

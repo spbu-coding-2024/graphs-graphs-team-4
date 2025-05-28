@@ -62,10 +62,6 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
             _showEdgesWeights.value = value
         }
 
-    fun scale(delta: Int) {
-        scale = (scale * exp(delta * 0.2f)).coerceIn(-0.25f, 5f)
-    }
-
     var graphViewModel by mutableStateOf(
         GraphViewModel(
             graph = graph,
@@ -76,14 +72,14 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
         )
     )
 
-    fun scaleAt(delta: Int, cursorPosition: Offset) {
+    fun scaleAt(delta: Int, screenCenter: Offset) {
         val scaleFactor = if (delta > 0) 1.1f else 0.9f
         val oldScale = scale
         val newScale = (scale * scaleFactor)
 
-        val offsetToCursor = (cursorPosition - offset) / oldScale
+        val offsetToCenter = (screenCenter - offset) / oldScale
 
-        offset = cursorPosition - offsetToCursor * newScale
+        offset = screenCenter - offsetToCenter * newScale
         scale = newScale
     }
 
