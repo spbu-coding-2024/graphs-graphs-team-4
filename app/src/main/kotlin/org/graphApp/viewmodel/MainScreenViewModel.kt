@@ -208,7 +208,7 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
     }
 
     fun randomLongExcluding(min: Long, max: Long, exclude: Long): Long {
-        require(max > min) { "Неверный диапазон" }
+        require(max > min) { "Invalid diapason" }
         var value: Long
         do {
             value = Random.nextLong(min, max + 1)
