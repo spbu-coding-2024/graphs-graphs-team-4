@@ -1,3 +1,5 @@
+package algorithms
+
 import org.graphApp.model.graph.WeightedGraph
 import org.graphApp.model.graph.algorithms.MinimalSpanningTree
 import org.junit.jupiter.api.Assertions

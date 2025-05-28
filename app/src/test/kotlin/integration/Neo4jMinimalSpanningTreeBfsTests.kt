@@ -1,3 +1,5 @@
+package integration
+
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.runBlocking

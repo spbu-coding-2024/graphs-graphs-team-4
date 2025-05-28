@@ -1,3 +1,5 @@
+package algorithms
+
 import org.graphApp.model.graph.DirectGraph
 import org.graphApp.model.graph.Vertex
 import org.graphApp.model.graph.algorithms.FindStrongCommunities
