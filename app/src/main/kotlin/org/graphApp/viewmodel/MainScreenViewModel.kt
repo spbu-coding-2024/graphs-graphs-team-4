@@ -214,27 +214,33 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
 
 
     fun createRandomGraph(isWeighted: Boolean): Job = CoroutineScope(Dispatchers.Default).launch {
-        val randomVertices = Random.nextLong(50L, 800L)
-        val randomEdges = (4..8).random()
+        val randomVertices = Random.nextLong(50L, 400L)
+        val randomEdges = (1..2).random()
         for (vertexID in 0..randomVertices) {
             graphViewModel.addVertex(vertexID.toString(), 0.dp, 0.dp)
 
         }
-        for (vertexIDFrom in 0..randomVertices) {
-            val vertexIDTo = randomLongExcluding(0, randomVertices, vertexIDFrom)
-            if (isWeighted) {
-                repeat(randomEdges) {
-                    graphViewModel.addEdge(vertexIDFrom, vertexIDTo, vertexIDFrom.toString() as E)
-                }
-            } else {
-                repeat(randomEdges) {
-                    graphViewModel.addEdge(
-                        vertexIDFrom, vertexIDTo, vertexIDFrom.toString() as E,
-                        Random.nextLong(1L, 100L).toString() as String
-                    )
-                }
-            }
+        for (vertexID in 1..randomVertices) {
+            val parentVertex = Random.nextLong(0, vertexID)
+            addEdgeWithWeight(vertexID, parentVertex, isWeighted)
         }
 
+        for (vertexIDFrom in 0..randomVertices) {
+            val vertexIDTo = randomLongExcluding(0, randomVertices, vertexIDFrom)
+            repeat(randomEdges) {
+                addEdgeWithWeight(vertexIDFrom, vertexIDTo, isWeighted)
+            }
+        }
+    }
+
+    private fun addEdgeWithWeight(vertexIDFrom: Long, vertexIDTo: Long, isWeighted: Boolean) {
+        if (!isWeighted) {
+                graphViewModel.addEdge(vertexIDFrom, vertexIDTo, vertexIDFrom.toString() as E)
+        } else {
+                graphViewModel.addEdge(
+                    vertexIDFrom, vertexIDTo, vertexIDFrom.toString() as E,
+                    Random.nextLong(1L, 100L).toString() as String
+                )
+        }
     }
 }
