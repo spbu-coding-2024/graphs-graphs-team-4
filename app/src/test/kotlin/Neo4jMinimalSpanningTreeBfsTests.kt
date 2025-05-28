@@ -2,11 +2,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.runBlocking
 import org.graphApp.data.Neo4j.Neo4jDataBase
-import org.graphApp.model.graph.DirectGraph
 import org.graphApp.model.graph.UndirectedGraph
-import org.graphApp.model.graph.UndirectedWeightedGraph
-import org.graphApp.model.graph.WeightedGraph
-import org.graphApp.model.graph.algorithms.FindStrongCommunities
 import org.graphApp.model.graph.algorithms.MinimalSpanningTree
 import org.graphApp.viewmodel.MainScreenViewModel
 import org.graphApp.viewmodel.graph.GraphViewModel
@@ -16,7 +12,7 @@ import org.junit.jupiter.api.Test
 import org.neo4j.driver.AuthTokens
 import org.neo4j.driver.Driver
 import org.neo4j.driver.GraphDatabase
-import kotlin.test.assertEquals
+import org.junit.jupiter.api.Assertions
 
 class Neo4jWithMinimalSpanningTreeBfs {
     private lateinit var graph: UndirectedGraph<String, Long>
@@ -36,7 +32,7 @@ class Neo4jWithMinimalSpanningTreeBfs {
             mutableStateOf(false),
             mutableStateOf(true)
         )
-        
+
         driver = GraphDatabase.driver(
             "bolt://localhost:7687",
             AuthTokens.basic("neo4j", "Sosiska1234554321"))
@@ -46,6 +42,7 @@ class Neo4jWithMinimalSpanningTreeBfs {
             driver = driver,
             graphName = "RISCVHATERS"
         )
+        clean(driver)
     }
 
     @Test
@@ -61,13 +58,12 @@ class Neo4jWithMinimalSpanningTreeBfs {
         graphViewModel.createEdge(3, 0)
 
         database.storeGraph()
-        graphViewModel.clear()
         database.uploadGraph()
-        assertEquals(5, graphViewModel.vertices.size)
-        assertEquals(5, graphViewModel.edges.size)
+        Assertions.assertEquals(5, graphViewModel.vertices.size)
+        Assertions.assertEquals(5, graphViewModel.edges.size)
         finder = MinimalSpanningTree(graph)
         val actualResult = finder.bfsSpanningTree()
-        assertEquals(4, actualResult!!.size)
+        Assertions.assertEquals(4, actualResult!!.size)
     }
 
     @Test
@@ -81,12 +77,11 @@ class Neo4jWithMinimalSpanningTreeBfs {
         graphViewModel.createEdge(2, 0)
 
         database.storeGraph()
-        graphViewModel.clear()
         database.uploadGraph()
         finder = MinimalSpanningTree(graph)
         val actualResult = finder.bfsSpanningTree()
-        assertEquals(3, graphViewModel.vertices.size)
-        assertEquals(3, graphViewModel.edges.size)
-        assertEquals(2, actualResult!!.size)
+        Assertions.assertEquals(3, graphViewModel.vertices.size)
+        Assertions.assertEquals(3, graphViewModel.edges.size)
+        Assertions.assertEquals(2, actualResult!!.size)
     }
 }

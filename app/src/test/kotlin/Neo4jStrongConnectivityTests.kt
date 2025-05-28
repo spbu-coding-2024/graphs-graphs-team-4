@@ -6,13 +6,22 @@ import org.graphApp.model.graph.DirectGraph
 import org.graphApp.model.graph.algorithms.FindStrongCommunities
 import org.graphApp.viewmodel.MainScreenViewModel
 import org.graphApp.viewmodel.graph.GraphViewModel
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.neo4j.driver.AuthTokens
 import org.neo4j.driver.Driver
 import org.neo4j.driver.GraphDatabase
-import kotlin.test.assertEquals
+
+fun clean(driver: Driver) {
+    driver.session().use { session ->
+        session.executeWrite { tx ->
+            tx.run("MATCH (n) DETACH DELETE n;")
+        }
+    }
+}
 
 class Neo4jWithStrongConnectivity {
     private lateinit var graph: DirectGraph<String, Long>
@@ -21,6 +30,7 @@ class Neo4jWithStrongConnectivity {
     private lateinit var finder: FindStrongCommunities<String, Long>
     private lateinit var driver: Driver
     private lateinit var database: Neo4jDataBase<String, Long>
+
     @BeforeEach
     fun setUp() {
         graph = DirectGraph()
@@ -42,7 +52,13 @@ class Neo4jWithStrongConnectivity {
             driver = driver,
             graphName = "RISCVHATERS"
         )
+        clean(driver)
     }
+//    @AfterEach
+//    fun delete() {
+//        clean(driver)
+//    }
+
 
     @Test
     @DisplayName("Integration test for Strong connectivity")
@@ -57,13 +73,12 @@ class Neo4jWithStrongConnectivity {
         graphViewModel.createEdge(3, 0)
 
         database.storeGraph()
-        graphViewModel.clear()
         database.uploadGraph()
         finder = FindStrongCommunities(graph = graphViewModel.graph)
-        assertEquals(5, graphViewModel.vertices.size)
-        assertEquals(5, graphViewModel.edges.size)
+        Assertions.assertEquals(5, graphViewModel.vertices.size)
+        Assertions.assertEquals(5, graphViewModel.edges.size)
         val actualResult = finder.findStrongCommunitiesInGraph()
-        assertEquals(3, actualResult!!.size)
+        Assertions.assertEquals(3, actualResult!!.size)
     }
 
     @Test
@@ -77,13 +92,12 @@ class Neo4jWithStrongConnectivity {
         graphViewModel.createEdge(2, 0)
 
         database.storeGraph()
-        graphViewModel.clear()
         database.uploadGraph()
         finder = FindStrongCommunities(graph = graphViewModel.graph)
-        assertEquals(3, graphViewModel.vertices.size)
-        assertEquals(3, graphViewModel.edges.size)
+        Assertions.assertEquals(3, graphViewModel.vertices.size)
+        Assertions.assertEquals(3, graphViewModel.edges.size)
         val actualResult = finder.findStrongCommunitiesInGraph()
-        assertEquals(1, actualResult!!.size)
+        Assertions.assertEquals(1, actualResult!!.size)
     }
 
 

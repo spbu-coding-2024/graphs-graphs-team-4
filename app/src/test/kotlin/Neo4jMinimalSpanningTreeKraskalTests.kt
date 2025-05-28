@@ -2,20 +2,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.runBlocking
 import org.graphApp.data.Neo4j.Neo4jDataBase
-import org.graphApp.model.graph.DirectGraph
-import org.graphApp.model.graph.UndirectedGraph
 import org.graphApp.model.graph.WeightedGraph
-import org.graphApp.model.graph.algorithms.FindStrongCommunities
 import org.graphApp.model.graph.algorithms.MinimalSpanningTree
 import org.graphApp.viewmodel.MainScreenViewModel
 import org.graphApp.viewmodel.graph.GraphViewModel
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Assertions
 import org.neo4j.driver.AuthTokens
 import org.neo4j.driver.Driver
 import org.neo4j.driver.GraphDatabase
-import kotlin.test.assertEquals
 
 class Neo4jWithMinimalSpanningTreeKraskal {
     private lateinit var graph: WeightedGraph<String, Long>
@@ -45,6 +42,7 @@ class Neo4jWithMinimalSpanningTreeKraskal {
             driver = driver,
             graphName = "RISCVHATERS"
         )
+        clean(driver)
     }
 
     @Test
@@ -60,14 +58,14 @@ class Neo4jWithMinimalSpanningTreeKraskal {
         graphViewModel.createEdge(3, 0, "1")
 
         database.storeGraph()
-        graphViewModel.clear()
         database.uploadGraph()
-        assertEquals(5, graphViewModel.vertices.size)
-        assertEquals(5, graphViewModel.edges.size)
+        Assertions.assertEquals(5, graphViewModel.vertices.size)
+        Assertions.assertEquals(5, graphViewModel.edges.size)
         finder = MinimalSpanningTree(graph)
         val actualResult = finder.kraskalSpanningTree()
-        assertEquals(4, actualResult!!.size)
-        assertEquals(6L, actualResult.sumOf { it.weight.toLong() })
+        Assertions.assertEquals(4, actualResult!!.size)
+        Assertions.assertEquals(6L, actualResult.sumOf { it.weight.toLong() })
+
     }
 
     @Test
@@ -81,13 +79,12 @@ class Neo4jWithMinimalSpanningTreeKraskal {
         graphViewModel.createEdge(2, 0, "3")
 
         database.storeGraph()
-        graphViewModel.clear()
         database.uploadGraph()
         finder = MinimalSpanningTree(graph)
         val actualResult = finder.kraskalSpanningTree()
-        assertEquals(3, graphViewModel.vertices.size)
-        assertEquals(3, graphViewModel.edges.size)
-        assertEquals(2, actualResult!!.size)
-        assertEquals(4L, actualResult.sumOf { it.weight.toLong() })
+        Assertions.assertEquals(3, graphViewModel.vertices.size)
+        Assertions.assertEquals(3, graphViewModel.edges.size)
+        Assertions.assertEquals(2, actualResult!!.size)
+        Assertions.assertEquals(4L, actualResult.sumOf { it.weight.toLong() })
     }
 }
