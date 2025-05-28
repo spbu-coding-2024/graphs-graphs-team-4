@@ -39,7 +39,7 @@ class Neo4jWithMinimalSpanningTreeBfs {
         
         driver = GraphDatabase.driver(
             "bolt://localhost:7687",
-            AuthTokens.basic("neo4j", "12345"))
+            AuthTokens.basic("neo4j", "Sosiska1234554321"))
         database = Neo4jDataBase(
             mainViewModel = mainScreenViewModel,
             graph = graphViewModel,

@@ -27,7 +27,7 @@ jobs:
           - 7474:7474
           - 7687:7687
         env:
-          NEO4J_AUTH: neo4j/12345
+          NEO4J_AUTH: neo4j/Sosiska1234554321
         options: >-
           --health-cmd "curl http://localhost:7474 || exit 1"
           --health-interval 10s
