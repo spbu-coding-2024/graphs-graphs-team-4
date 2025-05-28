@@ -20,6 +20,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.graphApp.data.Neo4j.Neo4jDataBase
 import org.graphApp.viewmodel.MainScreenViewModel
+import org.neo4j.driver.AuthTokens
+import org.neo4j.driver.GraphDatabase
 import java.io.File
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
@@ -312,12 +314,14 @@ fun OpenDialog(
 
                                             "Neo4j" -> {
                                                 try {
+                                                    val driver = GraphDatabase.driver(
+                                                        uri.ifBlank { "bolt://localhost:7687" },
+                                                        AuthTokens.basic(username, password)
+                                                    )
                                                     val neo4jLoader = Neo4jDataBase(
                                                         mainViewModel = mainViewModel,
-                                                        graphViewModel = mainViewModel.graphViewModel,
-                                                        uri = uri,
-                                                        username = username,
-                                                        password = password,
+                                                        graph = mainViewModel.graphViewModel,
+                                                        driver = driver,
                                                         graphName = graphName
                                                     )
                                                     neo4jLoader.uploadGraph()

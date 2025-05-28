@@ -1,40 +1,30 @@
 package org.graphApp.data.Neo4j
 
 import androidx.compose.ui.unit.dp
-import data.SQLiteMainLogic.Graphs.graphName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.graphApp.viewmodel.MainScreenViewModel
 import org.graphApp.viewmodel.graph.EdgeViewModel
 import org.graphApp.viewmodel.graph.GraphViewModel
 import org.graphApp.viewmodel.graph.VertexViewModel
-import org.neo4j.driver.AuthTokens
-import org.neo4j.driver.GraphDatabase
+import org.neo4j.driver.Driver
 import org.neo4j.driver.Session
 
 const val STUB = 0
 
 
 class Neo4jDataBase<V, E>(
-    graphViewModel: GraphViewModel<V, E>,
     val mainViewModel: MainScreenViewModel<E>,
+    val graph: GraphViewModel<V,E>,
     graphName: String,
-    uri: String,
-    username: String,
-    password: String,
+    private val driver: Driver
 ) {
-    private val _username = username
-    private val _password = password
-    private val _uri = uri
     private val currentGraphName = graphName
     private val gName = mapOf(
         "graphname" to currentGraphName
     )
-    private val driver =
-        GraphDatabase.driver(uri.ifBlank { "bolt://localhost:7687" }, AuthTokens.basic(_username, _password))
 
     private fun <T> withSession(action: (Session) -> T): T {
         return driver.session().use { session -> action(session) }
@@ -93,7 +83,7 @@ class Neo4jDataBase<V, E>(
     private fun storeEdge(edge: EdgeViewModel<E, V>) {
 
         withSession { session ->
-            if (mainViewModel.graphViewModel.isWeightedGraph.value && mainViewModel.graphViewModel.isDirectedGraph.value) {
+            if (graph.isWeightedGraph.value && graph.isDirectedGraph.value) {
                 val paramsWeightedDirectedEdge = mapOf(
                     "fromID" to edge.u.vertexID,
                     "toID" to edge.v.vertexID,
@@ -110,7 +100,7 @@ class Neo4jDataBase<V, E>(
                 }
             }
 
-            if (!mainViewModel.graphViewModel.isWeightedGraph.value && mainViewModel.graphViewModel.isDirectedGraph.value) {
+            if (!graph.isWeightedGraph.value && graph.isDirectedGraph.value) {
                 val directedEdge = mapOf(
                     "fromID" to edge.u.vertexID,
                     "toID" to edge.v.vertexID,
@@ -126,7 +116,7 @@ class Neo4jDataBase<V, E>(
 
 
             }
-            if (mainViewModel.graphViewModel.isWeightedGraph.value && !mainViewModel.graphViewModel.isDirectedGraph.value) {
+            if (graph.isWeightedGraph.value && !graph.isDirectedGraph.value) {
                 val paramsWeightedEdge = mapOf(
                     "V1" to edge.u.vertexID,
                     "V2" to edge.v.vertexID,
@@ -143,7 +133,7 @@ class Neo4jDataBase<V, E>(
                 }
             }
 
-            if (!mainViewModel.graphViewModel.isWeightedGraph.value && !mainViewModel.graphViewModel.isDirectedGraph.value) {
+            if (!graph.isWeightedGraph.value && !graph.isDirectedGraph.value) {
                 val paramsEdge = mapOf(
                     "Vertex1ID" to edge.u.vertexID,
                     "Vertex2ID" to edge.v.vertexID,
@@ -164,10 +154,10 @@ class Neo4jDataBase<V, E>(
         withContext(Dispatchers.IO) {
             checkNeo4jConnection()
             checkForExistingNameOfGraph()
-            mainViewModel.graphViewModel.vertices.forEach { vertex ->
+            graph.vertices.forEach { vertex ->
                 storeVertex(vertex as VertexViewModel<V>)
             }
-            mainViewModel.graphViewModel.edges.forEach { edge ->
+            graph.edges.forEach { edge ->
                 storeEdge(edge as EdgeViewModel<E, V>)
             }
         }
@@ -186,7 +176,7 @@ class Neo4jDataBase<V, E>(
                     if (element == null) {
                         throw IllegalStateException("Vertex element not found")
                     }
-                    mainViewModel.graphViewModel.addVertex(element as V as String, 0.dp, 0.dp)
+                    graph.addVertex(element as String as V, 0.dp, 0.dp)
                 }
             }
         }
@@ -219,7 +209,7 @@ class Neo4jDataBase<V, E>(
                                 val IDFrom = edge["idFrom"].asLong()
                                 val IDTo = edge["idTo"].asLong()
                                 val edgeWeight = edge["weight"].asString()
-                                mainViewModel.graphViewModel.createEdge(IDFrom, IDTo, edgeWeight)
+                                graph.createEdge(IDFrom, IDTo, edgeWeight)
                             }
                         }
 
@@ -233,7 +223,7 @@ class Neo4jDataBase<V, E>(
                                 val IDFrom = edge["idFrom"].asLong()
                                 val IDTo = edge["idTo"].asLong()
                                 val edgeWeight = edge["weight"].asString()
-                                mainViewModel.graphViewModel.createEdge(IDFrom, IDTo, edgeWeight)
+                                graph.createEdge(IDFrom, IDTo, edgeWeight)
                             }
                         }
 
@@ -245,7 +235,7 @@ class Neo4jDataBase<V, E>(
                             unloadAllEdges.forEach { edge ->
                                 val IDFrom = edge["idFrom"].asLong()
                                 val IDTo = edge["idTo"].asLong()
-                                mainViewModel.graphViewModel.createEdge(IDFrom, IDTo, null)
+                                graph.createEdge(IDFrom, IDTo, null)
                             }
                         }
 
@@ -257,7 +247,7 @@ class Neo4jDataBase<V, E>(
                             unloadAllEdges.forEach { edge ->
                                 val IDFrom = edge["idFrom"].asLong()
                                 val IDTo = edge["idTo"].asLong()
-                                mainViewModel.graphViewModel.createEdge(IDFrom, IDTo, null)
+                                graph.createEdge(IDFrom, IDTo, null)
                             }
                         }
 
