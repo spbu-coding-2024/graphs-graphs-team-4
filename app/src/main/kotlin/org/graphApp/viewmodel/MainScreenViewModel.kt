@@ -238,7 +238,6 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
                     )
                 }
             }
-            delay(100)
         }
 
     }
