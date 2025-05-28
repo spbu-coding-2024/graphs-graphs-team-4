@@ -17,15 +17,11 @@ import data.SQLiteMainLogic.SQLiteExposed
 import data.SQLiteMainLogic.SQLiteMainLogic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.graphApp.data.Neo4j.Neo4jDataBase
-import org.graphApp.main
 import org.graphApp.viewmodel.MainScreenViewModel
 import org.neo4j.driver.AuthTokens
 import org.neo4j.driver.GraphDatabase
-import org.neo4j.driver.exceptions.Neo4jException
 import java.io.File
 import javax.swing.JFileChooser
 
@@ -36,8 +32,6 @@ fun <E> SaveAsDialog(
     mainViewModel: MainScreenViewModel<E>,
     onDismissRequest: () -> Unit,
     onSaveSuccess: (String, String) -> Unit = { _, _ -> },
-    onSaveError: (String) -> Unit = { }
-
 ) {
     val resources = LocalTextResources.current
     var selectedOption by remember { mutableStateOf("SQLite") }

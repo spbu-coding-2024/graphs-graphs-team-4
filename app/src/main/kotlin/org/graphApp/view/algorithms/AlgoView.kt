@@ -1,12 +1,10 @@
 package org.graphApp.view.algorithms
 
 import androidx.compose.ui.graphics.Color
-import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.graphApp.currentGraph
 import org.graphApp.model.graph.Vertex
 import org.graphApp.model.graph.*
 import org.graphApp.model.graph.Edge
@@ -17,10 +15,8 @@ import org.graphApp.model.graph.algorithms.FindCycles
 import org.graphApp.model.graph.algorithms.FindCommunities
 import org.graphApp.viewmodel.graph.GraphViewModel
 import org.graphApp.viewmodel.graph.VertexViewModel
-import kotlin.Int
 import kotlin.Long
 import kotlin.collections.List
-import kotlin.collections.Map
 
 class AlgorithmsView<V, E>(
     val viewModel: GraphViewModel<V, E>,

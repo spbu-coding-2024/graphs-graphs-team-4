@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import org.graphApp.viewmodel.graph.EdgeViewModel
 import kotlin.math.atan2
 import kotlin.math.cos
