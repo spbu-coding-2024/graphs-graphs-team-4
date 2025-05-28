@@ -94,6 +94,11 @@ In addition to classical algorithms, the application features built-in layout al
 
 All algorithms are modularly implemented, making them reusable outside the user interface context.
 
+## Supported languages:
+
+  - English
+  - Russian
+  - Chinese
 
 ## Contributing
 
