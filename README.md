@@ -25,7 +25,6 @@
 
 ## 🔧 Main functionality
 
-- 
 - Graph analysis:
   - Algorithm for graph layout on the plane
   - Search for communities using the Louvain algorithm
@@ -54,7 +53,69 @@ The application uses the **MVVM** architectural pattern. Graphs are displayed in
 - DataBases: SQLite, Neo4j
 - Testing: `JUnit5`
 
-## 🚀 Installation and launch
+## 🚀 Get started
 
-// TODO
+* To download project:
+```
+    git clone git@github.com:spbu-coding-2024/trees-trees-team-4.git
+```
+* To build project:
+```
+    ./gradlew build
+```
 
+* To run application:
+```
+    ./gradlew run
+```
+
+---
+
+## Model
+Our model supports multiple graph types:
+* [Directed Graph](https://en.wikipedia.org/wiki/Directed_graph)
+* [Undirected Graph](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics))
+* [Directed Weighted Graph](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)#Weighted_graph)
+* [Undirected Weighted Graph](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)#Weighted_graph)
+
+## Algorithms
+
+The application provides a collection of classical graph algorithms, implemented in the `algorithms` package and available through the user interface:
+
+* [MST algorithm](https://en.wikipedia.org/wiki/Minimum_spanning_tree) — Kraskal finds a minimum spanning forest of an undirected edge-weighted graph. If the graph is connected, it finds a minimum spanning tree.
+* [Ford-Bellman algorithm](https://en.wikipedia.org/wiki/Bellman%E2%80%93Ford_algorithm) — finds shortest paths in graphs that may include negative edge weights.
+* [Find Cycle algorithm](https://en.wikipedia.org/wiki/Cycle_%28graph_theory%29#Algorithm) — determines whether a cycle exists involving a specified vertex.
+* [Strongly connected - Kosaraju's algorithm](https://en.wikipedia.org/wiki/Kosaraju%27s_algorithm) — identifies and extracts strongly connected components in directed graphs.
+
+In addition to classical algorithms, the application features built-in layout algorithms for automatic graph visualization:
+
+* [Find Communities - Louvain Algoritms](https://github.com/JetBrains-Research/louvain) — The Louvain method for community detection is a greedy optimization method intended to extract non-overlapping communities from large networks.
+* [Graph Layout]()
+
+All algorithms are modularly implemented, making them reusable outside the user interface context.
+
+
+## Contributing
+
+Contributions are welcome! There are multiple ways to make our application better. If you have an idea of a feature, 
+eager to contribute or found bug:
+
+1. Describe your idea/bug in issue
+2. Wait for owners to reply with questions/approves/denials
+3. If idea is accepted create new branch
+4. Create pull request on complete and wait for owners to respond (you may want to mark them as reviewers to notify)
+
+Before submitting, make sure:
+- All tests pass 
+- Code is formatted consistently
+
+## 📄 License
+
+This project is licensed under the [**MIT License**](LICENSE).
+
+## 📌 Authors
+- **Vladimir Pugovkin**'
+- **Rafael**
+- **Tatyana Gromova**
+
+© 2025
