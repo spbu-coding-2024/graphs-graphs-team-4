@@ -245,6 +245,7 @@ private fun <E> FileMenu(
 
             DropdownMenuItem(onClick = {
                 expanded = false
+                mainVm.graphViewModel.clear()
             }) {
                 Box(modifier = Modifier.padding(start = 28.dp)) {
                     Text(
