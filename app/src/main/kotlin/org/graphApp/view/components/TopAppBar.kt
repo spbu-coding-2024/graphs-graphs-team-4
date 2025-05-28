@@ -266,8 +266,6 @@ private fun <E> FileMenu(
     }
     if (showOpenAsDialog) {
         OpenDialog(
-
-            graphViewModel = mainVm.graphViewModel,
             onDismissRequest = { showOpenAsDialog = false },
             mainViewModel = mainVm as MainScreenViewModel<Any>,
             onLoadSuccess = { loadedGraphViewModel, name, type ->
