@@ -97,17 +97,17 @@ All algorithms are modularly implemented, making them reusable outside the user 
 
 ## Contributing
 
-Contributions are welcome! There are multiple ways to make our application better. If you have an idea of a feature, 
-eager to contribute or found bug:
+We welcome all contributions! There are several ways you can help improve the application. Whether you have a feature idea, want to contribute code, or discovered a bug — you're in the right place.
 
-1. Describe your idea/bug in issue
-2. Wait for owners to reply with questions/approves/denials
-3. If idea is accepted create new branch
-4. Create pull request on complete and wait for owners to respond (you may want to mark them as reviewers to notify)
+To contribute:
+  1. Open an issue describing your idea or the bug you found.
+  2. Wait for the maintainers to respond with questions, approval, or feedback.
+  3. If your idea is accepted, create a new branch.
+  4. Once your work is complete, open a pull request and tag the maintainers as reviewers to get their attention.
 
-Before submitting, make sure:
-- All tests pass 
-- Code is formatted consistently
+Before submitting a pull request, please ensure:
+  -All tests pass
+  -Your code follows the project's formatting and style guidelines
 
 ## 📄 License
 
