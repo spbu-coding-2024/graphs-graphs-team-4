@@ -1,12 +1,27 @@
 # GraphViz
 
+![Kotlin](https://img.shields.io/badge/Kotlin-2.1.20-blue)
+![Gradle](https://img.shields.io/badge/Gradle-8.8-brightgreen)
+![Compose](https://img.shields.io/badge/Compose-1.8.0-orange)
+![License](https://img.shields.io/badge/License-MIT-blue)
+![build](https://img.shields.io/badge/build-passing-brightgreen)
+
+
 **GraphViz** — is a desktop application with a graphical interface designed to visualize graphs, analyze their structure using modern and classical algorithms, and save the analysis results to various storages.
 
 **Screenshots:**
+
+**Dark theme - 10k vertices and 20k edges:**
+
 ![IMG_20250527_172715](https://github.com/user-attachments/assets/b814c39d-bece-489d-a311-72dbdacb182e)
 
-![image](https://github.com/user-attachments/assets/e7e39ff7-118c-4cd0-b34b-09698ff3652c)
+**White theme:**
 
+![image_2025-05-28_22-35-59](https://github.com/user-attachments/assets/7b37f661-eaa5-4f7c-a033-a92536e626ef)
+
+**Video demonstration on YouTube:**
+
+[![Video demonstration](https://img.youtube.com/vi/cyapdboouAI/0.jpg)](https://www.youtube.com/watch?v=cyapdboouAI)
 
 ## 🔧 Main functionality
 
