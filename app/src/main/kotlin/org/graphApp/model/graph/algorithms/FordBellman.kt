@@ -42,6 +42,7 @@ class FordBellman<V, E>(
         detectNegativeCycles()
 
         if (to != null && (hasNegativeCycle[to] == true || d[to] == Double.POSITIVE_INFINITY)) {
+            println("ЭТО СРАБОТАЛО ТУТ ФФФФФФФФФФФФФФФФФФФФ")
             return null
         }
 
@@ -64,6 +65,7 @@ class FordBellman<V, E>(
         }
 
         if (flag) {
+
             return
         }
 
