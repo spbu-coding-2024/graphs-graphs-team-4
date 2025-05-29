@@ -35,7 +35,7 @@ fun <V, E> AlgorithmsDialog(
 ) {
     val resources = LocalTextResources.current
 
-    val algoLayout: GraphsLayout<V,E> = GraphsLayout()
+    val algoLayout: GraphsLayout<V, E> = GraphsLayout()
 
     Surface(
         color = MaterialTheme.colors.surface,
@@ -92,7 +92,7 @@ fun <V, E> AlgorithmsDialog(
                     color = MaterialTheme.colors.onPrimary
                 )
             )
-            var selectedOption1 by remember {mutableStateOf("") }
+            var selectedOption1 by remember { mutableStateOf("") }
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
@@ -120,8 +120,9 @@ fun <V, E> AlgorithmsDialog(
                         resources.findCommunities -> {
                             algoVM.findCommunities()
                         }
+
                         resources.layout -> {
-                            algoLayout.place(1000.0,900.0, viewModel.graphViewModel as GraphViewModel<V, E>)
+                            algoLayout.place(1000.0, 900.0, viewModel.graphViewModel as GraphViewModel<V, E>)
                         }
                     }
 
@@ -278,8 +279,9 @@ fun <V, E> AlgorithmsDialog(
                         resources.fordBellman -> {
                             algoVM.fordBellman(startVertex, finishVertex)
                         }
+
                         resources.findCycles -> {
-                           algoVM.findCycles(startVertexCycle)
+                            algoVM.findCycles(startVertexCycle)
                         }
 //                        resources.findCommunities -> {
 //                            algoVM.findCommunities()

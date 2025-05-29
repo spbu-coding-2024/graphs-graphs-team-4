@@ -39,7 +39,7 @@ class AlgorithmsView<V, E>(
         Color(0xFF789262),
         Color(0xFFEC407A),
         Color(0xFF7E57C2),
-        Color(0xFF26C6DA),
+        Color(0xFF26C6DA)
     )
 
 

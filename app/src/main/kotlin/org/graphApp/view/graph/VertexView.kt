@@ -195,4 +195,3 @@ fun <V> VertexView(
         }
     }
 }
-

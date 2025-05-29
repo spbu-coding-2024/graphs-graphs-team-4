@@ -19,10 +19,10 @@ class VertexViewModel<V>(
 ) {
     private var _selected = mutableStateOf(false)
     var selected: Boolean
-    get() = _selected.value
-    set(value) {
-        _selected.value = value
-    }
+        get() = _selected.value
+        set(value) {
+            _selected.value = value
+        }
 
     private var _x = mutableStateOf(x)
     var x: Dp

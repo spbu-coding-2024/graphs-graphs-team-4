@@ -37,7 +37,6 @@ fun OpenDialog(
     val resources = LocalTextResources.current
     var selectedOption by remember { mutableStateOf("SQLite") }
     val options = listOf("JSON", "Neo4j", "SQLite")
-    var name by remember { mutableStateOf("") }
     var uri by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
@@ -98,9 +97,9 @@ fun OpenDialog(
                         Spacer(Modifier.width(8.dp))
                         AddFolderButton(
                             onClick = {
-                                val _file = chooseDbFile()
-                                if (_file != null) {
-                                    selectedFile = _file
+                                val fileName = chooseDbFile()
+                                if (fileName != null) {
+                                    selectedFile = fileName
                                 }
                             }
                         )
