@@ -1,5 +1,6 @@
 package algorithms
 
+import org.graphApp.viewmodel.ErrorViewModel
 import org.graphApp.model.graph.*
 import org.graphApp.model.graph.algorithms.FordBellman
 import org.junit.jupiter.api.Test
@@ -37,7 +38,7 @@ class FordBellmanTest {
         directGraph.addEdge("1", "2", "КАД1")
         directGraph.addEdge("2", "3", "КАД2")
 
-        val fordBellman = FordBellman(graph = directGraph)
+        val fordBellman = FordBellman(graph = directGraph, errorViewModel = ErrorViewModel())
         val result = fordBellman.fordBellman(vertex1.id, vertex3.id)
 
         assertNotNull(result)
@@ -68,7 +69,7 @@ class FordBellmanTest {
         directGraph.addEdge("4", "5", "КАД4")
         directGraph.addEdge("5", "6", "КАД5")
 
-        val fordBellman = FordBellman(graph = directGraph)
+        val fordBellman = FordBellman(graph = directGraph, errorViewModel = ErrorViewModel())
         val result = fordBellman.fordBellman(vertex1.id, vertex6.id)
 
         assertNotNull(result)
@@ -92,7 +93,7 @@ class FordBellmanTest {
 
         directGraph.addEdge("1", "2", "Ботаническая")
 
-        val fordBellman = FordBellman(graph = directGraph)
+        val fordBellman = FordBellman(graph = directGraph, errorViewModel = ErrorViewModel())
         val result = fordBellman.fordBellman(vertex1.id, vertex3.id)
 
         assertNull(result)
@@ -109,7 +110,7 @@ class FordBellmanTest {
         directWeightedGraph.addEdge("1", "2", "КАД1", "50")
         directWeightedGraph.addEdge("2", "3", "КАД2", "100")
 
-        val fordBellman = FordBellman(graph = directWeightedGraph)
+        val fordBellman = FordBellman(graph = directWeightedGraph, errorViewModel = ErrorViewModel())
         val result = fordBellman.fordBellman(vertex1.id, vertex3.id)
 
         assertNotNull(result)
@@ -140,7 +141,7 @@ class FordBellmanTest {
         directWeightedGraph.addEdge("4", "5", "КАД4", "50")
         directWeightedGraph.addEdge("5", "6", "КАД5", "60")
 
-        val fordBellman = FordBellman(graph = directWeightedGraph)
+        val fordBellman = FordBellman(graph = directWeightedGraph, errorViewModel = ErrorViewModel())
         val result = fordBellman.fordBellman(vertex1.id, vertex6.id)
 
         assertNotNull(result)
@@ -164,7 +165,7 @@ class FordBellmanTest {
 
         directWeightedGraph.addEdge("1", "2", "Ботаническая", "10")
 
-        val fordBellman = FordBellman(graph = directWeightedGraph)
+        val fordBellman = FordBellman(graph = directWeightedGraph, errorViewModel = ErrorViewModel())
         val result = fordBellman.fordBellman(vertex1.id, vertex3.id)
 
         assertNull(result)
@@ -181,7 +182,7 @@ class FordBellmanTest {
         directWeightedGraph.addEdge("1", "2", "КАД1", "50")
         directWeightedGraph.addEdge("2", "3", "КАД2", "-100")
 
-        val fordBellman = FordBellman(graph = directWeightedGraph)
+        val fordBellman = FordBellman(graph = directWeightedGraph, errorViewModel = ErrorViewModel())
         val result = fordBellman.fordBellman(vertex1.id, vertex3.id)
 
         assertNotNull(result)
@@ -212,7 +213,7 @@ class FordBellmanTest {
         directWeightedGraph.addEdge("4", "5", "КАД4", "-50")
         directWeightedGraph.addEdge("5", "6", "КАД5", "-60")
 
-        val fordBellman = FordBellman(graph = directWeightedGraph)
+        val fordBellman = FordBellman(graph = directWeightedGraph, errorViewModel = ErrorViewModel())
         val result = fordBellman.fordBellman(vertex1.id, vertex6.id)
 
         assertNotNull(result)
@@ -236,7 +237,7 @@ class FordBellmanTest {
 
         directWeightedGraph.addEdge("1", "2", "Ботаническая", "-10")
 
-        val fordBellman = FordBellman(graph = directWeightedGraph)
+        val fordBellman = FordBellman(graph = directWeightedGraph, errorViewModel = ErrorViewModel())
         val result = fordBellman.fordBellman(vertex1.id, vertex3.id)
 
         assertNull(result)
@@ -255,7 +256,7 @@ class FordBellmanTest {
         directWeightedGraph.addEdge("C", "D", "Садовая", "-7")
         directWeightedGraph.addEdge("D", "B", "Гороховая", "-1")
 
-        val fordBellman = FordBellman(directWeightedGraph)
+        val fordBellman = FordBellman(directWeightedGraph, errorViewModel = ErrorViewModel())
         val result = fordBellman.fordBellman(vertexA.id, vertexC.id)
 
         assertNull(result)
@@ -275,7 +276,7 @@ class FordBellmanTest {
         undirectedGraph.addEdge("1", "2", "КАД1")
         undirectedGraph.addEdge("2", "3", "КАД2")
 
-        val fordBellman = FordBellman(graph = undirectedGraph)
+        val fordBellman = FordBellman(graph = undirectedGraph, errorViewModel = ErrorViewModel())
         val result = fordBellman.fordBellman(vertex1.id, vertex3.id)
 
         assertNotNull(result)
@@ -306,7 +307,7 @@ class FordBellmanTest {
         undirectedGraph.addEdge("4", "5", "КАД4")
         undirectedGraph.addEdge("5", "6", "КАД5")
 
-        val fordBellman = FordBellman(graph = undirectedGraph)
+        val fordBellman = FordBellman(graph = undirectedGraph, errorViewModel = ErrorViewModel())
         val result = fordBellman.fordBellman(vertex1.id, vertex6.id)
 
         assertNotNull(result)
@@ -330,7 +331,7 @@ class FordBellmanTest {
 
         undirectedGraph.addEdge("1", "2", "Ботаническая")
 
-        val fordBellman = FordBellman(graph = undirectedGraph)
+        val fordBellman = FordBellman(graph = undirectedGraph, errorViewModel = ErrorViewModel())
         val result = fordBellman.fordBellman(vertex1.id, vertex3.id)
 
         assertNull(result)
@@ -347,7 +348,7 @@ class FordBellmanTest {
         weightedGraph.addEdge("1", "2", "КАД1", "50")
         weightedGraph.addEdge("2", "3", "КАД2", "100")
 
-        val fordBellman = FordBellman(graph = weightedGraph)
+        val fordBellman = FordBellman(graph = weightedGraph, errorViewModel = ErrorViewModel())
         val result = fordBellman.fordBellman(vertex1.id, vertex3.id)
 
         assertNotNull(result)
@@ -378,7 +379,7 @@ class FordBellmanTest {
         weightedGraph.addEdge("4", "5", "КАД4", "50")
         weightedGraph.addEdge("5", "6", "КАД5", "60")
 
-        val fordBellman = FordBellman(graph = weightedGraph)
+        val fordBellman = FordBellman(graph = weightedGraph, errorViewModel = ErrorViewModel())
         val result = fordBellman.fordBellman(vertex1.id, vertex6.id)
 
         assertNotNull(result)
@@ -402,7 +403,7 @@ class FordBellmanTest {
 
         weightedGraph.addEdge("1", "2", "Ботаническая", "10")
 
-        val fordBellman = FordBellman(graph = weightedGraph)
+        val fordBellman = FordBellman(graph = weightedGraph, errorViewModel = ErrorViewModel())
         val result = fordBellman.fordBellman(vertex1.id, vertex3.id)
 
         assertNull(result)
@@ -420,7 +421,7 @@ class FordBellmanTest {
 
         weightedGraph.addEdge("1", "2", "Ботаническая", "-10")
 
-        val fordBellman = FordBellman(graph = weightedGraph)
+        val fordBellman = FordBellman(graph = weightedGraph, errorViewModel = ErrorViewModel())
         val result = fordBellman.fordBellman(vertex1.id, vertex3.id)
 
         assertNull(result)
@@ -431,7 +432,7 @@ class FordBellmanTest {
     fun `single vertex`() {
         val vertex1 = directGraph.addVertex("239")
 
-        val fordBellman = FordBellman(graph = directGraph)
+        val fordBellman = FordBellman(graph = directGraph, errorViewModel = ErrorViewModel())
         val result = fordBellman.fordBellman(vertex1.id, vertex1.id)
         assertNotNull(result)
 
@@ -450,7 +451,7 @@ class FordBellmanTest {
         directWeightedGraph.addVertex("B")
         directWeightedGraph.addEdge("A", "B", "МКАД", "5")
 
-        val fordBellman = FordBellman(directWeightedGraph)
+        val fordBellman = FordBellman(directWeightedGraph, errorViewModel = ErrorViewModel())
         val result = fordBellman.fordBellman(vertexA.id, vertexA.id)
 
         assertNotNull(result)
@@ -467,7 +468,7 @@ class FordBellmanTest {
         val vertexB = directWeightedGraph.addVertex("B")
         directWeightedGraph.addEdge("A", "B", "СолявойПереулок", "invalidWeight")
 
-        val fordBellman = FordBellman(directWeightedGraph)
+        val fordBellman = FordBellman(directWeightedGraph, errorViewModel = ErrorViewModel())
         val result = fordBellman.fordBellman(vertexA.id, vertexB.id)
 
         assertNotNull(result)
@@ -488,7 +489,7 @@ class FordBellmanTest {
             directWeightedGraph.addEdge("$i", "${i + 1}", "edge$i", "${i + 1}")
         }
 
-        val fordBellman = FordBellman(directWeightedGraph)
+        val fordBellman = FordBellman(directWeightedGraph, errorViewModel = ErrorViewModel())
         val start = System.currentTimeMillis()
         val result = fordBellman.fordBellman(vertices.first().id, vertices.last().id)
         val end = System.currentTimeMillis()
@@ -513,7 +514,7 @@ class FordBellmanTest {
         directGraph.addEdge("1", "2", "Чичера1")
         directGraph.addEdge("3", "4", "Чичера2")
 
-        val fordBellman = FordBellman(graph = directGraph)
+        val fordBellman = FordBellman(graph = directGraph, errorViewModel = ErrorViewModel())
 
         val res1 = fordBellman.fordBellman(vertex1.id, vertex2.id)
         assertNotNull(res1)
@@ -532,7 +533,7 @@ class FordBellmanTest {
         directWeightedGraph.addEdge("A", "B", "10-ЛИНИЯ-ВО", "0")
         directWeightedGraph.addEdge("B", "C", "11-ЛИНИЯ-ВО", "0")
 
-        val fordBellman = FordBellman(graph = directWeightedGraph)
+        val fordBellman = FordBellman(graph = directWeightedGraph, errorViewModel = ErrorViewModel())
         val result = fordBellman.fordBellman(vertexA.id, vertexC.id)
 
         assertNotNull(result)
@@ -547,7 +548,7 @@ class FordBellmanTest {
 
         directWeightedGraph.addEdge("A", "B", "edge1", "999999999999")
 
-        val fordBellman = FordBellman(graph = directWeightedGraph)
+        val fordBellman = FordBellman(graph = directWeightedGraph, errorViewModel = ErrorViewModel())
         val result = fordBellman.fordBellman(vertexA.id, vertexB.id)
 
         assertNotNull(result)
@@ -562,7 +563,7 @@ class FordBellmanTest {
 
         directWeightedGraph.addEdge("A", "B", "edge1", "3.14159")
 
-        val fordBellman = FordBellman(directWeightedGraph)
+        val fordBellman = FordBellman(directWeightedGraph, errorViewModel = ErrorViewModel())
         val result = fordBellman.fordBellman(vertexA.id, vertexB.id)
 
         assertNotNull(result)
@@ -578,7 +579,7 @@ class FordBellmanTest {
         expectedPathLen: Int
     ) {
         val (graph, sourceId, targetId) = graph()
-        val fordBellman = FordBellman(graph)
+        val fordBellman = FordBellman(graph, errorViewModel = ErrorViewModel())
         val result = fordBellman.fordBellman(sourceId, targetId)
 
         assertNotNull(result)

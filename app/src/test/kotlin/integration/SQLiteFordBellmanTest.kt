@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.AfterEach
 import androidx.compose.ui.unit.dp
+import org.graphApp.viewmodel.ErrorViewModel
 import org.graphApp.viewmodel.graph.VertexViewModel
 import org.junit.jupiter.api.Tag
 import java.io.File
@@ -74,7 +75,7 @@ class SQLiteFordBellmanTest {
         assertTrue(loadedViewModel.isWeightedGraph.value)
         assertTrue(loadedViewModel.isDirectedGraph.value)
 
-        val fordBellman = FordBellman(graph = loadedViewModel.graph)
+        val fordBellman = FordBellman(graph = loadedViewModel.graph, errorViewModel = ErrorViewModel())
 
         val startVertex = loadedViewModel.vertices.find { it.value == "1" }
         val endVertex = loadedViewModel.vertices.find { it.value == "100" }
@@ -127,7 +128,7 @@ class SQLiteFordBellmanTest {
         val loadedViewModel = sqLiteMainLogic.readFromSQLiteDataBase<String, String>("test_empty")
         assertNotNull(loadedViewModel)
 
-        val fordBellman = FordBellman(graph = loadedViewModel!!.graph)
+        val fordBellman = FordBellman(graph = loadedViewModel!!.graph, errorViewModel = ErrorViewModel())
         val startVertex = loadedViewModel.vertices.find { it.value == "1" }
         val endVertex = loadedViewModel.vertices.find { it.value == "4" }
 
