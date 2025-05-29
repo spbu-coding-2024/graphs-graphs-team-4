@@ -17,7 +17,7 @@ const val STUB = 0
 
 class Neo4jDataBase<V, E>(
     val mainViewModel: MainScreenViewModel<E>,
-    val graph: GraphViewModel<V,E>,
+    val graph: GraphViewModel<V, E>,
     graphName: String,
     private val driver: Driver
 ) {
@@ -46,9 +46,6 @@ class Neo4jDataBase<V, E>(
             }
         }
     }
-
-
-
 
     private fun checkForExistingNameOfGraph() {
         withSession { session ->
@@ -86,7 +83,7 @@ class Neo4jDataBase<V, E>(
     private fun storeEdge(edge: EdgeViewModel<E, V>) {
 
         withSession { session ->
-            if (graph.isWeightedGraph.value && graph.isDirectedGraph.value) {
+            if (mainViewModel.graphViewModel.isWeightedGraph.value && mainViewModel.graphViewModel.isDirectedGraph.value) {
                 val paramsWeightedDirectedEdge = mapOf(
                     "fromID" to edge.u.vertexID,
                     "toID" to edge.v.vertexID,
@@ -103,7 +100,7 @@ class Neo4jDataBase<V, E>(
                 }
             }
 
-            if (!graph.isWeightedGraph.value && graph.isDirectedGraph.value) {
+            if (!mainViewModel.graphViewModel.isWeightedGraph.value && mainViewModel.graphViewModel.isDirectedGraph.value) {
                 val directedEdge = mapOf(
                     "fromID" to edge.u.vertexID,
                     "toID" to edge.v.vertexID,
@@ -119,7 +116,7 @@ class Neo4jDataBase<V, E>(
 
 
             }
-            if (graph.isWeightedGraph.value && !graph.isDirectedGraph.value) {
+            if (mainViewModel.graphViewModel.isWeightedGraph.value && !mainViewModel.graphViewModel.isDirectedGraph.value) {
                 val paramsWeightedEdge = mapOf(
                     "V1" to edge.u.vertexID,
                     "V2" to edge.v.vertexID,
@@ -136,7 +133,7 @@ class Neo4jDataBase<V, E>(
                 }
             }
 
-            if (!graph.isWeightedGraph.value && !graph.isDirectedGraph.value) {
+            if (!mainViewModel.graphViewModel.isWeightedGraph.value && !mainViewModel.graphViewModel.isDirectedGraph.value) {
                 val paramsEdge = mapOf(
                     "Vertex1ID" to edge.u.vertexID,
                     "Vertex2ID" to edge.v.vertexID,
@@ -157,13 +154,12 @@ class Neo4jDataBase<V, E>(
         withContext(Dispatchers.IO) {
             checkNeo4jConnection()
             checkForExistingNameOfGraph()
-            graph.vertices.forEach { vertex ->
+            mainViewModel.graphViewModel.vertices.forEach { vertex ->
                 storeVertex(vertex as VertexViewModel<V>)
             }
-            graph.edges.forEach { edge ->
+            mainViewModel.graphViewModel.edges.forEach { edge ->
                 storeEdge(edge as EdgeViewModel<E, V>)
             }
-            driver.close()
         }
     }
 
@@ -180,7 +176,7 @@ class Neo4jDataBase<V, E>(
                     if (element == null) {
                         throw IllegalStateException("Vertex element not found")
                     }
-                    graph.addVertex(element as String as V, 0.dp, 0.dp)
+                    mainViewModel.graphViewModel.addVertex(element as V as String, 0.dp, 0.dp)
                 }
             }
         }
@@ -213,7 +209,7 @@ class Neo4jDataBase<V, E>(
                                 val IDFrom = edge["idFrom"].asLong()
                                 val IDTo = edge["idTo"].asLong()
                                 val edgeWeight = edge["weight"].asString()
-                                graph.createEdge(IDFrom, IDTo, edgeWeight)
+                                mainViewModel.graphViewModel.createEdge(IDFrom, IDTo, edgeWeight)
                             }
                         }
 
@@ -227,7 +223,7 @@ class Neo4jDataBase<V, E>(
                                 val IDFrom = edge["idFrom"].asLong()
                                 val IDTo = edge["idTo"].asLong()
                                 val edgeWeight = edge["weight"].asString()
-                                graph.createEdge(IDFrom, IDTo, edgeWeight)
+                                mainViewModel.graphViewModel.createEdge(IDFrom, IDTo, edgeWeight)
                             }
                         }
 
@@ -239,7 +235,7 @@ class Neo4jDataBase<V, E>(
                             unloadAllEdges.forEach { edge ->
                                 val IDFrom = edge["idFrom"].asLong()
                                 val IDTo = edge["idTo"].asLong()
-                                graph.createEdge(IDFrom, IDTo, null)
+                                mainViewModel.graphViewModel.createEdge(IDFrom, IDTo, null)
                             }
                         }
 
@@ -251,7 +247,7 @@ class Neo4jDataBase<V, E>(
                             unloadAllEdges.forEach { edge ->
                                 val IDFrom = edge["idFrom"].asLong()
                                 val IDTo = edge["idTo"].asLong()
-                                graph.createEdge(IDFrom, IDTo, null)
+                                mainViewModel.graphViewModel.createEdge(IDFrom, IDTo, null)
                             }
                         }
 
@@ -264,35 +260,31 @@ class Neo4jDataBase<V, E>(
         }
     }
 
-    suspend fun uploadGraph() {
-        withContext(Dispatchers.IO) {
-            checkNeo4jConnection()
-            val type = withSession { session ->
-                session.executeRead { tx ->
-                    val result = tx.run(
-                        "MATCH (a:Vertex {graphname: \$graphname})-[edge:CONNECTED_TO]-(b:Vertex {graphname: \$graphname}) RETURN edge.type AS type LIMIT 1",
-                        gName
-                    )
-                    if (result.hasNext()) {
-                        result.next().get("type").asString()
-                    } else {
-                        null
-                    }
+    fun uploadGraph() = CoroutineScope(Dispatchers.IO).launch {
+        checkNeo4jConnection()
+        val type = withSession { session ->
+            session.executeRead { tx ->
+                val result = tx.run(
+                    "MATCH (a:Vertex {graphname: \$graphname})-[edge:CONNECTED_TO]-(b:Vertex {graphname: \$graphname}) RETURN edge.type AS type LIMIT 1",
+                    gName
+                )
+                if (result.hasNext()) {
+                    result.next().get("type").asString()
+                } else {
+                    null
                 }
             }
-
-            when (type) {
-                EdgeTypeNeo4j.DIRECTED_WEIGHTED.typeString -> mainViewModel.createNewGraph(true, true)
-                EdgeTypeNeo4j.WEIGHTED.typeString -> mainViewModel.createNewGraph(true, false)
-                EdgeTypeNeo4j.DIRECTED.typeString -> mainViewModel.createNewGraph(false, true)
-                EdgeTypeNeo4j.UNDIRECTED.typeString -> mainViewModel.createNewGraph(false, false)
-                else -> throw IllegalArgumentException("Unknown edge type: $type")
-            }
-
-            uploadVertex()
-            uploadEdge()
-
-            driver.close()
         }
+
+        when (type) {
+            EdgeTypeNeo4j.DIRECTED_WEIGHTED.typeString -> mainViewModel.createNewGraph(true, true)
+            EdgeTypeNeo4j.WEIGHTED.typeString -> mainViewModel.createNewGraph(true, false)
+            EdgeTypeNeo4j.DIRECTED.typeString -> mainViewModel.createNewGraph(false, true)
+            EdgeTypeNeo4j.UNDIRECTED.typeString -> mainViewModel.createNewGraph(false, false)
+            else -> throw IllegalArgumentException("Unknown edge type: $type")
+        }
+
+        uploadVertex()
+        uploadEdge()
     }
 }
