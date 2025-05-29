@@ -68,6 +68,16 @@ The application uses the **MVVM** architectural pattern. Graphs are displayed in
 ```
     ./gradlew run
 ```
+* To run a local instance of Neo4j, make sure Docker is installed on your system.
+Then, start a Neo4j session using the following command:
+```
+ docker run -d --name neo4j -p 7474:7474 -p 7687:7687 -e NEO4J_AUTH=neo4j/Test1234554321 -v /home/vkinzin/data/neo4j/data neo4j
+```
+* This will run Neo4j locally at http://localhost:7474 with default credentials:
+```
+Username: neo4j
+Password: test
+```
 
 ---
 
