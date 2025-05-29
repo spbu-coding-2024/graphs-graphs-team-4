@@ -44,7 +44,7 @@ The application uses the **MVVM** architectural pattern. Graphs are displayed in
 
 ## 🧪 Testing
 
-- Unit tests for algorithms 
+- Unit tests for algorithms, SQLite
 - Integration tests with user scenarios (SQLite saving and loading + Ford Bellman and Find Cycles)
 
 ## 📦 Technologies
