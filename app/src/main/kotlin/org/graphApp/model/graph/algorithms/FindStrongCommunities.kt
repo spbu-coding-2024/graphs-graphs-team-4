@@ -4,15 +4,15 @@ import org.graphApp.model.graph.Graph
 import org.graphApp.model.graph.Vertex
 import kotlin.collections.forEach
 
-internal class FindStrongCommunities<V,E>(
-    private val graph: Graph<V,E>,
+internal class FindStrongCommunities<V, E>(
+    private val graph: Graph<V, E>,
 ) {
 
     private var _used: MutableMap<Long, Boolean> = mutableMapOf()
 
     private fun resetUsedFlags() {
-        _used = graph.vertices.associate {
-                vertex -> vertex.id to false
+        _used = graph.vertices.associate { vertex ->
+            vertex.id to false
         }.toMutableMap()
     }
 
@@ -37,7 +37,7 @@ internal class FindStrongCommunities<V,E>(
     private fun dfs1(v: Vertex<V>) {
         _used[v.id] = true
         _graphInfo[v.id]?.forEach { vertex ->
-            if(_used[vertex.id] == false) {
+            if (_used[vertex.id] == false) {
                 dfs1(vertex)
             }
         }
@@ -48,7 +48,7 @@ internal class FindStrongCommunities<V,E>(
         _used[v.id] = true
         _component.add(v)
         _graphInfoT[v.id]?.forEach { vertex ->
-            if(_used[vertex.id] == false) {
+            if (_used[vertex.id] == false) {
                 dfs2(vertex)
             }
         }
@@ -57,19 +57,20 @@ internal class FindStrongCommunities<V,E>(
 
     fun findStrongCommunitiesInGraph(
 
-    ) : List<List<Vertex<V>>>? {
+    ): List<List<Vertex<V>>>? {
 
         val resultStrongCommunities = mutableListOf<List<Vertex<V>>>()
 
         resetUsedFlags()
         convertToList()
+
         _vertices.forEach { vertex ->
             _graphInfo.computeIfAbsent(vertex.id) { mutableListOf() }
             _graphInfoT.computeIfAbsent(vertex.id) { mutableListOf() }
         }
         _vertices.forEach { vertex ->
-            if(_used[vertex.id] == false) {
-                    dfs1(vertex)
+            if (_used[vertex.id] == false) {
+                dfs1(vertex)
             }
         }
         resetUsedFlags()
@@ -80,7 +81,6 @@ internal class FindStrongCommunities<V,E>(
                 _component.clear()
             }
         }
-        println(resultStrongCommunities)
         return resultStrongCommunities
     }
 }
