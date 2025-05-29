@@ -65,21 +65,21 @@ fun <V> VertexView(
                 if(viewModel.highlight.value) {
                     for (i in 15 downTo 1) {
                         drawCircle(
-                            color = (if (viewModel.selected) selectedColor else viewModel.color).copy(alpha = 0.01f),
-                            radius = size.minDimension / 2 + i * 6f
+                            color = (if (viewModel.selected) selectedColor else viewModel.color).copy(alpha = 0.02f),
+                            radius = size.minDimension / 2 + i * 7f
                         )
                     }
 
                     for (i in 7 downTo 1) {
                         drawCircle(
-                            color = (if (viewModel.selected) selectedColor else viewModel.color).copy(alpha = 0.02f),
-                            radius = size.minDimension / 2 + i * 4f
+                            color = (if (viewModel.selected) selectedColor else viewModel.color).copy(alpha = 0.035f),
+                            radius = size.minDimension / 2 + i * 5f
                         )
                     }
 
                     for (i in 5 downTo 1) {
                         drawCircle(
-                            color = (if (viewModel.selected) selectedColor else viewModel.color).copy(alpha = 0.03f),
+                            color = (if (viewModel.selected) selectedColor else viewModel.color).copy(alpha = 0.02f),
                             radius = size.minDimension / 2 + i * 3f
                         )
                     }
