@@ -1,11 +1,12 @@
 # GraphViz
 
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.1.20-blue)
+![Kotlin Coroutines](https://img.shields.io/badge/Kotlin%Coroutines)
 ![Gradle](https://img.shields.io/badge/Gradle-8.8-brightgreen)
 ![Compose](https://img.shields.io/badge/Compose-1.8.0-orange)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 ![build](https://img.shields.io/badge/build-passing-brightgreen)
-![Kotlin Coroutines](https://img.shields.io/badge/Kotlin%20Coroutines-Enabled-7F52FF?logo=kotlin&logoColor=white&style=for-the-badge)
+
 
 
 **GraphViz** — is a desktop application with a graphical interface designed to visualize graphs, analyze their structure using modern and classical algorithms, and save the analysis results to various storages.
