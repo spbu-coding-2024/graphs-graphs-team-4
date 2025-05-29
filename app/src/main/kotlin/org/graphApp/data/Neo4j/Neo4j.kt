@@ -163,6 +163,7 @@ class Neo4jDataBase<V, E>(
             graph.edges.forEach { edge ->
                 storeEdge(edge as EdgeViewModel<E, V>)
             }
+            driver.close()
         }
     }
 
@@ -263,32 +264,35 @@ class Neo4jDataBase<V, E>(
         }
     }
 
-    fun uploadGraph() = CoroutineScope(Dispatchers.IO).launch {
-        checkNeo4jConnection()
-        val type = withSession { session ->
-            session.executeRead { tx ->
-                val result = tx.run(
-                    "MATCH (a:Vertex {graphname: \$graphname})-[edge:CONNECTED_TO]-(b:Vertex {graphname: \$graphname}) RETURN edge.type AS type LIMIT 1",
-                    gName
-                )
-                if (result.hasNext()) {
-                    result.next().get("type").asString()
-                } else {
-                    null
+    suspend fun uploadGraph() {
+        withContext(Dispatchers.IO) {
+            checkNeo4jConnection()
+            val type = withSession { session ->
+                session.executeRead { tx ->
+                    val result = tx.run(
+                        "MATCH (a:Vertex {graphname: \$graphname})-[edge:CONNECTED_TO]-(b:Vertex {graphname: \$graphname}) RETURN edge.type AS type LIMIT 1",
+                        gName
+                    )
+                    if (result.hasNext()) {
+                        result.next().get("type").asString()
+                    } else {
+                        null
+                    }
                 }
             }
-        }
 
-        when (type) {
-            EdgeTypeNeo4j.DIRECTED_WEIGHTED.typeString -> mainViewModel.createNewGraph(true, true)
-            EdgeTypeNeo4j.WEIGHTED.typeString -> mainViewModel.createNewGraph(true, false)
-            EdgeTypeNeo4j.DIRECTED.typeString -> mainViewModel.createNewGraph(false, true)
-            EdgeTypeNeo4j.UNDIRECTED.typeString -> mainViewModel.createNewGraph(false, false)
-            else -> throw IllegalArgumentException("Unknown edge type: $type")
-        }
+            when (type) {
+                EdgeTypeNeo4j.DIRECTED_WEIGHTED.typeString -> mainViewModel.createNewGraph(true, true)
+                EdgeTypeNeo4j.WEIGHTED.typeString -> mainViewModel.createNewGraph(true, false)
+                EdgeTypeNeo4j.DIRECTED.typeString -> mainViewModel.createNewGraph(false, true)
+                EdgeTypeNeo4j.UNDIRECTED.typeString -> mainViewModel.createNewGraph(false, false)
+                else -> throw IllegalArgumentException("Unknown edge type: $type")
+            }
 
-        uploadVertex()
-        uploadEdge()
+            uploadVertex()
+            uploadEdge()
+
+            driver.close()
+        }
     }
-
 }

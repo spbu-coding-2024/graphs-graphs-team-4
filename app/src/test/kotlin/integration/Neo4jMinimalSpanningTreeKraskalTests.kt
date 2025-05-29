@@ -8,6 +8,7 @@ import org.graphApp.model.graph.WeightedGraph
 import org.graphApp.model.graph.algorithms.MinimalSpanningTree
 import org.graphApp.viewmodel.MainScreenViewModel
 import org.graphApp.viewmodel.graph.GraphViewModel
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -45,6 +46,11 @@ class Neo4jWithMinimalSpanningTreeKraskal {
             graphName = "RISCVHATERS"
         )
         clean(driver)
+    }
+
+    @AfterEach
+    fun delete() {
+        driver.close()
     }
 
     @Test

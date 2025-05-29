@@ -324,6 +324,8 @@ fun OpenDialog(
                                                         graphName = graphName
                                                     )
                                                     neo4jLoader.uploadGraph()
+                                                    onLoadSuccess(mainViewModel.graphViewModel as GraphViewModel<Any,Any>, graphName, "Neo4j")
+                                                    onDismissRequest()
                                                 } catch (error: Exception) {
                                                     errorMessage = error.localizedMessage ?: "Unknown error"
                                                 }

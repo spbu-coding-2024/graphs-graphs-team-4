@@ -8,6 +8,7 @@ import org.graphApp.model.graph.DirectGraph
 import org.graphApp.model.graph.algorithms.FindStrongCommunities
 import org.graphApp.viewmodel.MainScreenViewModel
 import org.graphApp.viewmodel.graph.GraphViewModel
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -56,6 +57,10 @@ class Neo4jWithStrongConnectivity {
         clean(driver)
     }
 
+    @AfterEach
+    fun delete() {
+        driver.close()
+    }
 
     @Test
     @DisplayName("Integration test for Strong connectivity")

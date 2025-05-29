@@ -146,7 +146,6 @@ fun <V> VertexView(
                 )
             }
             .onKeyEvent { event ->
-                println("Pressed key ${event.key}")
                 if (event.key == Key.Delete && event.type == KeyEventType.KeyDown && viewModel.selected) {
                     onVertexClickDeletion(viewModel)
                     true
