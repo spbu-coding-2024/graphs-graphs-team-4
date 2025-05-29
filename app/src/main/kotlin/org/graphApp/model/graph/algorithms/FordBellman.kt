@@ -59,6 +59,14 @@ class FordBellman<V, E>(
 
         val directedEdges = mutableListOf<Triple<Long, Long, Double>>()
 
+        val flag = _edges.any { edge ->
+            edge !is  WeightedEdge<*,*> && getEdgeWeight(edge) < 0
+        }
+
+        if (flag) {
+            return
+        }
+
         for (edge in _edges) {
             val (fromId, toId, weight) = getEdgeInfo(edge)
 

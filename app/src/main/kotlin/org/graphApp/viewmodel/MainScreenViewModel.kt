@@ -29,7 +29,7 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
     var scale by mutableStateOf(1f)
     var rotation by mutableStateOf(0f)
     var offset by mutableStateOf(Offset.Zero)
-    private var showHighlightOfVertex = mutableStateOf(false)
+    private var showHighlightOfVertex = mutableStateOf(true)
     var highlight: Boolean
     get() = showHighlightOfVertex.value
     set(value) {
