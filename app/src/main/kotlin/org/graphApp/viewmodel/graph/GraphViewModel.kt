@@ -49,10 +49,26 @@ class GraphViewModel<V, E>(
         _selectFirstVertex.value = null
         val vertexID = vertex.vertexID
         val vm = _vertices.remove(vertexID)
-        vm?.let { removeVertex ->
+        vm?.let { vertexViewModel ->
+            val edgesToRemove = _edges.filter { edgevm ->
+                edgevm.u.vertexID == vertexID || edgevm.v.vertexID == vertexID
+            }
+            edgesToRemove.forEach { edgeVM ->
+                val modelEdge = graph.edges.find { modelEdge ->
+                    modelEdge.vertices.first.id == edgeVM.u.vertexID &&
+                            modelEdge.vertices.second.id == edgeVM.v.vertexID ||
+                            modelEdge.vertices.first.id == edgeVM.v.vertexID &&
+                            modelEdge.vertices.second.id == edgeVM.u.vertexID
+                }
+                modelEdge?.let { edge ->
+                    graph.removeEdge(edge)
+                }
+            }
             _edges.removeAll { edgevm ->
                 edgevm.u.vertexID == vertexID || edgevm.v.vertexID == vertexID
             }
+            val modelVertex = graph.vertices.find { it.id == vertexID }
+            modelVertex?.let { graph.removeVertex(it) }
         }
     }
 
@@ -119,6 +135,7 @@ class GraphViewModel<V, E>(
     fun clear() {
         _vertices.clear()
         _edges.clear()
+        graph.clear()
     }
 
 

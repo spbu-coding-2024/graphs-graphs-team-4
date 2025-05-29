@@ -23,6 +23,31 @@ internal class UndirectedGraph<V, E> : Graph<V, E> {
         return _edges.getOrPut(e) { DataEdge(e, from to to) }
     }
 
+    override fun removeVertex(vertex: Vertex<V>) {
+        val removed = _vertices.remove(vertex.id) != null
+        if (removed) {
+            elementToVertex.remove(vertex.element)
+
+            val edgesToRemove = _edges.values.filter { edge ->
+                edge.vertices.first.id == vertex.id || edge.vertices.second.id == vertex.id
+            }
+            edgesToRemove.forEach { edge ->
+                _edges.remove(edge.element)
+            }
+        }
+    }
+
+    override fun removeEdge(edge: Edge<E, V>) {
+        _edges.remove(edge.element) != null
+    }
+
+    override fun clear() {
+        _vertices.clear()
+        elementToVertex.clear()
+        _edges.clear()
+        vertexIdCounter = 0
+    }
+
     private data class DataEdge<E, V>(
         override val element: E,
         override val vertices: Pair<Vertex<V>, Vertex<V>>

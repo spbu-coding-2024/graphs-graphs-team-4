@@ -35,12 +35,9 @@ fun <E> MainScreen(viewModel: MainScreenViewModel<E>, onCloseRequest: () -> Unit
 
     var showAlgorithmsPanel by remember { mutableStateOf(false) }
     var showNewGraphPanel by remember { mutableStateOf(false) }
-    var startCliked by remember { mutableStateOf(false)}
     val currentGraphViewModel by remember { derivedStateOf { viewModel.graphViewModel } }
     var currentLanguage by remember { mutableStateOf(AppLanguage.ENGLISH) }
     val resources = getResources(currentLanguage)
-
-    println("${viewModel.graphViewModel.vertices.size}")
     val algoVM = AlgorithmsView(viewModel = viewModel.graphViewModel, errorViewModel = viewModelError)
     CompositionLocalProvider(LocalTextResources provides resources) {
         GraphTheme(darkTheme = mainThemeDark) {

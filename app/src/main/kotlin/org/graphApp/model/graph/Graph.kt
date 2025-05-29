@@ -6,6 +6,10 @@ interface Graph<V, E> {
 
     fun addVertex(v: V): Vertex<V>
     fun addEdge(u: V, v: V, e: E): Edge<E, V>
+
+    fun removeVertex(vertex: Vertex<V>)
+    fun removeEdge(edge: Edge<E, V>)
+    fun clear()
 }
 
 interface UndirectedWeightedGraph<V, E> : Graph<V, E> {
