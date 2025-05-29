@@ -1391,4 +1391,68 @@ public val SquareLineIcon: ImageVector
         return _SquareLineIcon!!
     }
 
+
+public val passwordViewer: ImageVector
+    get() {
+        if (_undefined != null) {
+            return _undefined!!
+        }
+        _undefined = ImageVector.Builder(
+            name = "Password_2",
+            defaultWidth = 24.dp,
+            defaultHeight = 24.dp,
+            viewportWidth = 960f,
+            viewportHeight = 960f
+        ).apply {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(160f, 520f)
+                quadToRelative(-50f, 0f, -85f, -35f)
+                reflectiveQuadToRelative(-35f, -85f)
+                reflectiveQuadToRelative(35f, -85f)
+                reflectiveQuadToRelative(85f, -35f)
+                reflectiveQuadToRelative(85f, 35f)
+                reflectiveQuadToRelative(35f, 85f)
+                reflectiveQuadToRelative(-35f, 85f)
+                reflectiveQuadToRelative(-85f, 35f)
+                moveTo(80f, 760f)
+                verticalLineToRelative(-80f)
+                horizontalLineToRelative(800f)
+                verticalLineToRelative(80f)
+                close()
+                moveToRelative(400f, -240f)
+                quadToRelative(-50f, 0f, -85f, -35f)
+                reflectiveQuadToRelative(-35f, -85f)
+                reflectiveQuadToRelative(35f, -85f)
+                reflectiveQuadToRelative(85f, -35f)
+                reflectiveQuadToRelative(85f, 35f)
+                reflectiveQuadToRelative(35f, 85f)
+                reflectiveQuadToRelative(-35f, 85f)
+                reflectiveQuadToRelative(-85f, 35f)
+                moveToRelative(320f, 0f)
+                quadToRelative(-50f, 0f, -85f, -35f)
+                reflectiveQuadToRelative(-35f, -85f)
+                reflectiveQuadToRelative(35f, -85f)
+                reflectiveQuadToRelative(85f, -35f)
+                reflectiveQuadToRelative(85f, 35f)
+                reflectiveQuadToRelative(35f, 85f)
+                reflectiveQuadToRelative(-35f, 85f)
+                reflectiveQuadToRelative(-85f, 35f)
+            }
+        }.build()
+        return _undefined!!
+    }
+
+private var _undefined: ImageVector? = null
+
+
 private var _SquareLineIcon: ImageVector? = null
