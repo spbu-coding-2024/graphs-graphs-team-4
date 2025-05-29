@@ -1,6 +1,5 @@
 package org.graphApp.view.algorithms
 
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -46,6 +45,7 @@ class AlgorithmsView<V, E>(
     fun findStrongCommunities() {
         CoroutineScope(Dispatchers.Default).launch {
             if (!viewModel.isDirectedGraph.value) {
+                errorViewModel.showError("Warning: Graph should be directed")
                 return@launch
             }
             resetAllColorsToDefaults()
@@ -72,7 +72,14 @@ class AlgorithmsView<V, E>(
             var mstFinder: MinimalSpanningTree<V, E> = MinimalSpanningTree(graph = viewModel.graph)
             var resultEdges: List<Edge<E, V>>?
             val components = mstFinder.forCheckingConnectivity()
-            if (viewModel.isDirectedGraph.value || components > 1) return@launch
+            if (components > 1) {
+                errorViewModel.showError("Warning: Components of connection > 1")
+                return@launch
+            }
+            if (viewModel.isDirectedGraph.value) {
+                errorViewModel.showError("Warning: Graph should be undirected")
+                return@launch
+            }
             resetAllColorsToDefaults()
             if (viewModel.isWeightedGraph.value) {
 
@@ -110,7 +117,11 @@ class AlgorithmsView<V, E>(
                 edgeVM.color = Color.Gray.copy(alpha = 0.3f)
             }
 
-            val startVertex = findVertexByLabel(startVertexIdOrLabel) ?: return@launch
+            val startVertex = findVertexByLabel(startVertexIdOrLabel)
+            if (startVertex == null) {
+                errorViewModel.showError("Warning: There are no such point in the graph")
+                return@launch
+            }
 
             val findCycle = FindCycles(graph = viewModel.graph)
 
@@ -123,6 +134,7 @@ class AlgorithmsView<V, E>(
             }
 
             if (result == null) {
+                errorViewModel.showError("No cycles here")
                 return@launch
             }
 
@@ -164,16 +176,20 @@ class AlgorithmsView<V, E>(
             val startVertex = findVertexByLabel(startVertexId)
             val endVertex = findVertexByLabel(endVertexId)
 
-            if (startVertex == null || endVertex == null) {
+            if (startVertex == null) {
+                errorViewModel.showError("Warning: There are no start vertex in the graph")
+                return@launch
+            }
+            if (endVertex == null) {
+                errorViewModel.showError("Warning: There are no end vertex in the graph")
                 return@launch
             }
 
-            val fordBellman = FordBellman(graph = viewModel.graph)
+            val fordBellman = FordBellman(graph = viewModel.graph, errorViewModel = errorViewModel)
 
             val result = fordBellman.fordBellman(startVertex.id, endVertex.id)
 
             if (result == null) {
-                errorViewModel.showError("Warning: No way")
                 return@launch
             }
 
@@ -213,6 +229,7 @@ class AlgorithmsView<V, E>(
             val communities = findCommunitiesAlgorithm.findCommunities()
 
             if (communities == null) {
+                errorViewModel.showError("No communities here")
                 return@launch
             }
 

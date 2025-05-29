@@ -19,8 +19,4 @@ class ErrorViewModel  {
         _isError.value = true
     }
 
-    fun clearError() {
-        _isError.value = false
-        _errorMessage.value = ""
-    }
 }

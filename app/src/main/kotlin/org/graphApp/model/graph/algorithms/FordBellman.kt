@@ -1,9 +1,11 @@
 package org.graphApp.model.graph.algorithms
 
 import org.graphApp.model.graph.*
+import org.graphApp.viewmodel.ErrorViewModel
 
 class FordBellman<V, E>(
-    private val graph: Graph<V, E>
+    val graph: Graph<V, E>,
+    val errorViewModel: ErrorViewModel
 ) {
     private val _edges = graph.edges
     private val _vertices = graph.vertices
@@ -41,17 +43,30 @@ class FordBellman<V, E>(
 
         detectNegativeCycles()
 
-        if (to != null && (hasNegativeCycle[to] == true || d[to] == Double.POSITIVE_INFINITY)) {
+        if (to != null && d[to] == Double.POSITIVE_INFINITY) {
+            errorViewModel.showError("Warning : Vertex of graph is unreachable")
+            return null
+        }
+        if (to != null && hasNegativeCycle[to] == true) {
+            errorViewModel.showError("Warning : Negative cycle")
+            return null
+        }
+        if (to == null) {
+            errorViewModel.showError("Warning : No such end vertex in graph")
+            return null
+        }
+        val vertexPath = pathReconstruct(from, to, parent)
+        if (vertexPath == null) {
+            errorViewModel.showError("Warning : Vertex path is empty")
             return null
         }
 
-        return if (to != null) {
-            val vertexPath = pathReconstruct(from, to, parent) ?: return null
-            val edgePath = reconstructEdges(vertexPath)
-            Pair(vertexPath, edgePath)
-        } else {
-            null
-        }
+        val edgePath = reconstructEdges(vertexPath)
+
+        return Pair(vertexPath, edgePath)
+
+
+
     }
 
 
@@ -64,6 +79,7 @@ class FordBellman<V, E>(
         }
 
         if (flag) {
+
             return
         }
 
