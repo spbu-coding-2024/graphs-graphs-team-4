@@ -92,17 +92,17 @@ Our model supports multiple graph types:
 
 The application provides a collection of classical graph algorithms, implemented in the `algorithms` package and available through the user interface:
 
-* [MST algorithm](https://en.wikipedia.org/wiki/Minimum_spanning_tree) — Kraskal finds a minimum spanning forest of an undirected edge-weighted graph. If the graph is connected, it finds a minimum spanning tree.
-* [Ford-Bellman algorithm](https://en.wikipedia.org/wiki/Bellman%E2%80%93Ford_algorithm) — finds shortest paths in graphs that may include negative edge weights.
-* [Find Cycle algorithm](https://en.wikipedia.org/wiki/Cycle_%28graph_theory%29#Algorithm) — determines whether a cycle exists involving a specified vertex.
-* [Strongly connected - Kosaraju's algorithm](https://en.wikipedia.org/wiki/Kosaraju%27s_algorithm) — identifies and extracts strongly connected components in directed graphs.
+* [MST algorithm](https://en.wikipedia.org/wiki/Minimum_spanning_tree) — Kraskal finds a minimum spanning forest of an undirected edge-weighted graph. If the graph is connected, it finds a minimum spanning tree
+* [Ford-Bellman algorithm](https://en.wikipedia.org/wiki/Bellman%E2%80%93Ford_algorithm) — finds shortest paths in graphs that may include negative edge weights
+* [Find Cycle algorithm](https://en.wikipedia.org/wiki/Cycle_%28graph_theory%29#Algorithm) — determines whether a cycle exists involving a specified vertex
+* [Strongly connected - Kosaraju's algorithm](https://en.wikipedia.org/wiki/Kosaraju%27s_algorithm) — identifies and extracts strongly connected components in directed graphs
 
 In addition to classical algorithms, the application features built-in layout algorithms for automatic graph visualization:
 
-* [Find Communities - Louvain Algoritms](https://github.com/JetBrains-Research/louvain) — The Louvain method for community detection is a greedy optimization method intended to extract non-overlapping communities from large networks.
-* [Graph Layout]()
+* [Find Communities - Louvain Algoritms](https://github.com/JetBrains-Research/louvain) — The Louvain method for community detection is a greedy optimization method intended to extract non-overlapping communities from large networks
+* [Graph Layout](https://github.com/gephi/gephi/wiki/Force-Atlas-2) - ForceAtlas2 is a force-directed layout algorithm based on physical simulation principles like gravity, repulsion, attraction
 
-All algorithms are modularly implemented, making them reusable outside the user interface context.
+All algorithms are modularly implemented, making them reusable outside the user interface context
 
 ## Supported languages:
 
