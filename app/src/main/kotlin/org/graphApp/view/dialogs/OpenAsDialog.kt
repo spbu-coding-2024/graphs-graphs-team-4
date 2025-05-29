@@ -24,6 +24,7 @@ import org.neo4j.driver.AuthTokens
 import org.neo4j.driver.GraphDatabase
 import java.io.File
 import javax.swing.JFileChooser
+import javax.swing.UIManager
 import javax.swing.filechooser.FileNameExtensionFilter
 
 
@@ -36,7 +37,6 @@ fun OpenDialog(
     val resources = LocalTextResources.current
     var selectedOption by remember { mutableStateOf("SQLite") }
     val options = listOf("JSON", "Neo4j", "SQLite")
-    var name by remember { mutableStateOf("") }
     var uri by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
@@ -97,9 +97,9 @@ fun OpenDialog(
                         Spacer(Modifier.width(8.dp))
                         AddFolderButton(
                             onClick = {
-                                val _file = chooseDbFile()
-                                if (_file != null) {
-                                    selectedFile = _file
+                                val fileName = chooseDbFile()
+                                if (fileName != null) {
+                                    selectedFile = fileName
                                 }
                             }
                         )
@@ -347,6 +347,9 @@ fun OpenDialog(
 }
 
 fun chooseDbFile(): File? {
+
+    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+
     val fileChooser = JFileChooser()
     fileChooser.fileFilter = FileNameExtensionFilter("SQLite DB files", "db")
     val result = fileChooser.showOpenDialog(null)

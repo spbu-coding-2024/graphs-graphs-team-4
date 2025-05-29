@@ -157,7 +157,7 @@ class GraphViewModel<V, E>(
         }
     }
 
-
+    @Suppress("UNCHECKED_CAST")
     fun createEdge(from: Long, to: Long, weight: String? = null) {
         val id = edgeId++
         addEdge(from, to, id as E, weight)
