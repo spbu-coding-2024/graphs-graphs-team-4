@@ -24,6 +24,7 @@ import org.neo4j.driver.AuthTokens
 import org.neo4j.driver.GraphDatabase
 import java.io.File
 import javax.swing.JFileChooser
+import javax.swing.UIManager
 import javax.swing.filechooser.FileNameExtensionFilter
 
 
@@ -347,6 +348,9 @@ fun OpenDialog(
 }
 
 fun chooseDbFile(): File? {
+
+    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+
     val fileChooser = JFileChooser()
     fileChooser.fileFilter = FileNameExtensionFilter("SQLite DB files", "db")
     val result = fileChooser.showOpenDialog(null)
