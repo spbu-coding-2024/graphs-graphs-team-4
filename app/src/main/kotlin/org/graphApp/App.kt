@@ -8,9 +8,9 @@ import androidx.compose.ui.window.application
 import org.graphApp.model.graph.Graph
 import org.graphApp.model.graph.UndirectedGraph
 import org.graphApp.view.MainScreen
+import org.graphApp.viewmodel.ErrorViewModel
 import org.graphApp.viewmodel.MainScreenViewModel
 import org.graphApp.viewmodel.graph.GraphViewModel
-
 val currentGraph: Graph<String, Long> = UndirectedGraph()
 
 
@@ -19,7 +19,11 @@ val currentGraph: Graph<String, Long> = UndirectedGraph()
 fun App(onCloseRequest: () -> Unit) {
     MaterialTheme {
         val viewModel = MainScreenViewModel(currentGraph)
-        MainScreen(viewModel = viewModel, onCloseRequest = onCloseRequest)
+        MainScreen(
+            viewModel = viewModel,
+            onCloseRequest = onCloseRequest,
+            viewModelError = ErrorViewModel()
+        )
     }
 }
 
