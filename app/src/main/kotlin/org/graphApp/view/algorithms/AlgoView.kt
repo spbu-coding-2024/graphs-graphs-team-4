@@ -1,5 +1,6 @@
 package org.graphApp.view.algorithms
 
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,6 +14,7 @@ import org.graphApp.model.graph.algorithms.FordBellman
 import org.graphApp.model.graph.algorithms.MinimalSpanningTree
 import org.graphApp.model.graph.algorithms.FindCycles
 import org.graphApp.model.graph.algorithms.FindCommunities
+import org.graphApp.viewmodel.ErrorViewModel
 import org.graphApp.viewmodel.graph.GraphViewModel
 import org.graphApp.viewmodel.graph.VertexViewModel
 import kotlin.Long
@@ -20,9 +22,10 @@ import kotlin.collections.List
 
 class AlgorithmsView<V, E>(
     val viewModel: GraphViewModel<V, E>,
+    val errorViewModel: ErrorViewModel
 ) {
-    private val highlightColor = Color(0xFF419FE7)
 
+    private val highlightColor = Color(0xFF419FE7)
     private val communitiesColors = listOf(
         Color(0xFFEF5350),
         Color(0xFFAB47BC),
@@ -170,6 +173,7 @@ class AlgorithmsView<V, E>(
             val result = fordBellman.fordBellman(startVertex.id, endVertex.id)
 
             if (result == null) {
+                errorViewModel.showError("Warning: No way")
                 return@launch
             }
 
