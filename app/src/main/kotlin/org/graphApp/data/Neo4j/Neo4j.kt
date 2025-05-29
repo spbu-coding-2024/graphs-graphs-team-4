@@ -265,7 +265,6 @@ class Neo4jDataBase<V, E>(
 
     fun uploadGraph() = CoroutineScope(Dispatchers.IO).launch {
         checkNeo4jConnection()
-        checkForExistingNameOfGraph()
         val type = withSession { session ->
             session.executeRead { tx ->
                 val result = tx.run(
