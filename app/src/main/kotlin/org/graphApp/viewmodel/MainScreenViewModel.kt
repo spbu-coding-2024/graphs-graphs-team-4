@@ -6,20 +6,14 @@ import androidx.compose.ui.unit.dp
 import org.graphApp.model.graph.DirectGraph
 import org.graphApp.model.graph.DirectWeightedGraph
 import org.graphApp.model.graph.DirectedWeightedGraph
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.graphApp.currentGraph
-import org.graphApp.model.graph.Edge
 import org.graphApp.model.graph.Graph
 import org.graphApp.model.graph.UndirectedGraph
 import org.graphApp.model.graph.WeightedGraph
 import org.graphApp.viewmodel.graph.GraphViewModel
-import kotlin.math.exp
 import kotlin.random.Random
 
 
@@ -31,10 +25,10 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
     var offset by mutableStateOf(Offset.Zero)
     private var showHighlightOfVertex = mutableStateOf(true)
     var highlight: Boolean
-    get() = showHighlightOfVertex.value
-    set(value) {
-        showHighlightOfVertex.value = value
-    }
+        get() = showHighlightOfVertex.value
+        set(value) {
+            showHighlightOfVertex.value = value
+        }
     private var _isWeightedGraphState = mutableStateOf(false)
     var isWeightedGraph: Boolean
         get() = _isWeightedGraphState.value
@@ -189,6 +183,13 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
 
 
     fun createRandomGraph(isWeighted: Boolean): Job = CoroutineScope(Dispatchers.Default).launch {
+        val isExistEdge: (Long,Long) -> Boolean = { from, to ->
+            graphViewModel.edges.any { edge ->
+                (edge.v.vertexID == from && edge.u.vertexID == to) ||
+                        (edge.u.vertexID == from && edge.v.vertexID == to)
+            }
+        }
+
         val randomVertices = Random.nextLong(5L, 8L)
         val randomEdges = (1..2).random()
         for (vertexID in 0..randomVertices) {
@@ -196,26 +197,32 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
 
         }
         for (vertexID in 1..randomVertices) {
-            val parentVertex = Random.nextLong(0, vertexID)
-            addEdgeWithWeight(vertexID, parentVertex, isWeighted)
+            var parentVertex = Random.nextLong(0, vertexID)
+            if(isDirectedGraph){
+                while (isExistEdge(vertexID, parentVertex)) {
+                    println(isExistEdge(vertexID, parentVertex))
+                    parentVertex = Random.nextLong(0, parentVertex)
+                }
+            }
+            addRandomEdge(vertexID, parentVertex, isWeighted)
         }
 
         for (vertexIDFrom in 0..randomVertices) {
             val vertexIDTo = randomLongExcluding(0, randomVertices, vertexIDFrom)
             repeat(randomEdges) {
-                addEdgeWithWeight(vertexIDFrom, vertexIDTo, isWeighted)
+                addRandomEdge(vertexIDFrom, vertexIDTo, isWeighted)
             }
         }
     }
 
-    private fun addEdgeWithWeight(vertexIDFrom: Long, vertexIDTo: Long, isWeighted: Boolean) {
+    private fun addRandomEdge(vertexIDFrom: Long, vertexIDTo: Long, isWeighted: Boolean) {
         if (!isWeighted) {
-                graphViewModel.addEdge(vertexIDFrom, vertexIDTo, vertexIDFrom.toString() as E)
+            graphViewModel.addEdge(vertexIDFrom, vertexIDTo, vertexIDFrom.toString() as E)
         } else {
-                graphViewModel.addEdge(
-                    vertexIDFrom, vertexIDTo, vertexIDFrom.toString() as E,
-                    Random.nextLong(1L, 100L).toString() as String
-                )
+            graphViewModel.addEdge(
+                vertexIDFrom, vertexIDTo, vertexIDFrom.toString() as E,
+                Random.nextLong(1L, 100L).toString() as String
+            )
         }
     }
 }
