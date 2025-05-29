@@ -6,7 +6,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.graphApp.model.graph.Vertex
-import org.graphApp.model.graph.*
 import org.graphApp.model.graph.Edge
 import org.graphApp.model.graph.algorithms.FindStrongCommunities
 import org.graphApp.model.graph.algorithms.FordBellman
@@ -40,12 +39,13 @@ class AlgorithmsView<V, E>(
         Color(0xFF789262),
         Color(0xFFEC407A),
         Color(0xFF7E57C2),
-        Color(0xFF26C6DA)
+        Color(0xFF26C6DA),
     )
 
 
     fun findStrongCommunities() {
         CoroutineScope(Dispatchers.Default).launch {
+
             if (!viewModel.isDirectedGraph.value) {
                 errorViewModel.showError("Warning: Graph should be directed")
                 return@launch
@@ -71,9 +71,9 @@ class AlgorithmsView<V, E>(
 
     fun minimalSpanningTree() {
         CoroutineScope(Dispatchers.Default).launch {
-            var mstFinder: MinimalSpanningTree<V, E> = MinimalSpanningTree(graph = viewModel.graph)
-            var resultEdges: List<Edge<E, V>>?
+            val mstFinder: MinimalSpanningTree<V, E> = MinimalSpanningTree(graph = viewModel.graph)
             val components = mstFinder.forCheckingConnectivity()
+
             if (components > 1) {
                 errorViewModel.showError("Warning: Components of connection > 1")
                 return@launch
@@ -83,17 +83,19 @@ class AlgorithmsView<V, E>(
                 return@launch
             }
             resetAllColorsToDefaults()
-            if (viewModel.isWeightedGraph.value) {
 
-                resultEdges = mstFinder.kraskalSpanningTree()
+            val resultEdges: List<Edge<E, V>>? = if (viewModel.isWeightedGraph.value) {
+                mstFinder.kraskalSpanningTree()
             } else {
-                resultEdges = mstFinder.bfsSpanningTree()
+                mstFinder.bfsSpanningTree()
             }
 
             viewModel.edges.forEach { edgeVM ->
                 edgeVM.color = Color.Gray.copy(alpha = 0.3f)
             }
+
             val mstColor = Color(0xFF4CAF50)
+
             resultEdges?.forEach { edge ->
                 val edgeId = findEdgeByVertices(edge.vertices.first.id, edge.vertices.second.id)
                 edgeId?.let { edgeVM ->
@@ -120,6 +122,7 @@ class AlgorithmsView<V, E>(
             }
 
             val startVertex = findVertexByLabel(startVertexIdOrLabel)
+
             if (startVertex == null) {
                 errorViewModel.showError("Warning: There are no such point in the graph")
                 return@launch
@@ -127,7 +130,8 @@ class AlgorithmsView<V, E>(
 
             val findCycle = FindCycles(graph = viewModel.graph)
 
-            val isDirected = viewModel.graph.edges.firstOrNull() is DirectedEdge<*, *>
+            val isDirected = viewModel.isDirectedGraph.value
+
             val result = if (isDirected) {
                 findCycle.findCycleDirected(startVertex)
             } else {
@@ -238,7 +242,7 @@ class AlgorithmsView<V, E>(
             if (!isWeightedGraph) {
                 errorViewModel.showError("Warning : It is no weighted graph")
             }
-            communities.entries.forEachIndexed { index, (communityId, vertexIds) ->
+            communities.entries.forEachIndexed { index, (_, vertexIds) ->
                 val colorIndex = index % communitiesColors.size
                 val communityColor = communitiesColors[colorIndex]
 
