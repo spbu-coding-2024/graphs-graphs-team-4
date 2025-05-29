@@ -108,7 +108,7 @@ The application provides a collection of classical graph algorithms, implemented
 * [Find Cycle algorithm](https://en.wikipedia.org/wiki/Cycle_%28graph_theory%29#Algorithm) — determines whether a cycle exists involving a specified vertex
   
   
-![img.gif](resources/findCycles.gif)
+![img.gif](resources/findCyclesPreview.gif)
       
 * [Strongly connected - Kosaraju's algorithm](https://en.wikipedia.org/wiki/Kosaraju%27s_algorithm) — identifies and extracts strongly connected components in directed graphs
 
