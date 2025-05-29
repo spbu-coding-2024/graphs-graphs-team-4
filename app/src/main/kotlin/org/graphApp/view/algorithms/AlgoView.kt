@@ -123,6 +123,7 @@ class AlgorithmsView<V, E>(
             }
 
             if (result == null) {
+                errorViewModel.showError("No cycles here")
                 return@launch
             }
 
@@ -213,6 +214,7 @@ class AlgorithmsView<V, E>(
             val communities = findCommunitiesAlgorithm.findCommunities()
 
             if (communities == null) {
+                errorViewModel.showError("No communities here")
                 return@launch
             }
 
