@@ -1,7 +1,6 @@
 # GraphViz
 
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.1.20-blue)
-![Kotlin Coroutines](https://img.shields.io/badge/Kotlin%Coroutines)
 ![Gradle](https://img.shields.io/badge/Gradle-8.8-brightgreen)
 ![Compose](https://img.shields.io/badge/Compose-1.8.0-orange)
 ![License](https://img.shields.io/badge/License-MIT-blue)
@@ -50,9 +49,11 @@ The application uses the **MVVM** architectural pattern. Graphs are displayed in
 
 ## 📦 Technologies
 
-- Language: Kotlin 
+- Language: Kotlin
+- Async: Kotlin Coroutines
 - GUI: Jetpack Compose 
 - DataBases: SQLite, Neo4j
+- Building system: Gradle
 - Testing: `JUnit5`
 
 ## 🚀 Get started
