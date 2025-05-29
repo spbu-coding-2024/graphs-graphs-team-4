@@ -116,9 +116,7 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
 
         loadedViewModel.vertices.forEach { oldVertexVM ->
             val newVertexVM = graphViewModel.addVertex(
-                label = oldVertexVM.vertex.element as String,
-                x = oldVertexVM.x,
-                y = oldVertexVM.y
+                label = oldVertexVM.vertex.element as String, x = oldVertexVM.x, y = oldVertexVM.y
             )
             vertexMap[oldVertexVM.vertexID] = newVertexVM.vertexID
         }
@@ -183,44 +181,52 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
 
 
     fun createRandomGraph(isWeighted: Boolean): Job = CoroutineScope(Dispatchers.Default).launch {
-        val isExistEdge: (Long,Long) -> Boolean = { from, to ->
+        val isExistEdge: (Long, Long) -> Boolean = { from, to ->
             graphViewModel.edges.any { edge ->
-                (edge.v.vertexID == from && edge.u.vertexID == to) ||
-                        (edge.u.vertexID == from && edge.v.vertexID == to)
+                (edge.v.vertexID == from && edge.u.vertexID == to) || (edge.u.vertexID == from && edge.v.vertexID == to)
             }
         }
 
-        val randomVertices = Random.nextLong(5L, 8L)
-        val randomEdges = (1..2).random()
+        val randomVertices = Random.nextLong(10L, 20L)
+        val randomEdges = (1..3).random()
         for (vertexID in 0..randomVertices) {
             graphViewModel.addVertex(vertexID.toString(), 0.dp, 0.dp)
 
         }
-        for (vertexID in 1..randomVertices) {
-            var parentVertex = Random.nextLong(0, vertexID)
-            if(isDirectedGraph){
-                while (isExistEdge(vertexID, parentVertex)) {
-                    println(isExistEdge(vertexID, parentVertex))
-                    parentVertex = Random.nextLong(0, parentVertex)
-                }
+        for (i in 0 until randomVertices) {
+            val next = (i + 1) % (randomVertices + 1)
+            if (!isExistEdge(i, next)) {
+                addRandomEdge(i, next, isWeighted)
             }
-            addRandomEdge(vertexID, parentVertex, isWeighted)
         }
-
         for (vertexIDFrom in 0..randomVertices) {
-            val vertexIDTo = randomLongExcluding(0, randomVertices, vertexIDFrom)
+            var vertexIDTo = randomLongExcluding(0, randomVertices, vertexIDFrom)
             repeat(randomEdges) {
-                addRandomEdge(vertexIDFrom, vertexIDTo, isWeighted)
+                if (isDirectedGraph) {
+                    if(isExistEdge(vertexIDFrom, vertexIDTo)) {
+                        println(isExistEdge(vertexIDFrom, vertexIDTo))
+                        vertexIDTo = Random.nextLong(0, randomVertices-1)
+                    } else {
+                        addRandomEdge(vertexIDFrom, vertexIDTo, isWeighted)
+                    }
+                } else {
+                    addRandomEdge(vertexIDFrom, vertexIDTo, isWeighted)
+                }
             }
         }
     }
 
     private fun addRandomEdge(vertexIDFrom: Long, vertexIDTo: Long, isWeighted: Boolean) {
         if (!isWeighted) {
-            graphViewModel.addEdge(vertexIDFrom, vertexIDTo, vertexIDFrom.toString() as E)
+            graphViewModel.addEdge(
+                vertexIDFrom, vertexIDTo,
+                Random.nextLong(1L, 1000L).toString() as E
+            )
         } else {
             graphViewModel.addEdge(
-                vertexIDFrom, vertexIDTo, vertexIDFrom.toString() as E,
+                vertexIDFrom,
+                vertexIDTo,
+                Random.nextLong(1L, 1000L).toString() as E,
                 Random.nextLong(1L, 100L).toString() as String
             )
         }
