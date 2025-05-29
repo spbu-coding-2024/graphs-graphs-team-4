@@ -128,7 +128,6 @@ class AlgorithmsView<V, E>(
             val findCycle = FindCycles(graph = viewModel.graph)
 
             val isDirected = viewModel.graph.edges.firstOrNull() is DirectedEdge<*, *>
-
             val result = if (isDirected) {
                 findCycle.findCycleDirected(startVertex)
             } else {
@@ -234,7 +233,11 @@ class AlgorithmsView<V, E>(
                 errorViewModel.showError("No communities here")
                 return@launch
             }
+            val isWeightedGraph = viewModel.isWeightedGraph.value
 
+            if (!isWeightedGraph) {
+                errorViewModel.showError("Warning : It is no weighted graph")
+            }
             communities.entries.forEachIndexed { index, (communityId, vertexIds) ->
                 val colorIndex = index % communitiesColors.size
                 val communityColor = communitiesColors[colorIndex]
