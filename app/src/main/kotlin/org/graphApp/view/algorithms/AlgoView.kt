@@ -177,17 +177,20 @@ class AlgorithmsView<V, E>(
             val startVertex = findVertexByLabel(startVertexId)
             val endVertex = findVertexByLabel(endVertexId)
 
-            if (startVertex == null || endVertex == null) {
-                errorViewModel.showError("Warning: There are no such point in the graph")
+            if (startVertex == null) {
+                errorViewModel.showError("Warning: There are no start vertex in the graph")
+                return@launch
+            }
+            if (endVertex == null) {
+                errorViewModel.showError("Warning: There are no end vertex in the graph")
                 return@launch
             }
 
-            val fordBellman = FordBellman(graph = viewModel.graph)
+            val fordBellman = FordBellman(graph = viewModel.graph, errorViewModel = errorViewModel)
 
             val result = fordBellman.fordBellman(startVertex.id, endVertex.id)
 
             if (result == null) {
-                errorViewModel.showError("Warning: No way or Negative cycle")
                 return@launch
             }
 
