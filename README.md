@@ -110,19 +110,6 @@ All algorithms are modularly implemented, making them reusable outside the user 
   - Russian
   - Chinese
 
-## Contributing
-
-We welcome all contributions! There are several ways you can help improve the application. Whether you have a feature idea, want to contribute code, or discovered a bug — you're in the right place.
-
-To contribute:
-  1. Open an issue describing your idea or the bug you found.
-  2. Wait for the maintainers to respond with questions, approval, or feedback.
-  3. If your idea is accepted, create a new branch.
-  4. Once your work is complete, open a pull request and tag the maintainers as reviewers to get their attention.
-
-Before submitting a pull request, please ensure:
-  -All tests pass
-  -Your code follows the project's formatting and style guidelines
 
 ## 📄 License
 
