@@ -22,7 +22,6 @@ class Neo4jWithMinimalSpanningTreeKraskal {
     private lateinit var graphViewModel: GraphViewModel<String, Long>
     private lateinit var mainScreenViewModel: MainScreenViewModel<Long>
     private lateinit var finder: MinimalSpanningTree<String, Long>
-    private lateinit var driver: Driver
     private lateinit var database: Neo4jDataBase<String, Long>
     @BeforeEach
     fun setUp() {
@@ -36,21 +35,14 @@ class Neo4jWithMinimalSpanningTreeKraskal {
             mutableStateOf(true)
         )
 
-        driver = GraphDatabase.driver(
-            "bolt://localhost:7687",
-            AuthTokens.basic("neo4j", "Sosiska1234554321"))
         database = Neo4jDataBase(
             mainViewModel = mainScreenViewModel,
-            graph = graphViewModel,
-            driver = driver,
-            graphName = "RISCVHATERS"
+            graphName = "RISCVHATERS",
+            graphViewModel = mainScreenViewModel.graphViewModel,
+            username = "neo4j",
+            password = "Sosiska1234554321",
+            uri = "",
         )
-        clean(driver)
-    }
-
-    @AfterEach
-    fun delete() {
-        driver.close()
     }
 
     @Test

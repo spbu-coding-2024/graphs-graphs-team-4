@@ -9,7 +9,8 @@ import org.graphApp.viewmodel.MainScreenViewModel
 import org.graphApp.viewmodel.graph.EdgeViewModel
 import org.graphApp.viewmodel.graph.GraphViewModel
 import org.graphApp.viewmodel.graph.VertexViewModel
-import org.neo4j.driver.Driver
+import org.neo4j.driver.AuthTokens
+import org.neo4j.driver.GraphDatabase
 import org.neo4j.driver.Session
 
 const val STUB = 0
@@ -17,14 +18,20 @@ const val STUB = 0
 
 class Neo4jDataBase<V, E>(
     val mainViewModel: MainScreenViewModel<E>,
-    val graph: GraphViewModel<V, E>,
+    graphViewModel: GraphViewModel<V,E>,
     graphName: String,
-    private val driver: Driver
+    uri: String,
+    username: String,
+    password: String,
 ) {
+    private val _username = username
+    private val _password = password
     private val currentGraphName = graphName
     private val gName = mapOf(
         "graphname" to currentGraphName
     )
+    private val driver =
+        GraphDatabase.driver(uri.ifBlank { "bolt://localhost:7687" }, AuthTokens.basic(_username, _password))
 
     private fun <T> withSession(action: (Session) -> T): T {
         return driver.session().use { session -> action(session) }
@@ -161,6 +168,7 @@ class Neo4jDataBase<V, E>(
                 storeEdge(edge as EdgeViewModel<E, V>)
             }
         }
+        driver.close()
     }
 
 
@@ -260,35 +268,33 @@ class Neo4jDataBase<V, E>(
         }
     }
 
-    suspend fun uploadGraph() {
-        withContext(Dispatchers.IO) {
-            checkNeo4jConnection()
-            val type = withSession { session ->
-                session.executeRead { tx ->
-                    val result = tx.run(
-                        "MATCH (a:Vertex {graphname: \$graphname})-[edge:CONNECTED_TO]-(b:Vertex {graphname: \$graphname}) RETURN edge.type AS type LIMIT 1",
-                        gName
-                    )
-                    if (result.hasNext()) {
-                        result.next().get("type").asString()
-                    } else {
-                        null
-                    }
+    fun uploadGraph() = CoroutineScope(Dispatchers.IO).launch {
+        checkNeo4jConnection()
+
+        val type = withSession { session ->
+            session.executeRead { tx ->
+                val result = tx.run(
+                    "MATCH (a:Vertex {graphname: \$graphname})-[edge:CONNECTED_TO]-(b:Vertex {graphname: \$graphname}) RETURN edge.type AS type LIMIT 1",
+                    gName
+                )
+                if (result.hasNext()) {
+                    result.next().get("type").asString()
+                } else {
+                    null
                 }
             }
-
-
-
-            when (type) {
-                EdgeTypeNeo4j.DIRECTED_WEIGHTED.typeString -> mainViewModel.createNewGraph(true, true)
-                EdgeTypeNeo4j.WEIGHTED.typeString -> mainViewModel.createNewGraph(true, false)
-                EdgeTypeNeo4j.DIRECTED.typeString -> mainViewModel.createNewGraph(false, true)
-                EdgeTypeNeo4j.UNDIRECTED.typeString -> mainViewModel.createNewGraph(false, false)
-                else -> throw IllegalArgumentException("Unknown edge type: $type")
-            }
-
-            uploadVertex()
-            uploadEdge()
         }
+        when (type) {
+            EdgeTypeNeo4j.DIRECTED_WEIGHTED.typeString -> mainViewModel.createNewGraph(true, true)
+            EdgeTypeNeo4j.WEIGHTED.typeString -> mainViewModel.createNewGraph(true, false)
+            EdgeTypeNeo4j.DIRECTED.typeString -> mainViewModel.createNewGraph(false, true)
+            EdgeTypeNeo4j.UNDIRECTED.typeString -> mainViewModel.createNewGraph(false, false)
+            else -> throw IllegalArgumentException("Unknown edge type: $type")
+        }
+
+        uploadVertex()
+        uploadEdge()
+        driver.close()
     }
+
 }

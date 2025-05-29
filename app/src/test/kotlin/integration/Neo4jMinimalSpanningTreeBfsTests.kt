@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.runBlocking
 import org.graphApp.data.Neo4j.Neo4jDataBase
+import org.graphApp.main
 import org.graphApp.model.graph.UndirectedGraph
 import org.graphApp.model.graph.algorithms.MinimalSpanningTree
 import org.graphApp.viewmodel.MainScreenViewModel
@@ -22,8 +23,8 @@ class Neo4jWithMinimalSpanningTreeBfs {
     private lateinit var graphViewModel: GraphViewModel<String, Long>
     private lateinit var mainScreenViewModel: MainScreenViewModel<Long>
     private lateinit var finder: MinimalSpanningTree<String, Long>
-    private lateinit var driver: Driver
     private lateinit var database: Neo4jDataBase<String, Long>
+
     @BeforeEach
     fun setUp() {
         graph = UndirectedGraph()
@@ -36,27 +37,20 @@ class Neo4jWithMinimalSpanningTreeBfs {
             mutableStateOf(true)
         )
 
-        driver = GraphDatabase.driver(
-            "bolt://localhost:7687",
-            AuthTokens.basic("neo4j", "Sosiska1234554321"))
         database = Neo4jDataBase(
             mainViewModel = mainScreenViewModel,
-            graph = graphViewModel,
-            driver = driver,
-            graphName = "RISCVHATERS"
-        )
-        clean(driver)
-    }
-
-    @AfterEach
-    fun delete() {
-        driver.close()
+            graphName = "RISCVHATERS",
+            graphViewModel = mainScreenViewModel.graphViewModel,
+            username = "neo4j",
+            password = "Sosiska1234554321",
+            uri = "",
+            )
     }
 
     @Test
     @DisplayName("Integration test for Finding Minimal SpanningTree with BFS")
     fun testBfsMinimalSpanningTree() = runBlocking {
-        for(id in 0..<5) {
+        for (id in 0..<5) {
             graphViewModel.addVertex(id.toString(), 0.dp, 0.dp)
         }
         graphViewModel.createEdge(0, 1)
@@ -77,7 +71,7 @@ class Neo4jWithMinimalSpanningTreeBfs {
     @Test
     @DisplayName("Integration test for Finding Minimal SpanningTree with BFS")
     fun testBfsMinimalSpanningTree2() = runBlocking {
-        for(id in 0..<3) {
+        for (id in 0..<3) {
             graphViewModel.addVertex(id.toString(), 0.dp, 0.dp)
         }
         graphViewModel.createEdge(0, 1)

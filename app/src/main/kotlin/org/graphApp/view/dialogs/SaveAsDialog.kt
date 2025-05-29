@@ -321,17 +321,15 @@ fun <E> SaveAsDialog(
 
                                             "Neo4j" -> {
                                                 try {
-                                                    val driver = GraphDatabase.driver(
-                                                        uri.ifBlank { "bolt://localhost:7687" },
-                                                        AuthTokens.basic(username, password)
-                                                    )
-                                                    val neo4jStorer = Neo4jDataBase(
+                                                    val neo4jLoader = Neo4jDataBase(
                                                         mainViewModel = mainViewModel,
-                                                        graph = mainViewModel.graphViewModel,
-                                                        driver = driver,
-                                                        graphName = name
+                                                        graphName = name,
+                                                        username = username,
+                                                        password = password,
+                                                        uri = uri,
+                                                        graphViewModel = mainViewModel.graphViewModel
                                                     )
-                                                    neo4jStorer.storeGraph()
+                                                    neo4jLoader.storeGraph()
                                                     onDismissRequest()
                                                 } catch (neo4jException: Exception) {
                                                     errorMessage = neo4jException.localizedMessage ?: "Unknown error"

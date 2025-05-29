@@ -333,15 +333,13 @@ fun OpenDialog(
 
                                             "Neo4j" -> {
                                                 try {
-                                                    val driver = GraphDatabase.driver(
-                                                        uri.ifBlank { "bolt://localhost:7687" },
-                                                        AuthTokens.basic(username, password)
-                                                    )
                                                     val neo4jLoader = Neo4jDataBase(
                                                         mainViewModel = mainViewModel,
-                                                        graph = mainViewModel.graphViewModel,
-                                                        driver = driver,
-                                                        graphName = graphName
+                                                        graphName = graphName,
+                                                        username = username,
+                                                        password = password,
+                                                        uri = uri,
+                                                        graphViewModel = mainViewModel.graphViewModel
                                                     )
                                                     neo4jLoader.uploadGraph()
                                                     onDismissRequest()

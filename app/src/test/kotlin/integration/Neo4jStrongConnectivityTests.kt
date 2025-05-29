@@ -17,20 +17,11 @@ import org.neo4j.driver.AuthTokens
 import org.neo4j.driver.Driver
 import org.neo4j.driver.GraphDatabase
 
-fun clean(driver: Driver) {
-    driver.session().use { session ->
-        session.executeWrite { tx ->
-            tx.run("MATCH (n) DETACH DELETE n;")
-        }
-    }
-}
-
 class Neo4jWithStrongConnectivity {
     private lateinit var graph: DirectGraph<String, Long>
     private lateinit var graphViewModel: GraphViewModel<String, Long>
     private lateinit var mainScreenViewModel: MainScreenViewModel<Long>
     private lateinit var finder: FindStrongCommunities<String, Long>
-    private lateinit var driver: Driver
     private lateinit var database: Neo4jDataBase<String, Long>
 
     @BeforeEach
@@ -44,22 +35,15 @@ class Neo4jWithStrongConnectivity {
             mutableStateOf(false),
             mutableStateOf(true)
         )
-        
-        driver = GraphDatabase.driver(
-            "bolt://localhost:7687",
-            AuthTokens.basic("neo4j", "Sosiska1234554321"))
+
         database = Neo4jDataBase(
             mainViewModel = mainScreenViewModel,
-            graph = graphViewModel,
-            driver = driver,
-            graphName = "RISCVHATERS"
+            graphName = "RISCVHATERS",
+            graphViewModel = mainScreenViewModel.graphViewModel,
+            username = "neo4j",
+            password = "Sosiska1234554321",
+            uri = "",
         )
-        clean(driver)
-    }
-
-    @AfterEach
-    fun delete() {
-        driver.close()
     }
 
     @Test
