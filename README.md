@@ -96,6 +96,10 @@ Our model supports multiple graph types:
 The application provides a collection of classical graph algorithms, implemented in the `algorithms` package and available through the user interface:
 
 * [MST algorithm](https://en.wikipedia.org/wiki/Minimum_spanning_tree) — Kraskal finds a minimum spanning forest of an undirected edge-weighted graph. If the graph is connected, it finds a minimum spanning tree
+
+    <details>
+      ![img.gif](app/src/main/resources/gifPreview/MSTPreview.gif)
+  
 * [Ford-Bellman algorithm](https://en.wikipedia.org/wiki/Bellman%E2%80%93Ford_algorithm) — finds shortest paths in graphs that may include negative edge weights
 * [Find Cycle algorithm](https://en.wikipedia.org/wiki/Cycle_%28graph_theory%29#Algorithm) — determines whether a cycle exists involving a specified vertex
 * [Strongly connected - Kosaraju's algorithm](https://en.wikipedia.org/wiki/Kosaraju%27s_algorithm) — identifies and extracts strongly connected components in directed graphs
