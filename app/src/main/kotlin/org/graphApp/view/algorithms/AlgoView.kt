@@ -26,19 +26,21 @@ class AlgorithmsView<V, E>(
 
     private val highlightColor = Color(0xFF419FE7)
     private val communitiesColors = listOf(
-        Color(0xFFFF0000), Color(0xFFFF8000), Color(0xFFFFFF00), Color(0xFF80FF00),
-        Color(0xFF00FF00), Color(0xFF00FF80), Color(0xFF00FFFF), Color(0xFF0080FF),
-        Color(0xFF0000FF), Color(0xFF8000FF), Color(0xFFFF00FF), Color(0xFFFF0080),
-        Color(0xFF8B0000), Color(0xFF8B4513), Color(0xFFFF4500), Color(0xFFFFD700),
-        Color(0xFF808000), Color(0xFF006400), Color(0xFF50C878), Color(0xFF008B8B),
-        Color(0xFF4682B4), Color(0xFF000080), Color(0xFF4B0082), Color(0xFF8B008B),
-        Color(0xFFFFB6C1), Color(0xFFFFCBA4), Color(0xFFFFFDD0), Color(0xFF90EE90),
-        Color(0xFFF0FFFF), Color(0xFF87CEEB), Color(0xFFE6E6FA), Color(0xFFDDA0DD),
-        Color(0xFF40E0D0), Color(0xFFFF7F50), Color(0xFFF0E68C), Color(0xFFFA8072),
-        Color(0xFFDDA0DD), Color(0xFFDC143C), Color(0xFFED9121), Color(0xFF7DF9FF),
-        Color(0xFFE2725B), Color(0xFFCC7722), Color(0xFFC2B280), Color(0xFF2E8B57),
-        Color(0xFF708090), Color(0xFF722F37), Color(0xFFADFF2F), Color(0xFFFF6EC7),
-        Color(0xFF0080FF), Color(0xFFCCFF00)
+        Color(0xFFEF5350),
+        Color(0xFFAB47BC),
+        Color(0xFF5C6BC0),
+        Color(0xFF29B6F6),
+        Color(0xFF26A69A),
+        Color(0xFF66BB6A),
+        Color(0xFFD4E157),
+        Color(0xFFFFCA28),
+        Color(0xFFFF7043),
+        Color(0xFFA1887F),
+        Color(0xFF8D6E63),
+        Color(0xFF789262),
+        Color(0xFFEC407A),
+        Color(0xFF7E57C2),
+        Color(0xFF26C6DA)
     )
 
 
@@ -145,7 +147,7 @@ class AlgorithmsView<V, E>(
             vertexPath?.forEach { vertexId ->
                 viewModel.vertices.find { it.vertexID == vertexId }?.let { vertexVM ->
                     vertexVM.color = cycleColor
-                    delay(300L)
+                    delay(30L)
                 }
             }
 
@@ -156,7 +158,7 @@ class AlgorithmsView<V, E>(
                 val edgeVM = findEdgeByVertices(fromId, toId)
                 edgeVM?.let {
                     it.color = cycleColor
-                    delay(300L)
+                    delay(30L)
                 }
             }
         }
@@ -200,7 +202,7 @@ class AlgorithmsView<V, E>(
             vertexPath?.forEach { vertexId ->
                 viewModel.vertices.find { it.vertexID == vertexId }?.let { vertexVM ->
                     vertexVM.color = pathColor
-                    delay(300L)
+                    delay(30L)
                 }
             }
 
@@ -211,7 +213,7 @@ class AlgorithmsView<V, E>(
                 val edgeVM = findEdgeByVertices(fromId, toId)
                 edgeVM?.let {
                     it.color = pathColor
-                    delay(300L)
+                    delay(30L)
                 }
             }
         }
@@ -243,7 +245,7 @@ class AlgorithmsView<V, E>(
                     }
                 }
 
-                delay(3L)
+                delay(30L)
             }
 
             communities.entries.forEach { (communityId, vertexIds) ->

@@ -187,7 +187,7 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
             }
         }
 
-        val randomVertices = Random.nextLong(10L, 20L)
+        val randomVertices = Random.nextLong(100L, 500L)
         val randomEdges = (1..3).random()
         for (vertexID in 0..randomVertices) {
             graphViewModel.addVertex(vertexID.toString(), 0.dp, 0.dp)
