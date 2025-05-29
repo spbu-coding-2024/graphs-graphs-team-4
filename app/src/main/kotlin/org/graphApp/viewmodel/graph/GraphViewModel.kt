@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpOffset
-import androidx.compose.ui.unit.IntOffset
 import org.graphApp.model.graph.*
 
 class GraphViewModel<V, E>(
@@ -14,7 +13,8 @@ class GraphViewModel<V, E>(
     val showVerticesLabels: State<Boolean>,
     val showEdgesWeights: State<Boolean>,
     val isWeightedGraph: State<Boolean>,
-    val isDirectedGraph: State<Boolean>
+    val isDirectedGraph: State<Boolean>,
+    val highlight: State<Boolean> = mutableStateOf(false)
 ) {
     private var edgeId = 0L
     private val _vertices = mutableStateMapOf<Long, VertexViewModel<V>>()
@@ -39,6 +39,7 @@ class GraphViewModel<V, E>(
                 y = y,
                 v = vertex,
                 _labelVisible = showVerticesLabels,
+                highlight = highlight,
             )
         }
     }

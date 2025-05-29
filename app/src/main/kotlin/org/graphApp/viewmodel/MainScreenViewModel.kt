@@ -29,8 +29,12 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
     var scale by mutableStateOf(1f)
     var rotation by mutableStateOf(0f)
     var offset by mutableStateOf(Offset.Zero)
-
-
+    private var showHighlightOfVertex = mutableStateOf(false)
+    var highlight: Boolean
+    get() = showHighlightOfVertex.value
+    set(value) {
+        showHighlightOfVertex.value = value
+    }
     private var _isWeightedGraphState = mutableStateOf(false)
     var isWeightedGraph: Boolean
         get() = _isWeightedGraphState.value
@@ -69,6 +73,7 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
             showEdgesWeights = _showEdgesWeights,
             isWeightedGraph = _isWeightedGraphState,
             isDirectedGraph = _isDirectedGraphState,
+            highlight = showHighlightOfVertex
         )
     )
 
@@ -81,38 +86,6 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
 
         offset = screenCenter - offsetToCenter * newScale
         scale = newScale
-    }
-
-
-    @Suppress("UNCHECKED_CAST")
-    fun generateLargeGraph(vertexCount: Int = 10000, edgeCount: Int = 20000) {
-        createNewGraph(isWeightedGraph, isDirectedGraph)
-
-        val vertices = mutableListOf<Long>()
-
-        for (i in 0 until vertexCount) {
-            val vertex = graphViewModel.addVertex(
-                label = "V$i",
-                x = ((i % 50) * 20f).dp,
-                y = ((i / 50) * 20f).dp
-            )
-            vertices.add(vertex.vertexID)
-        }
-
-        repeat(edgeCount) {
-            val from = vertices.random()
-            val to = vertices.random()
-            if (from != to) {
-                val weight = if (isWeightedGraph) Random.nextDouble(0.0, 10000.0) else null
-                val _weight: String = weight.toString()
-                graphViewModel.addEdge(
-                    fromVertedID = from,
-                    toVertexID = to,
-                    edgeValue = "" as E,
-                    weight = _weight
-                )
-            }
-        }
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -130,7 +103,8 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
                 showVerticesLabels = _showVertexLabels,
                 showEdgesWeights = _showEdgesWeights,
                 isWeightedGraph = _isWeightedGraphState,
-                isDirectedGraph = _isDirectedGraphState
+                isDirectedGraph = _isDirectedGraphState,
+                highlight = showHighlightOfVertex
             )
 
             restoreVisualization(newGraphViewModel)
@@ -199,7 +173,8 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
             showVerticesLabels = _showVertexLabels,
             showEdgesWeights = _showEdgesWeights,
             isWeightedGraph = _isWeightedGraphState,
-            isDirectedGraph = _isDirectedGraphState
+            isDirectedGraph = _isDirectedGraphState,
+            highlight = showHighlightOfVertex
         )
     }
 

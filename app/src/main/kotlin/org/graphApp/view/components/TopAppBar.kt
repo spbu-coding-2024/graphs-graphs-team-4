@@ -420,6 +420,27 @@ private fun <E> ViewMenu(
                         fontWeight = FontWeight.ExtraLight
                     )
                 }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    Checkbox(
+                        checked = mainVm.highlight,
+                        onCheckedChange = {
+                            mainVm.highlight = it
+                        },
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = MaterialTheme.colors.primaryVariant,
+                            uncheckedColor = MaterialTheme.colors.onPrimary
+                        ),
+                    )
+
+                    Text(
+                        resources.highlight,
+                        fontWeight = FontWeight.ExtraLight
+                    )
+                }
             }
 
             if (showViewDialog) {

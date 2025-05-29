@@ -13,11 +13,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.text.font.FontWeight
 import org.graphApp.viewmodel.graph.EdgeViewModel
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 const val PLACE_ARROW_PARAM = 0.7f
 
@@ -78,7 +80,9 @@ fun <E, V> EdgeView(
                 Text(
                     text = viewModel.weight ?: "",
                     color = MaterialTheme.colors.onBackground,
-                    style = MaterialTheme.typography.caption
+                    style = MaterialTheme.typography.caption,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
                 )
             }
         }

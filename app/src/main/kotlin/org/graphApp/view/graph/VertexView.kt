@@ -30,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.graphApp.viewmodel.graph.VertexViewModel
 
 @Composable
@@ -49,7 +50,6 @@ fun <V> VertexView(
     val radiusDp = viewModel.radius
     val selectedColor = MaterialTheme.colors.primaryVariant
     val focusRequester = remember { FocusRequester() }
-    val focusManager = LocalFocusManager.current
     LaunchedEffect(viewModel.selected) {
         if (viewModel.selected) {
             focusRequester.requestFocus()
@@ -63,37 +63,40 @@ fun <V> VertexView(
             .size(radiusDp * 2, radiusDp * 2)
             .offset(viewModel.x, viewModel.y)
             .drawBehind {
-                for (i in 15 downTo 1) {
-                    drawCircle(
-                        color = (if (viewModel.selected) selectedColor else viewModel.color).copy(alpha = 0.03f),
-                        radius = size.minDimension / 2 + i * 8f
-                    )
-                }
+                if(viewModel.highlight.value) {
+                    for (i in 15 downTo 1) {
+                        drawCircle(
+                            color = (if (viewModel.selected) selectedColor else viewModel.color).copy(alpha = 0.03f),
+                            radius = size.minDimension / 2 + i * 8f
+                        )
+                    }
 
-                for (i in 7 downTo 1) {
-                    drawCircle(
-                        color = (if (viewModel.selected) selectedColor else viewModel.color).copy(alpha = 0.05f),
-                        radius = size.minDimension / 2 + i * 6f
-                    )
-                }
+                    for (i in 7 downTo 1) {
+                        drawCircle(
+                            color = (if (viewModel.selected) selectedColor else viewModel.color).copy(alpha = 0.05f),
+                            radius = size.minDimension / 2 + i * 6f
+                        )
+                    }
 
-                for (i in 5 downTo 1) {
-                    drawCircle(
-                        color = (if (viewModel.selected) selectedColor else viewModel.color).copy(alpha = 0.1f),
-                        radius = size.minDimension / 2 + i * 3f
-                    )
+                    for (i in 5 downTo 1) {
+                        drawCircle(
+                            color = (if (viewModel.selected) selectedColor else viewModel.color).copy(alpha = 0.1f),
+                            radius = size.minDimension / 2 + i * 3f
+                        )
+                    }
                 }
-                drawCircle(
-                    brush = Brush.radialGradient(
-                        colors = listOf(
-                            if (viewModel.selected) selectedColor else viewModel.color,
-                            if (viewModel.selected) selectedColor else viewModel.color
+                    drawCircle(
+                        brush = Brush.radialGradient(
+                            colors = listOf(
+                                if (viewModel.selected) selectedColor else viewModel.color,
+                                if (viewModel.selected) selectedColor else viewModel.color
+                            ),
+                            center = center,
+                            radius = 20.0F
                         ),
-                        center = center,
-                        radius = 20.0F
-                    ),
-                    radius = size.minDimension / 2
-                )
+                        radius = size.minDimension / 2
+                    )
+
             }
             .focusRequester(focusRequester)
             .focusable()
@@ -153,7 +156,8 @@ fun <V> VertexView(
                     maxLines = 1,
                     softWrap = false,
                     overflow = androidx.compose.ui.text.style.TextOverflow.Visible,
-                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
+                    fontSize = 20.sp
                 )
             }
         }

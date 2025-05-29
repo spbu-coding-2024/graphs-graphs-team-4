@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import org.graphApp.model.graph.Vertex
 
@@ -16,6 +15,7 @@ class VertexViewModel<V>(
     private val _labelVisible: State<Boolean>,
     val scaleFactor: Float = 1f,
     val radius: Dp = 20.dp * scaleFactor,
+    val highlight: State<Boolean> = mutableStateOf(false),
 ) {
     private var _selected = mutableStateOf(false)
     var selected: Boolean
