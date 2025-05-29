@@ -39,7 +39,7 @@
 
 ## 🖼 Interface
 
-The application uses the **MVVM** architectural pattern. Graphs are displayed in a convenient interactive form with visualization of the algorithms' results.
+The application uses the **MVVM** architectural pattern. Graphs are displayed in a convenient interactive form with visualization of the algorithms' results
 
 ## 🧪 Testing
 
