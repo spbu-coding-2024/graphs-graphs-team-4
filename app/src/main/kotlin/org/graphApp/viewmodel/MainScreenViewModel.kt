@@ -189,7 +189,7 @@ class MainScreenViewModel<E>(graph: Graph<String, E>) {
 
 
     fun createRandomGraph(isWeighted: Boolean): Job = CoroutineScope(Dispatchers.Default).launch {
-        val randomVertices = Random.nextLong(50L, 400L)
+        val randomVertices = Random.nextLong(5L, 8L)
         val randomEdges = (1..2).random()
         for (vertexID in 0..randomVertices) {
             graphViewModel.addVertex(vertexID.toString(), 0.dp, 0.dp)

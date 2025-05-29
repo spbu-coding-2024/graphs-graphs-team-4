@@ -64,6 +64,10 @@ internal class FindStrongCommunities<V,E>(
         resetUsedFlags()
         convertToList()
         _vertices.forEach { vertex ->
+            _graphInfo.computeIfAbsent(vertex.id) { mutableListOf() }
+            _graphInfoT.computeIfAbsent(vertex.id) { mutableListOf() }
+        }
+        _vertices.forEach { vertex ->
             if(_used[vertex.id] == false) {
                     dfs1(vertex)
             }
@@ -76,7 +80,7 @@ internal class FindStrongCommunities<V,E>(
                 _component.clear()
             }
         }
-
+        println(resultStrongCommunities)
         return resultStrongCommunities
     }
 }

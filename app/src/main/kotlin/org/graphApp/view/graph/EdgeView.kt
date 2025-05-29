@@ -63,6 +63,7 @@ fun <E, V> EdgeView(
             strokeWidth = 4f
         )
     }
+
     if (viewModel.weightVisible) {
         Box(
             modifier = Modifier.wrapContentSize().padding(8.dp)

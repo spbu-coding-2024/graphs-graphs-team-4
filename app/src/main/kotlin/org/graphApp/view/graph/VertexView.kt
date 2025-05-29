@@ -4,6 +4,7 @@ import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -18,9 +19,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.pointer.pointerInput
@@ -61,41 +65,70 @@ fun <V> VertexView(
         modifier = modifier
             .size(radiusDp * 2, radiusDp * 2)
             .offset(viewModel.x, viewModel.y)
+
             .drawBehind {
-                if(viewModel.highlight.value) {
-                    for (i in 15 downTo 1) {
-                        drawCircle(
-                            color = (if (viewModel.selected) selectedColor else viewModel.color).copy(alpha = 0.01f),
-                            radius = size.minDimension / 2 + i * 6f
-                        )
-                    }
-
-                    for (i in 7 downTo 1) {
-                        drawCircle(
-                            color = (if (viewModel.selected) selectedColor else viewModel.color).copy(alpha = 0.02f),
-                            radius = size.minDimension / 2 + i * 4f
-                        )
-                    }
-
-                    for (i in 5 downTo 1) {
-                        drawCircle(
-                            color = (if (viewModel.selected) selectedColor else viewModel.color).copy(alpha = 0.03f),
-                            radius = size.minDimension / 2 + i * 3f
-                        )
-                    }
-                }
+                val baseColor = if (viewModel.selected) selectedColor else viewModel.color
+                if (viewModel.highlight.value) {
                     drawCircle(
                         brush = Brush.radialGradient(
                             colors = listOf(
-                                if (viewModel.selected) selectedColor else viewModel.color,
-                                if (viewModel.selected) selectedColor else viewModel.color
+                                baseColor.copy(alpha = 0.3f),
+                                baseColor.copy(alpha = 0.2f),
+                                baseColor.copy(alpha = 0.0f)
                             ),
                             center = center,
-                            radius = 20.0F
+                            radius = size.minDimension * 2.5f
                         ),
-                        radius = size.minDimension / 2
+                        radius = size.minDimension * 4f
                     )
+                }
 
+                drawCircle(
+                    color = baseColor,
+                    radius = size.minDimension / 2
+                )
+
+                drawCircle(
+                    color = Color.Black.copy(alpha = 0.25f),
+                    radius = size.minDimension / 2 * 0.95f,
+                    center = Offset(center.x + 4f, center.y + 4f)
+                )
+
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        colors = listOf(
+                            baseColor.copy(alpha = 1.0f),
+                            baseColor.copy(alpha = 0.85f),
+                            baseColor.copy(
+                                red = baseColor.red * 0.6f,
+                                green = baseColor.green * 0.6f,
+                                blue = baseColor.blue * 0.6f,
+                                alpha = 1.0f
+                            )
+                        ),
+                        center = Offset(center.x - size.minDimension * 0.2f, center.y - size.minDimension * 0.2f),
+                        radius = size.minDimension * 0.7f
+                    ),
+                    radius = size.minDimension / 2
+                )
+
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        colors = listOf(
+                            baseColor.copy(
+                                red = Math.min(1.0f, baseColor.red * 1.2f),
+                                green = Math.min(1.0f, baseColor.green * 1.2f),
+                                blue = Math.min(1.0f, baseColor.blue * 1.2f),
+                                alpha = 0.4f
+                            ),
+                            Color.Transparent
+                        ),
+                        center = Offset(0f, 0f),
+                        radius = size.minDimension * 0.2f
+                    ),
+                    radius = size.minDimension * 0.15f,
+                    center = Offset(center.x + size.minDimension * 0.1f, center.y + size.minDimension * 0.25f)
+                )
             }
             .focusRequester(focusRequester)
             .focusable()
