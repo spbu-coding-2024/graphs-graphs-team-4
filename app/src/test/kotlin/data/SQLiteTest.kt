@@ -214,4 +214,58 @@ class SQLiteTest {
         assertEquals(0, loadedViewModel!!.vertices.size)
         assertEquals(0, loadedViewModel.edges.size)
     }
+
+    @Test
+    @Tag("SQLite - Stress")
+    fun `SQLite - stress test - large graph performance`() {
+        val viewModel = GraphViewModel(
+            graph = directWeightedGraph,
+            showVerticesLabels = mutableStateOf(false),
+            showEdgesWeights = mutableStateOf(true),
+            isWeightedGraph = mutableStateOf(true),
+            isDirectedGraph = mutableStateOf(true)
+        )
+
+        val vertexCount = 1000
+        val edgeCount = 2000
+        val vertices = mutableListOf<org.graphApp.viewmodel.graph.VertexViewModel<String>>()
+
+        val vertexCreationTime = measureTimeMillis {
+            repeat(vertexCount) { i ->
+                val vertex = viewModel.addVertex(
+                    "Node_$i",
+                    Random.nextInt(50, 1000).dp,
+                    Random.nextInt(50, 1000).dp
+                )
+                vertices.add(vertex)
+            }
+        }
+
+        val edgeCreationTime = measureTimeMillis {
+            repeat(edgeCount) { i ->
+                val fromVertex = vertices[Random.nextInt(vertices.size)]
+                val toVertex = vertices[Random.nextInt(vertices.size)]
+                val weight = Random.nextDouble(1.0, 100.0).toString()
+
+                viewModel.addEdge(fromVertex.vertexID, toVertex.vertexID, "rebro_$i", weight)
+            }
+        }
+
+        assertEquals(vertexCount, viewModel.vertices.size)
+        assertTrue(viewModel.edges.size >= edgeCount)
+
+        val saveTime = measureTimeMillis {
+            assertTrue(sqLiteMainLogic.saveToSQLiteDataBase(viewModel, "stress_test_large_graph"))
+        }
+
+        val loadTime = measureTimeMillis {
+            val loadedViewModel = sqLiteMainLogic.readFromSQLiteDataBase<String, String>("stress_test_large_graph")
+            assertNotNull(loadedViewModel)
+            assertEquals(vertexCount, loadedViewModel!!.vertices.size)
+            assertTrue(loadedViewModel.edges.size >= edgeCount)
+        }
+
+        assertTrue(saveTime < 10000)
+        assertTrue(loadTime < 10000)
+    }
 }
