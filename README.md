@@ -1,4 +1,4 @@
-# GraphViz
+# GraphVizScript
 
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.1.20-blue)
 ![Gradle](https://img.shields.io/badge/Gradle-8.8-brightgreen)
