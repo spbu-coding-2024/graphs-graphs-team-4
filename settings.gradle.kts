@@ -1,2 +1,2 @@
-rootProject.name = "GraphViz"
+rootProject.name = "GraphVizScript"
 include("app")

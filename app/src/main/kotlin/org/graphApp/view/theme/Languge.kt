@@ -195,7 +195,7 @@ val englishResources = TextResources(
     newGraphFile = """
                                 1) New Graph: File → New Graph
                             """,
-    aboutGravViz = "About GraphViz",
+    aboutGravViz = "About GraphVizScript",
     version = "Version 1.0",
     aLightweight = "A lightweight tool for graph visualization and analysis",
     keyFeatures = "Key features:",
@@ -311,7 +311,7 @@ val russianResources = TextResources(
     newGraphFile = """
                                 1) Новый график: Файл → Новый график
                             """,
-    aboutGravViz = "Про GraphViz",
+    aboutGravViz = "Про GraphVizScript",
     version = "Версия 1.0",
     aLightweight = "Легкий инструмент для визуализации и анализа графиков",
     keyFeatures = "Ключевые фичи",

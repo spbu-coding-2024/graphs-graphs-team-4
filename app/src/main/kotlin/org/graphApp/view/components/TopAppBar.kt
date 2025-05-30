@@ -86,7 +86,7 @@ fun <E> TopBarMenu(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    "GraphViz",
+                    "GraphVizScript",
                     color = MaterialTheme.colors.onPrimary,
                     fontWeight = FontWeight.ExtraBold
                 )
