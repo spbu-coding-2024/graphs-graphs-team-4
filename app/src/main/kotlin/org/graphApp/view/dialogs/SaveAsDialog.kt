@@ -32,6 +32,7 @@ import org.neo4j.driver.AuthTokens
 import org.neo4j.driver.GraphDatabase
 import java.io.File
 import javax.swing.JFileChooser
+import javax.swing.UIManager
 
 
 @Composable
@@ -363,6 +364,7 @@ fun <E> SaveAsDialog(
 }
 
 fun chooseFolder(): File? {
+    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     val chooser = JFileChooser()
     chooser.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
     chooser.dialogTitle = "Choose a folder for saving"
