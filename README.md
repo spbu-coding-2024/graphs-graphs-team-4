@@ -20,6 +20,10 @@
 
 ![image_2025-05-28_22-35-59](https://github.com/user-attachments/assets/7b37f661-eaa5-4f7c-a033-a92536e626ef)
 
+**Dark Theme - 5k vertices and 10k edges:**
+
+![image](https://github.com/user-attachments/assets/f522d0ac-26a5-42bf-a4ab-470765dc824e)
+
 **Video demonstration on YouTube:**
 
 [![Video demonstration](https://img.youtube.com/vi/cyapdboouAI/0.jpg)](https://www.youtube.com/watch?v=cyapdboouAI)
