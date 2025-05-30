@@ -8,7 +8,7 @@
 
 
 
-**GraphViz** — is a desktop application with a graphical interface designed to visualize graphs, analyze their structure using modern and classical algorithms, and save the analysis results to various storages.
+**GraphVizScript** — is a desktop application with a graphical interface designed to visualize graphs, analyze their structure using modern and classical algorithms, and save the analysis results to various storages.
 
 **Screenshots:**
 
